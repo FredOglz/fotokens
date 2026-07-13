@@ -1,41 +1,120 @@
-# @fred/design-tokens
+# fotokens
 
-Librairie de **design tokens** publiable en package npm. Ce repo ne contient
-**que les tokens** (pas de composants UI) : il est agnostique de tout framework
-et destiné à être consommé plus tard par un package de composants séparé.
+Librairie de **design tokens** agnostique de tout framework. Ce repo ne contient
+**que des tokens** — pas de composants UI. Il est destiné à être consommé par un
+package de composants séparé.
 
-Le moteur de transformation est [Style Dictionary](https://styledictionary.com/).
 Les tokens sont au format **DTCG** (`$value` / `$type` / `$description`), le
-standard du W3C — ce qui débloque l'interop Figma / Tokens Studio, et fait
-ressortir les `$description` en commentaires dans le CSS généré.
+standard du W3C, et transformés par [Style Dictionary](https://styledictionary.com/).
 
-## Architecture à 4 couches
+**📖 Documentation visuelle** — ouvre `docs/index.html` dans un navigateur : les 8
+rampes, le contrat de rôle, les 17 composants rendus en vrai, et un basculement
+clair/sombre.
+
+---
+
+## L'idée en une minute
+
+Un design system doit tenir deux promesses contradictoires : **être rebrandable**
+(chaque projet a ses couleurs) et **garantir l'accessibilité** (le contraste tient,
+quoi qu'on choisisse).
+
+Ce repo les tient toutes les deux, par construction :
+
+1. **Toutes les palettes partagent la même courbe de luminosité**, calculée en
+   OKLCH. À cran égal, deux palettes ont la même luminosité perçue.
+2. **Les 6 rôles sémantiques exposent les mêmes slots, mappés sur les mêmes crans.**
+
+D'où : si `on`/`main` passe AA pour *un* rôle, ça passe AA pour *les six*. Et
+changer la tonique d'un projet ne peut pas casser le contraste.
+
+> **30 combinaisons texte/fond mesurées sur le CSS généré. Toutes WCAG AA.**
+> Aucun token n'a été ajusté à la main.
+
+---
+
+## Architecture — 4 couches
 
 ```
 Primitives  →  Brand (sélection)  →  Sémantique (par mode)  →  Composant
-(catalogue)    (le projet choisit)    (rôles)                  (usage)
+(catalogue)    (le projet choisit)    (les rôles)              (l'usage)
 ```
 
 | Couche | Dossier | Rôle | Peut référencer |
 | --- | --- | --- | --- |
-| **1. Primitives** | `tokens/primitives/` | Catalogue brut : toutes les palettes, l'échelle de tailles, les familles de police. Aucune sémantique. | Rien — que des valeurs brutes. |
-| **2. Brand** | `tokens/brand/` | **La sélection du projet.** Dit quelle palette joue quel rôle : `tonic → violet`, `neutral → slateBlue`… | Un **primitive**. |
-| **3. Sémantique** | `tokens/themes/` | Le **contrat de rôle** (6 rôles × 9 slots), plus `surface`/`text`/`border`/`focus`. Déclinée par **mode** (light/dark, desktop/mobile). | La couche **brand** (couleurs) ou les **primitives** (tailles, typo). |
-| **4. Composant** | `tokens/components/` | Tokens nommés par composant (`button`, `input`…). | La couche **sémantique**. |
+| **1. Primitives** | `tokens/primitives/` | Le catalogue brut : 8 palettes, échelles de taille, familles de police, durées. Aucune sémantique. | Rien — que des valeurs brutes. |
+| **2. Brand** | `tokens/brand/` | **La sélection du projet.** Quelle palette joue quel rôle : `primary → violet`, `neutral → slateBlue`… | Un **primitive**. |
+| **3. Sémantique** | `tokens/themes/` | Le **contrat de rôle**, plus `surface`/`text`/`border`/`state`/`focus`/`shadow`. Décliné par **mode** (clair/sombre, desktop/mobile). | La couche **brand**. |
+| **4. Composant** | `tokens/components/` | 17 composants. | La couche **sémantique**. |
 
-### Les règles strictes
+### Les 3 règles de layering
 
-> - Un token de **composant** référence un token **sémantique**, jamais une couche
->   inférieure.
-> - Un token **sémantique de couleur** référence la couche **brand**, jamais un
->   primitive de couleur directement.
+> - Un token de **composant** référence un rôle **sémantique**, jamais une couche plus basse.
+> - Un rôle **sémantique** de couleur référence la couche **brand**, jamais un primitive.
 > - Un token **brand** référence un **primitive**, jamais une valeur brute.
 
-C'est la couche **brand** qui rend un projet interchangeable. Dans
-`themes/color/*.json` on ne doit **jamais** voir `{color.violet.600}` — seulement
-`{color.brand.primary.600}`.
+Elles sont mécaniquement vérifiables : un `grep` suffit à prouver qu'aucun
+composant ne pointe sur une palette.
 
-### Changer l'identité d'un projet
+### La chaîne de résolution
+
+Un token de composant ne connaît ni les palettes ni les hex. Il ne connaît qu'un rôle.
+
+```css
+--color-button-filled-primary-default-background: var(--color-role-primary-main);
+--color-role-primary-main:                        var(--color-brand-primary-600);
+--color-brand-primary-600:                        var(--color-violet-600);
+--color-violet-600:                               #9500ee;
+```
+
+C'est ce chaînage qui rend les blocs `dark` et `mobile` minuscules : quand le mode
+change, seule la var() **sémantique** est redéfinie — les 1131 tokens de composant
+suivent tout seuls, sans être réémis.
+
+---
+
+## Le contrat de rôle
+
+La pièce maîtresse. Les **6 rôles** — `primary`, `neutral`, `success`, `warning`,
+`danger`, `info` — exposent **exactement les mêmes 9 slots**, mappés sur
+**exactement les mêmes crans** :
+
+| Slot | Clair | Sombre | À quoi ça sert |
+| --- | --- | --- | --- |
+| `main` | `600` | `400` | Fond des composants pleins, bordure du rôle |
+| `hover` | `700` | `300` | Survol d'un composant plein |
+| `active` | `800` | `200` | État pressé |
+| `on` | `neutral.25` | `neutral.900` | Texte **sur** une surface `main` |
+| `text` | `700` | `400` | Le rôle **en texte** sur fond clair (lien, alerte) |
+| `border` | `300` | `700` | Bordure discrète du rôle |
+| `subtle` | `50` | `900` | Fond clair **solide** (alerte, badge doux) |
+| `tint` | `alpha.5` | *idem* | Voile **translucide** (survol outlined/ghost) |
+| `tintStrong` | `alpha.10` | *idem* | Voile translucide (pressé) |
+
+**Conséquence directe :** `<Button color="danger">` fonctionne **sans un token de
+plus**. Un composant qui sait afficher `primary` sait afficher les cinq autres.
+
+### Deux règles de nommage non négociables
+
+> **Un nom de rôle décrit un usage, jamais une apparence.**
+> Pas de `dark` / `darker` pour dire « survol » et « pressé » : en thème sombre, le
+> survol doit être *plus clair* — le nom deviendrait un mensonge. D'où `hover` et
+> `active`.
+
+> **Un mot, un sens.**
+> `surface` désigne *uniquement* les fonds (`surface.base`, `surface.raised`…). Le
+> voile alpha d'un rôle s'appelle `tint` — jamais `surface`.
+
+---
+
+## Démarrer un projet
+
+```bash
+npm install
+npm run build     # → dist/ et docs/
+```
+
+### Choisir l'identité du projet
 
 Éditer **une ligne** dans la table `BRAND` de `scripts/generate-theme.js`, puis
 `npm run theme` :
@@ -48,223 +127,203 @@ const BRAND = {
 };
 ```
 
-Rien d'autre ne bouge : ni le contrat de rôle, ni les composants. Toute l'app
-suit. N'importe quelle palette peut jouer n'importe quel rôle : elles exposent
-toutes les **mêmes 11 crans** sur la **même courbe de luminosité**, donc un swap
-ne casse ni le build, ni les contrastes.
+Rien d'autre ne bouge : ni le contrat de rôle, ni les composants. Tous les boutons,
+liens et états actifs de l'app suivent. **N'importe quelle palette peut jouer
+n'importe quel rôle** — elles exposent toutes les mêmes 11 crans sur la même courbe
+de luminosité, donc un swap ne casse ni le build, ni les contrastes.
 
-
-## Le contrat de rôle
-
-C'est la pièce maîtresse de la couche sémantique. Les **6 rôles** (`primary`,
-`neutral`, `success`, `warning`, `danger`, `info`) exposent **exactement les mêmes
-9 slots**, mappés sur **exactement les mêmes crans** :
-
-| Slot | Light | Dark | À quoi ça sert |
-| --- | --- | --- | --- |
-| `main` | `600` | `400` | Fond des composants pleins, bordure du rôle |
-| `hover` | `700` | `300` | Survol d'un composant plein |
-| `active` | `800` | `200` | État pressé |
-| `on` | `neutral.25` | `neutral.900` | Texte **sur** une surface `main` |
-| `text` | `700` | `400` | Le rôle **en texte** sur fond clair (lien, alerte) |
-| `border` | `300` | `700` | Bordure discrète du rôle |
-| `subtle` | `50` | `900` | Fond clair **solide** (alerte, badge doux) |
-| `tint` | `alpha.5` | *idem* | Voile **translucide** (survol outlined/ghost) |
-| `tintStrong` | `alpha.10` | *idem* | Voile translucide (pressé) |
-
-**Pourquoi cette uniformité garantit le contraste.** Toutes les palettes sont sur la
-même courbe de luminosité. Donc si `on`/`main` passe AA pour *un* rôle, ça passe AA
-pour *les six*. Mesuré sur le CSS généré : de 4,56:1 à 5,74:1 en clair, de 5,72:1 à
-6,66:1 en sombre — **les 6 rôles passent AA**.
-
-Conséquence : `<Button color="danger">` fonctionne **sans un token de plus**. Les
-3 variantes × 6 rôles × 4 états du bouton (216 tokens) sont générées à partir d'une
-table de mapping de 12 lignes dans `scripts/generate-theme.js`.
-
-### Deux règles de nommage non négociables
-
-> **Un nom de rôle décrit un usage, jamais une apparence.**
-> Pas de `dark`/`darker` pour dire « survol » et « pressé » : en thème sombre le
-> survol doit être *plus clair*, et le nom deviendrait un mensonge. D'où `hover` et
-> `active`.
-
-> **Un mot, un sens.**
-> `surface` désigne *uniquement* les fonds (`surface.base`, `surface.raised`…). Le
-> voile alpha d'un rôle s'appelle `tint` — jamais `surface`.
-
-## Structure du repo
-
-```
-tokens/
-  primitives/            # catalogue — jamais modifié par projet
-    color.json           # ⚙️ GÉNÉRÉ par scripts/generate-ramps.js — ne pas éditer
-    typography.json      # familles, graisses, interlignes
-    size.json            # spacing, font, radius, border, breakpoint
-
-  brand/
-    default.json         # ⚙️ GÉNÉRÉ — quelle palette joue quel rôle
-
-  themes/
-    color/
-      light.json         # ⚙️ GÉNÉRÉ — le contrat de rôle
-      dark.json          # ⚙️ GÉNÉRÉ — mêmes chemins, autres crans
-    typography/
-      default.json
-    size/
-      desktop.json       # mêmes chemins de tokens, valeurs différentes
-      mobile.json
-
-  components/
-    button.json          # ⚙️ GÉNÉRÉ — 3 variantes × 6 rôles × 4 états
-    input.json           # ⚙️ GÉNÉRÉ
-
-config/
-  build.js               # build multi-modes
-scripts/
-  generate-theme.js      # ⭐ LES TABLES DE MAPPING — la vraie source de vérité
-  generate-ramps.js      # génère les rampes de couleur (OKLCH)
-  build-docs.js          # génère la doc visuelle
-  oklch.js               # conversions sRGB ↔ OKLCH
-docs/
-  index.html             # ⚙️ GÉNÉRÉ — doc visuelle, ouvrir dans un navigateur
-dist/                    # généré (gitignoré)
-```
-
-## Documentation visuelle
-
-```bash
-npm run docs     # régénère docs/index.html
-open docs/index.html
-```
-
-La page explique l'architecture, comment démarrer un projet, et affiche les 4
-couches : les 8 rampes, le mapping `brand` courant, les rôles sémantiques, les
-composants rendus en vrai, et les **chaînes de résolution** complètes
-(`button.filled.primary.default.background` → `role.primary.main` →
-`brand.primary.600` → `violet.600` → `#9500ee`). Un bouton bascule light/dark.
-
-Elle est **générée depuis les fichiers de tokens** et **stylée avec les tokens
-qu'elle documente** — elle ne peut donc pas dériver du code, et si le design
-system casse, la page casse avec, visiblement. `docs/index.html` est généré : ne
-pas l'éditer à la main.
-
-## Sorties générées
-
-### `dist/tokens.css`
-
-Un seul fichier, trois blocs :
+### Consommer les tokens
 
 ```css
-:root                  { /* thème clair, tailles desktop — tout le dictionnaire */ }
-[data-theme="dark"]    { /* uniquement les rôles couleur qui changent */ }
-@media (max-width: 768px) {
-  :root                { /* uniquement les tokens de taille qui changent */ }
+@import 'fotokens/dist/tokens.css';      /* le système */
+@import 'fotokens/dist/components.css';  /* les composants (optionnel) */
+
+.btn-filled {
+  background:    var(--color-button-filled-primary-default-background);
+  color:         var(--color-button-filled-primary-default-text);
+  height:        var(--size-button-md-height);
+  padding:       0 var(--space-button-md-padding-x);
+  border-radius: var(--radius-button-md);
+}
+
+/* Changer de couleur = changer le rôle. Aucun token nouveau. */
+.btn-filled[data-color="danger"] {
+  background: var(--color-button-filled-danger-default-background);
 }
 ```
 
-Les blocs de surcharge ne réémettent **que les tokens dont la valeur diffère
-réellement** du bloc `:root`. Un rôle déclaré à l'identique dans les deux modes
-(ex. `borderWidth.*`, identique en desktop et mobile) ne produit aucune ligne.
+Thème sombre : `<html data-theme="dark">`. Le responsive est automatique.
 
-Le chaînage entre couches est préservé via `var()` :
+---
+
+## Les composants
+
+**17 composants, 1131 tokens, zéro écrit à la main.**
+
+| | Composants |
+| --- | --- |
+| **Role-aware** (générés ×6 rôles) | `button` `badge` `tag` `alert` `checkbox` `radio` `switch` `link` |
+| **Neutres** | `input` `textarea` `select` `card` `tooltip` `modal` `menu` `tabs` `table` |
+
+Tout vient de tables de mapping dans `scripts/generate-components.js`. La variante
+déclare seulement **quels slots du rôle elle consomme** ; le rôle reste un paramètre :
+
+```js
+outlined: {
+  default:  { background: '{color.surface.transparent}', text: 'text', border: 'border' },
+  hover:    { background: 'tint',       text: 'text', border: 'main' },
+  active:   { background: 'tintStrong', text: 'text', border: 'main' },
+}
+```
+
+Les composants interactifs ont **3 tailles** (`sm` / `md` / `lg`).
+
+> ⚠️ **Sur mobile, les contrôles GRANDISSENT.** C'est la seule famille de tailles
+> qui augmente au lieu de diminuer : une cible tactile doit faire au moins 44px
+> (WCAG 2.5.5). Un bouton `md` passe de **40px** en desktop à **52px** sous 768px.
+
+---
+
+## Sorties générées
+
+| Fichier | Contenu | Poids gzippé |
+| --- | --- | --- |
+| `dist/tokens.css` | Le système : primitives, brand, rôles sémantiques | **5,3 Ko** |
+| `dist/components.css` | Les 1131 tokens de composant — **requiert `tokens.css`** | **5,6 Ko** |
+| `dist/tokens.json` | Le dictionnaire complet, à plat, valeurs résolues | — |
+
+Les composants pèsent 73 % du dictionnaire : ils sont dans un fichier **à part**,
+pour qu'un projet qui écrit ses propres composants n'importe que le système.
+
+`tokens.css` contient trois blocs :
 
 ```css
---color-button-filled-primary-default-background: var(--color-role-primary-main);
---color-role-primary-main:                       var(--color-brand-primary-600);
---color-brand-primary-600:                       var(--color-violet-600);
---color-violet-600:                              #9500ee;
+:root                      { /* thème clair, tailles desktop */ }
+[data-theme="dark"]        { /* uniquement ce qui change */ }
+@media (max-width: 768px)  { /* uniquement ce qui change */ }
 ```
 
-**C'est ce qui rend les blocs dark/mobile si petits** : un token de composant
-pointe sur une var() sémantique, donc il n'a pas besoin d'être réémis quand le
-mode change — seule la var() sémantique est redéfinie.
+Les blocs de surcharge ne réémettent **que les tokens dont la valeur diffère
+réellement**. Un rôle déclaré à l'identique dans les deux modes ne produit aucune
+ligne.
 
-Activer le dark : `<html data-theme="dark">`.
+---
 
-### `dist/tokens.json`
+## Les fichiers générés
 
-Le même dictionnaire **à plat**, valeurs **résolues** (hex/px final), en
-**light + desktop**, pour inspection/debug. Clés en kebab-case, alignées sur les
-noms de variables CSS.
+⚙️ **Ne pas éditer à la main — ils seraient écrasés.**
 
-## Utilisation
+| Fichier | Généré par |
+| --- | --- |
+| `tokens/primitives/color.json` | `npm run ramps:write` |
+| `tokens/brand/default.json` · `tokens/themes/mode/*.json` | `npm run theme` |
+| `tokens/components/*.json` | `npm run components` |
+| `docs/` · `dist/` | `npm run build` |
 
-```bash
-npm install
-npm run build      # génère dist/tokens.css et dist/tokens.json
-npm run watch      # rebuild à chaque modification d'un token ou de la config
-npm run clean      # supprime dist/
+**Les tables de mapping dans `scripts/` sont la vraie source de vérité.** Écrire ces
+~1600 tokens à la main, c'est garantir qu'ils divergeront.
+
+### Les rampes de couleur
+
+Chaque palette est définie par son **identité** — une teinte + un pic de chroma — et
+ses 11 crans sont calculés en **OKLCH** sur une courbe de luminosité **partagée par
+toutes les palettes**. Ajouter une palette = **une ligne** :
+
+```js
+const PALETTES = {
+  violet: { hue: 304, chroma: 0.297 },
+  // …
+};
 ```
+
+> **Pourquoi c'est indispensable.** Les rampes dessinées à la main dérivaient : le
+> cran 500 valait 55 % de luminosité en `gray` et 89 % en `turquoise` (un néon). Un
+> bouton primaire en turquoise donnait un contraste de **1,85:1 — illisible**. Comme
+> les rôles sont interchangeables, un rôle ne peut tenir sa promesse de contraste que
+> si toutes les palettes partagent la même courbe. Après régénération : **4,60:1**.
+
+**OKLCH et pas HSL** : la luminosité HSL n'est pas perceptuelle — un jaune et un bleu
+à `L=50 %` n'ont rien à voir à l'œil. OKLCH, si.
+
+---
+
+## Structure
+
+```
+tokens/
+  primitives/            # le catalogue — jamais modifié par projet
+    color.json           # ⚙️ 8 palettes × 11 crans + voiles alpha
+    size.json            # spacing, font, radius, border, control, glyph, breakpoint
+    typography.json      # familles, graisses, interlignes
+    effect.json          # durées, courbes, opacités, géométries d'ombre
+  brand/
+    default.json         # ⚙️ quelle palette joue quel rôle
+  themes/
+    mode/                # ⚙️ tout ce qui dépend du clair/sombre : couleurs ET ombres
+      light.json
+      dark.json
+    size/                # desktop.json / mobile.json
+    typography/
+    effect/
+  components/            # ⚙️ les 17 composants
+config/
+  build.js               # build multi-modes, sortie scindée
+scripts/
+  generate-ramps.js      # ⭐ les rampes OKLCH
+  generate-theme.js      # ⭐ brand + contrat de rôle
+  generate-components.js # ⭐ les 17 composants
+  build-docs.js          # la doc visuelle
+  oklch.js               # conversions sRGB ↔ OKLCH
+docs/                    # ⚙️ 10 pages, autonomes (servables par GitHub Pages)
+dist/                    # ⚙️ gitignoré
+```
+
+## Commandes
+
+| Commande | Effet |
+| --- | --- |
+| `npm run build` | Génère `dist/` et `docs/` |
+| `npm run theme` | Régénère brand + rôles depuis les tables, puis build |
+| `npm run components` | Régénère les 17 composants, puis build |
+| `npm run ramps` | Aperçu des rampes (n'écrit rien) |
+| `npm run ramps:write` | Régénère `tokens/primitives/color.json` |
+| `npm run docs` | Régénère `docs/` |
+| `npm run watch` | Rebuild à chaque modification |
+
+---
 
 ## Notes techniques
 
-- **Pourquoi un `build.js` et pas la CLI ?** `light.json` et `dark.json`
-  déclarent les *mêmes* chemins de tokens avec des valeurs différentes — ils ne
-  peuvent pas cohabiter dans une seule source Style Dictionary (collision). On
+- **Pourquoi un `build.js` et pas la CLI Style Dictionary ?** `mode/light.json` et
+  `mode/dark.json` déclarent les *mêmes* chemins de tokens avec des valeurs
+  différentes — ils ne peuvent pas cohabiter dans une seule source (collision). On
   lance donc un build par combinaison de modes, puis on concatène les blocs.
-- **Breakpoints** : une media query CSS **ne peut pas** lire une custom property
-  (`@media (max-width: var(--size-breakpoint-md))` ne fonctionne pas — limitation
-  du langage). Les breakpoints sont donc émis comme tokens (utiles côté JS et
-  pour la doc), et `build.js` **lit la valeur depuis les tokens** pour l'inliner
-  dans la media query générée. Une seule source de vérité : changer
-  `size.breakpoint.md` dans les primitives déplace le breakpoint du build.
-- **Le `watch`** s'appuie sur `chokidar-cli` : la CLI Style Dictionary v4 n'a pas
-  de mode watch natif.
-- **Nom du package** : `@fred/design-tokens` est un placeholder, à remplacer
-  avant toute publication réelle.
 
-## Les rampes de couleur sont générées, pas écrites à la main
+- **Breakpoints.** Une media query CSS **ne peut pas** lire une custom property :
+  `@media (max-width: var(--size-breakpoint-md))` ne fonctionne pas. Le build lit
+  donc `size.breakpoint.md` dans les tokens et inline sa valeur. Une seule source de
+  vérité.
 
-`tokens/primitives/color.json` est **produit par `scripts/generate-ramps.js`** —
-ne l'édite pas à la main, il serait écrasé.
+- **Les voiles alpha d'une palette vivent DANS la palette** (`color.violet.alpha.5`),
+  pas dans un groupe séparé : le rôle `brand.primary` alias la palette *entière*, donc
+  changer la tonique emporte l'alpha avec elle. Un groupe séparé obligerait à swapper
+  deux fois — et un oubli donnerait un bouton violet au survol turquoise.
 
-Chaque palette est définie par son **identité** (une teinte + un pic de chroma),
-et ses 11 crans sont calculés en **OKLCH** sur une courbe de luminosité
-**partagée par toutes les palettes**. À cran égal, deux palettes ont donc la même
-luminosité perçue.
+- **Les voiles neutres, eux, sont ABSOLUS** (`color.alpha.white.*`,
+  `color.alpha.black.*`) et vivent bien dans un groupe à part : un survol de ligne de
+  tableau ou un scrim de modale ne doivent **jamais** changer de teinte au rebranding.
+  Ce sont eux aussi qui permettent aux voiles d'état de s'inverser — en clair on
+  assombrit, en sombre on éclaircit.
 
-```bash
-npm run ramps          # aperçu, n'écrit rien
-npm run ramps:write    # régénère tokens/primitives/color.json
-```
+- **Les ombres sont émises en valeurs résolues**, pas en `var()`. Style Dictionary
+  réinjecte les `var()` dans une valeur courte par recherche de chaîne : quand
+  `offsetX` vaut `0` et le `spread` aussi, il intervertit les deux positions.
 
-Ajouter une palette = **une ligne** dans `PALETTES` (teinte + chroma).
+- **Le build échoue bruyamment** si un token sort en `undefined`. Style Dictionary,
+  lui, ne bronche pas — il écrirait un CSS entièrement vide en affichant ✔.
 
-### Les voiles alpha
+- **Le `watch`** s'appuie sur `chokidar-cli` : la CLI Style Dictionary v4 n'a pas de
+  mode watch natif.
 
-Chaque teinte expose aussi un voile translucide à **5 %** et **10 %**, calculé sur
-son cran `500` — pour les fonds d'états (survol / actif d'un bouton `outlined` ou
-`ghost`, ligne de tableau sélectionnée…).
-
-```
-color.violet.alpha.5   →  rgba(170, 76, 255, 0.05)
-color.violet.alpha.10  →  rgba(170, 76, 255, 0.1)
-```
-
-**L'alpha vit *dans* la palette**, pas dans un groupe `color.alpha.*` séparé.
-C'est délibéré : le rôle `brand.tonic` alias la palette **entière**, donc changer
-la tonique emporte l'alpha avec elle. Un groupe séparé aurait obligé à swapper
-deux fois — et un oubli aurait donné un bouton violet au survol turquoise.
-
-Un voile se compose sur le fond qui est dessous : il **s'adapte donc tout seul au
-thème sombre**. C'est pourquoi les tokens alpha sont identiques en light et dark,
-et n'apparaissent pas dans le bloc `[data-theme="dark"]` du CSS généré.
-
-**Pourquoi c'est indispensable.** Les rampes dessinées à la main dérivaient les
-unes des autres : le `500` valait 55 % de luminosité en `gray` et 89 % en
-`turquoise` (un néon). Résultat, un bouton primaire en tonique turquoise donnait
-un contraste de **1,85:1 — illisible**. Comme les rôles `brand` sont
-interchangeables, un rôle sémantique ne peut tenir sa promesse de contraste que
-si toutes les palettes partagent la même courbe. Après régénération, le même
-bouton est à **4,60:1 (WCAG AA)**, et light comme dark passent AA.
-
-> ⚠️ Cette régénération a **déplacé les valeurs issues de Figma**. Les teintes
-> sont conservées (l'identité de chaque palette), mais les hex exacts ont changé.
-> Le néon `#01fee2` que le design plaçait en `turquoise.500` n'existe plus dans
-> la rampe : perceptuellement il valait un cran ~150, pas un 500. À rapprocher du
-> design si cette couleur précise a une valeur de marque.
-
-- **OKLCH et pas HSL** : la luminosité HSL n'est pas perceptuelle (un jaune et un
-  bleu à `L=50 %` n'ont rien à voir à l'œil). OKLCH, si. `scripts/oklch.js`
-  contient les conversions, y compris la réduction de chroma pour rester dans le
-  gamut sRGB.
+- **Le package n'est pas publié** (`"private": true`). Le nom `fotokens` est réservé
+  localement ; vérifie sa disponibilité sur npm avant toute publication.

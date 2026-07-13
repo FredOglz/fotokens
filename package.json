@@ -1,7 +1,7 @@
 {
-  "name": "@fred/design-tokens",
+  "name": "fotokens",
   "version": "0.1.0",
-  "description": "Librairie de design tokens (primitives → alias → composants), transformée avec Style Dictionary.",
+  "description": "Design tokens (DTCG) — contrat de rôle uniforme, rampes OKLCH, contraste WCAG AA garanti par construction.",
   "type": "module",
   "private": true,
   "files": [
@@ -13,6 +13,7 @@
   "scripts": {
     "build": "node config/build.js && node scripts/build-docs.js",
     "theme": "node scripts/generate-theme.js && npm run build",
+    "components": "node scripts/generate-components.js && npm run build",
     "ramps": "node scripts/generate-ramps.js",
     "ramps:write": "node scripts/generate-ramps.js --write",
     "docs": "node scripts/build-docs.js",
