@@ -1,0 +1,322 @@
+{
+  "color": {
+    "$type": "color",
+    "brand": {
+      "primary": {
+        "25": {
+          "$value": "{color.violet.25}"
+        },
+        "50": {
+          "$value": "{color.violet.50}"
+        },
+        "100": {
+          "$value": "{color.violet.100}"
+        },
+        "200": {
+          "$value": "{color.violet.200}"
+        },
+        "300": {
+          "$value": "{color.violet.300}"
+        },
+        "400": {
+          "$value": "{color.violet.400}"
+        },
+        "500": {
+          "$value": "{color.violet.500}"
+        },
+        "600": {
+          "$value": "{color.violet.600}"
+        },
+        "700": {
+          "$value": "{color.violet.700}"
+        },
+        "800": {
+          "$value": "{color.violet.800}"
+        },
+        "900": {
+          "$value": "{color.violet.900}"
+        },
+        "$description": "Rôle « primary » — joué par la palette « violet ».",
+        "alpha": {
+          "5": {
+            "$value": "{color.violet.alpha.5}"
+          },
+          "10": {
+            "$value": "{color.violet.alpha.10}"
+          }
+        }
+      },
+      "neutral": {
+        "25": {
+          "$value": "{color.slateBlue.25}"
+        },
+        "50": {
+          "$value": "{color.slateBlue.50}"
+        },
+        "100": {
+          "$value": "{color.slateBlue.100}"
+        },
+        "200": {
+          "$value": "{color.slateBlue.200}"
+        },
+        "300": {
+          "$value": "{color.slateBlue.300}"
+        },
+        "400": {
+          "$value": "{color.slateBlue.400}"
+        },
+        "500": {
+          "$value": "{color.slateBlue.500}"
+        },
+        "600": {
+          "$value": "{color.slateBlue.600}"
+        },
+        "700": {
+          "$value": "{color.slateBlue.700}"
+        },
+        "800": {
+          "$value": "{color.slateBlue.800}"
+        },
+        "900": {
+          "$value": "{color.slateBlue.900}"
+        },
+        "$description": "Rôle « neutral » — joué par la palette « slateBlue ».",
+        "alpha": {
+          "5": {
+            "$value": "{color.slateBlue.alpha.5}"
+          },
+          "10": {
+            "$value": "{color.slateBlue.alpha.10}"
+          }
+        }
+      },
+      "success": {
+        "25": {
+          "$value": "{color.green.25}"
+        },
+        "50": {
+          "$value": "{color.green.50}"
+        },
+        "100": {
+          "$value": "{color.green.100}"
+        },
+        "200": {
+          "$value": "{color.green.200}"
+        },
+        "300": {
+          "$value": "{color.green.300}"
+        },
+        "400": {
+          "$value": "{color.green.400}"
+        },
+        "500": {
+          "$value": "{color.green.500}"
+        },
+        "600": {
+          "$value": "{color.green.600}"
+        },
+        "700": {
+          "$value": "{color.green.700}"
+        },
+        "800": {
+          "$value": "{color.green.800}"
+        },
+        "900": {
+          "$value": "{color.green.900}"
+        },
+        "$description": "Rôle « success » — joué par la palette « green ».",
+        "alpha": {
+          "5": {
+            "$value": "{color.green.alpha.5}"
+          },
+          "10": {
+            "$value": "{color.green.alpha.10}"
+          }
+        }
+      },
+      "warning": {
+        "25": {
+          "$value": "{color.orange.25}"
+        },
+        "50": {
+          "$value": "{color.orange.50}"
+        },
+        "100": {
+          "$value": "{color.orange.100}"
+        },
+        "200": {
+          "$value": "{color.orange.200}"
+        },
+        "300": {
+          "$value": "{color.orange.300}"
+        },
+        "400": {
+          "$value": "{color.orange.400}"
+        },
+        "500": {
+          "$value": "{color.orange.500}"
+        },
+        "600": {
+          "$value": "{color.orange.600}"
+        },
+        "700": {
+          "$value": "{color.orange.700}"
+        },
+        "800": {
+          "$value": "{color.orange.800}"
+        },
+        "900": {
+          "$value": "{color.orange.900}"
+        },
+        "$description": "Rôle « warning » — joué par la palette « orange ».",
+        "alpha": {
+          "5": {
+            "$value": "{color.orange.alpha.5}"
+          },
+          "10": {
+            "$value": "{color.orange.alpha.10}"
+          }
+        }
+      },
+      "danger": {
+        "25": {
+          "$value": "{color.red.25}"
+        },
+        "50": {
+          "$value": "{color.red.50}"
+        },
+        "100": {
+          "$value": "{color.red.100}"
+        },
+        "200": {
+          "$value": "{color.red.200}"
+        },
+        "300": {
+          "$value": "{color.red.300}"
+        },
+        "400": {
+          "$value": "{color.red.400}"
+        },
+        "500": {
+          "$value": "{color.red.500}"
+        },
+        "600": {
+          "$value": "{color.red.600}"
+        },
+        "700": {
+          "$value": "{color.red.700}"
+        },
+        "800": {
+          "$value": "{color.red.800}"
+        },
+        "900": {
+          "$value": "{color.red.900}"
+        },
+        "$description": "Rôle « danger » — joué par la palette « red ».",
+        "alpha": {
+          "5": {
+            "$value": "{color.red.alpha.5}"
+          },
+          "10": {
+            "$value": "{color.red.alpha.10}"
+          }
+        }
+      },
+      "info": {
+        "25": {
+          "$value": "{color.blue.25}"
+        },
+        "50": {
+          "$value": "{color.blue.50}"
+        },
+        "100": {
+          "$value": "{color.blue.100}"
+        },
+        "200": {
+          "$value": "{color.blue.200}"
+        },
+        "300": {
+          "$value": "{color.blue.300}"
+        },
+        "400": {
+          "$value": "{color.blue.400}"
+        },
+        "500": {
+          "$value": "{color.blue.500}"
+        },
+        "600": {
+          "$value": "{color.blue.600}"
+        },
+        "700": {
+          "$value": "{color.blue.700}"
+        },
+        "800": {
+          "$value": "{color.blue.800}"
+        },
+        "900": {
+          "$value": "{color.blue.900}"
+        },
+        "$description": "Rôle « info » — joué par la palette « blue ».",
+        "alpha": {
+          "5": {
+            "$value": "{color.blue.alpha.5}"
+          },
+          "10": {
+            "$value": "{color.blue.alpha.10}"
+          }
+        }
+      },
+      "categorical": {
+        "1": {
+          "main": {
+            "$value": "{color.violet.600}"
+          },
+          "tint": {
+            "$value": "{color.violet.alpha.10}"
+          }
+        },
+        "2": {
+          "main": {
+            "$value": "{color.blue.600}"
+          },
+          "tint": {
+            "$value": "{color.blue.alpha.10}"
+          }
+        },
+        "3": {
+          "main": {
+            "$value": "{color.green.600}"
+          },
+          "tint": {
+            "$value": "{color.green.alpha.10}"
+          }
+        },
+        "4": {
+          "main": {
+            "$value": "{color.orange.600}"
+          },
+          "tint": {
+            "$value": "{color.orange.alpha.10}"
+          }
+        },
+        "5": {
+          "main": {
+            "$value": "{color.red.600}"
+          },
+          "tint": {
+            "$value": "{color.red.alpha.10}"
+          }
+        },
+        "6": {
+          "main": {
+            "$value": "{color.turquoise.600}"
+          },
+          "tint": {
+            "$value": "{color.turquoise.alpha.10}"
+          }
+        },
+        "$description": "Teintes distinguables pour graphiques, avatars et tags."
+      }
+    }
+  }
+}

@@ -1,0 +1,365 @@
+{
+  "color": {
+    "$type": "color",
+    "role": {
+      "primary": {
+        "main": {
+          "$value": "{color.brand.primary.400}",
+          "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
+        },
+        "hover": {
+          "$value": "{color.brand.primary.300}",
+          "$description": "Élévation au survol d’un composant plein."
+        },
+        "active": {
+          "$value": "{color.brand.primary.200}",
+          "$description": "Élévation à l’état pressé."
+        },
+        "on": {
+          "$value": "{color.brand.neutral.900}",
+          "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
+        },
+        "text": {
+          "$value": "{color.brand.primary.400}",
+          "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
+        },
+        "border": {
+          "$value": "{color.brand.primary.700}",
+          "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
+        },
+        "subtle": {
+          "$value": "{color.brand.primary.900}",
+          "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
+        },
+        "tint": {
+          "$value": "{color.brand.primary.alpha.5}",
+          "$description": "Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark."
+        },
+        "tintStrong": {
+          "$value": "{color.brand.primary.alpha.10}",
+          "$description": "Voile translucide 10 % — état pressé des variantes outlined/ghost."
+        }
+      },
+      "neutral": {
+        "main": {
+          "$value": "{color.brand.neutral.400}",
+          "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
+        },
+        "hover": {
+          "$value": "{color.brand.neutral.300}",
+          "$description": "Élévation au survol d’un composant plein."
+        },
+        "active": {
+          "$value": "{color.brand.neutral.200}",
+          "$description": "Élévation à l’état pressé."
+        },
+        "on": {
+          "$value": "{color.brand.neutral.900}",
+          "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
+        },
+        "text": {
+          "$value": "{color.brand.neutral.400}",
+          "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
+        },
+        "border": {
+          "$value": "{color.brand.neutral.700}",
+          "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
+        },
+        "subtle": {
+          "$value": "{color.brand.neutral.900}",
+          "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
+        },
+        "tint": {
+          "$value": "{color.brand.neutral.alpha.5}",
+          "$description": "Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark."
+        },
+        "tintStrong": {
+          "$value": "{color.brand.neutral.alpha.10}",
+          "$description": "Voile translucide 10 % — état pressé des variantes outlined/ghost."
+        }
+      },
+      "success": {
+        "main": {
+          "$value": "{color.brand.success.400}",
+          "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
+        },
+        "hover": {
+          "$value": "{color.brand.success.300}",
+          "$description": "Élévation au survol d’un composant plein."
+        },
+        "active": {
+          "$value": "{color.brand.success.200}",
+          "$description": "Élévation à l’état pressé."
+        },
+        "on": {
+          "$value": "{color.brand.neutral.900}",
+          "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
+        },
+        "text": {
+          "$value": "{color.brand.success.400}",
+          "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
+        },
+        "border": {
+          "$value": "{color.brand.success.700}",
+          "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
+        },
+        "subtle": {
+          "$value": "{color.brand.success.900}",
+          "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
+        },
+        "tint": {
+          "$value": "{color.brand.success.alpha.5}",
+          "$description": "Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark."
+        },
+        "tintStrong": {
+          "$value": "{color.brand.success.alpha.10}",
+          "$description": "Voile translucide 10 % — état pressé des variantes outlined/ghost."
+        }
+      },
+      "warning": {
+        "main": {
+          "$value": "{color.brand.warning.400}",
+          "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
+        },
+        "hover": {
+          "$value": "{color.brand.warning.300}",
+          "$description": "Élévation au survol d’un composant plein."
+        },
+        "active": {
+          "$value": "{color.brand.warning.200}",
+          "$description": "Élévation à l’état pressé."
+        },
+        "on": {
+          "$value": "{color.brand.neutral.900}",
+          "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
+        },
+        "text": {
+          "$value": "{color.brand.warning.400}",
+          "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
+        },
+        "border": {
+          "$value": "{color.brand.warning.700}",
+          "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
+        },
+        "subtle": {
+          "$value": "{color.brand.warning.900}",
+          "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
+        },
+        "tint": {
+          "$value": "{color.brand.warning.alpha.5}",
+          "$description": "Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark."
+        },
+        "tintStrong": {
+          "$value": "{color.brand.warning.alpha.10}",
+          "$description": "Voile translucide 10 % — état pressé des variantes outlined/ghost."
+        }
+      },
+      "danger": {
+        "main": {
+          "$value": "{color.brand.danger.400}",
+          "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
+        },
+        "hover": {
+          "$value": "{color.brand.danger.300}",
+          "$description": "Élévation au survol d’un composant plein."
+        },
+        "active": {
+          "$value": "{color.brand.danger.200}",
+          "$description": "Élévation à l’état pressé."
+        },
+        "on": {
+          "$value": "{color.brand.neutral.900}",
+          "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
+        },
+        "text": {
+          "$value": "{color.brand.danger.400}",
+          "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
+        },
+        "border": {
+          "$value": "{color.brand.danger.700}",
+          "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
+        },
+        "subtle": {
+          "$value": "{color.brand.danger.900}",
+          "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
+        },
+        "tint": {
+          "$value": "{color.brand.danger.alpha.5}",
+          "$description": "Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark."
+        },
+        "tintStrong": {
+          "$value": "{color.brand.danger.alpha.10}",
+          "$description": "Voile translucide 10 % — état pressé des variantes outlined/ghost."
+        }
+      },
+      "info": {
+        "main": {
+          "$value": "{color.brand.info.400}",
+          "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
+        },
+        "hover": {
+          "$value": "{color.brand.info.300}",
+          "$description": "Élévation au survol d’un composant plein."
+        },
+        "active": {
+          "$value": "{color.brand.info.200}",
+          "$description": "Élévation à l’état pressé."
+        },
+        "on": {
+          "$value": "{color.brand.neutral.900}",
+          "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
+        },
+        "text": {
+          "$value": "{color.brand.info.400}",
+          "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
+        },
+        "border": {
+          "$value": "{color.brand.info.700}",
+          "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
+        },
+        "subtle": {
+          "$value": "{color.brand.info.900}",
+          "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
+        },
+        "tint": {
+          "$value": "{color.brand.info.alpha.5}",
+          "$description": "Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark."
+        },
+        "tintStrong": {
+          "$value": "{color.brand.info.alpha.10}",
+          "$description": "Voile translucide 10 % — état pressé des variantes outlined/ghost."
+        }
+      }
+    },
+    "surface": {
+      "base": {
+        "$value": "{color.brand.neutral.900}",
+        "$description": "Fond de l’application."
+      },
+      "raised": {
+        "$value": "{color.brand.neutral.800}",
+        "$description": "Fond d’un bloc surélevé (carte, panneau)."
+      },
+      "overlay": {
+        "$value": "{color.brand.neutral.700}",
+        "$description": "Fond d’un élément flottant (popover, menu, modale)."
+      },
+      "sunken": {
+        "$value": "{color.brand.neutral.900}",
+        "$description": "Fond en creux (piste de slider, zone de dépôt)."
+      },
+      "inverse": {
+        "$value": "{color.brand.neutral.25}",
+        "$description": "Rupture visuelle négative (tooltip, bandeau)."
+      },
+      "disabled": {
+        "$value": "{color.brand.neutral.800}",
+        "$description": "Fond d’un composant désactivé."
+      },
+      "transparent": {
+        "$value": "{color.transparent}",
+        "$description": "Fond absent (variantes outlined/ghost)."
+      }
+    },
+    "text": {
+      "body": {
+        "$value": "{color.brand.neutral.25}",
+        "$description": "Texte de lecture."
+      },
+      "muted": {
+        "$value": "{color.brand.neutral.300}",
+        "$description": "Texte secondaire, moins appuyé."
+      },
+      "disabled": {
+        "$value": "{color.brand.neutral.600}",
+        "$description": "Texte d’un composant désactivé."
+      },
+      "inverse": {
+        "$value": "{color.brand.neutral.900}",
+        "$description": "Texte posé sur `surface.inverse`."
+      }
+    },
+    "border": {
+      "default": {
+        "$value": "{color.brand.neutral.700}",
+        "$description": "Bordure par défaut de tous les composants."
+      },
+      "strong": {
+        "$value": "{color.brand.neutral.500}",
+        "$description": "Bordure appuyée."
+      },
+      "divider": {
+        "$value": "{color.brand.neutral.800}",
+        "$description": "Séparateur entre deux blocs de contenu."
+      },
+      "disabled": {
+        "$value": "{color.brand.neutral.700}",
+        "$description": "Bordure d’un composant désactivé."
+      },
+      "transparent": {
+        "$value": "{color.transparent}",
+        "$description": "Bordure absente."
+      }
+    },
+    "focus": {
+      "ring": {
+        "$value": "{color.brand.primary.400}",
+        "$description": "Anneau de focus clavier. Doit rester visible sur tous les fonds."
+      }
+    },
+    "scrim": {
+      "$value": "{color.brand.neutral.alpha.10}",
+      "$description": "Voile assombrissant sous une modale ou un drawer."
+    },
+    "categorical": {
+      "1": {
+        "main": {
+          "$value": "{color.brand.categorical.1.main}"
+        },
+        "tint": {
+          "$value": "{color.brand.categorical.1.tint}"
+        }
+      },
+      "2": {
+        "main": {
+          "$value": "{color.brand.categorical.2.main}"
+        },
+        "tint": {
+          "$value": "{color.brand.categorical.2.tint}"
+        }
+      },
+      "3": {
+        "main": {
+          "$value": "{color.brand.categorical.3.main}"
+        },
+        "tint": {
+          "$value": "{color.brand.categorical.3.tint}"
+        }
+      },
+      "4": {
+        "main": {
+          "$value": "{color.brand.categorical.4.main}"
+        },
+        "tint": {
+          "$value": "{color.brand.categorical.4.tint}"
+        }
+      },
+      "5": {
+        "main": {
+          "$value": "{color.brand.categorical.5.main}"
+        },
+        "tint": {
+          "$value": "{color.brand.categorical.5.tint}"
+        }
+      },
+      "6": {
+        "main": {
+          "$value": "{color.brand.categorical.6.main}"
+        },
+        "tint": {
+          "$value": "{color.brand.categorical.6.tint}"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "space": {
+    "$type": "dimension",
+    "xs": { "$value": "{size.spacing.2}" },
+    "sm": { "$value": "{size.spacing.3}" },
+    "md": { "$value": "{size.spacing.5}" },
+    "lg": { "$value": "{size.spacing.7}" },
+    "xl": { "$value": "{size.spacing.8}" }
+  },
+  "radius": {
+    "$type": "dimension",
+    "sm":   { "$value": "{size.radius.sm}" },
+    "md":   { "$value": "{size.radius.md}" },
+    "lg":   { "$value": "{size.radius.lg}" },
+    "full": { "$value": "{size.radius.full}" }
+  },
+  "borderWidth": {
+    "$type": "dimension",
+    "default": { "$value": "{size.border.sm}" },
+    "strong":  { "$value": "{size.border.md}" },
+    "focus":   { "$value": "{size.border.md}" }
+  },
+  "fontSize": {
+    "$type": "dimension",
+    "small": { "$value": "{size.font.sm}" },
+    "body":  { "$value": "{size.font.md}" },
+    "lead":  { "$value": "{size.font.lg}" },
+    "h3":    { "$value": "{size.font.xl}" },
+    "h2":    { "$value": "{size.font.2xl}" },
+    "h1":    { "$value": "{size.font.4xl}" }
+  }
+}

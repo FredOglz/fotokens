@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build output (généré par Style Dictionary)
+dist/
+
+# Logs
+npm-debug.log*
+*.log
+
+# OS / éditeurs
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Réglages Claude Code locaux à la machine
+.claude/settings.local.json

@@ -1,0 +1,112 @@
+{
+  "color": {
+    "$type": "color",
+    "input": {
+      "default": {
+        "background": {
+          "$value": "{color.surface.base}"
+        },
+        "text": {
+          "$value": "{color.text.body}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        }
+      },
+      "hover": {
+        "background": {
+          "$value": "{color.surface.base}"
+        },
+        "text": {
+          "$value": "{color.text.body}"
+        },
+        "border": {
+          "$value": "{color.border.strong}"
+        }
+      },
+      "focus": {
+        "background": {
+          "$value": "{color.surface.base}"
+        },
+        "text": {
+          "$value": "{color.text.body}"
+        },
+        "border": {
+          "$value": "{color.role.primary.main}"
+        }
+      },
+      "disabled": {
+        "background": {
+          "$value": "{color.surface.disabled}"
+        },
+        "text": {
+          "$value": "{color.text.disabled}"
+        },
+        "border": {
+          "$value": "{color.border.disabled}"
+        }
+      },
+      "error": {
+        "background": {
+          "$value": "{color.surface.base}"
+        },
+        "text": {
+          "$value": "{color.text.body}"
+        },
+        "border": {
+          "$value": "{color.role.danger.main}"
+        }
+      }
+    }
+  },
+  "space": {
+    "$type": "dimension",
+    "input": {
+      "paddingX": {
+        "$value": "{space.sm}"
+      },
+      "paddingY": {
+        "$value": "{space.sm}"
+      }
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "input": {
+      "$value": "{radius.sm}"
+    }
+  },
+  "borderWidth": {
+    "$type": "dimension",
+    "input": {
+      "default": {
+        "$value": "{borderWidth.default}"
+      },
+      "focus": {
+        "$value": "{borderWidth.focus}"
+      }
+    }
+  },
+  "fontSize": {
+    "$type": "dimension",
+    "input": {
+      "$value": "{fontSize.body}"
+    }
+  },
+  "typography": {
+    "input": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{typography.body.family}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.body.weight}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{typography.body.lineHeight}"
+      }
+    }
+  }
+}

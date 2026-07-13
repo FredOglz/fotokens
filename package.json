@@ -1,0 +1,33 @@
+{
+  "name": "@fred/design-tokens",
+  "version": "0.1.0",
+  "description": "Librairie de design tokens (primitives → alias → composants), transformée avec Style Dictionary.",
+  "type": "module",
+  "private": true,
+  "files": [
+    "dist",
+    "tokens"
+  ],
+  "main": "dist/tokens.json",
+  "style": "dist/tokens.css",
+  "scripts": {
+    "build": "node config/build.js && node scripts/build-docs.js",
+    "theme": "node scripts/generate-theme.js && npm run build",
+    "ramps": "node scripts/generate-ramps.js",
+    "ramps:write": "node scripts/generate-ramps.js --write",
+    "docs": "node scripts/build-docs.js",
+    "watch": "chokidar \"tokens/**/*.json\" \"config/**/*.js\" \"scripts/**/*.js\" -c \"npm run build\" --initial",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "design-tokens",
+    "style-dictionary",
+    "css-variables",
+    "design-system"
+  ],
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "style-dictionary": "^4.0.0"
+  }
+}

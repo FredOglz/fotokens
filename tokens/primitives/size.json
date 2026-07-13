@@ -1,0 +1,55 @@
+{
+  "size": {
+    "$type": "dimension",
+    "spacing": {
+      "$description": "Échelle d'espacement brute. Sert aux paddings et aux gaps.",
+      "0":  { "$value": "0" },
+      "1":  { "$value": "2px" },
+      "2":  { "$value": "4px" },
+      "3":  { "$value": "8px" },
+      "4":  { "$value": "12px" },
+      "5":  { "$value": "16px" },
+      "6":  { "$value": "20px" },
+      "7":  { "$value": "24px" },
+      "8":  { "$value": "32px" },
+      "9":  { "$value": "40px" },
+      "10": { "$value": "48px" },
+      "11": { "$value": "64px" }
+    },
+    "font": {
+      "$description": "Échelle de corps de texte brute.",
+      "xs":  { "$value": "12px" },
+      "sm":  { "$value": "14px" },
+      "md":  { "$value": "16px" },
+      "lg":  { "$value": "20px" },
+      "xl":  { "$value": "24px" },
+      "2xl": { "$value": "32px" },
+      "3xl": { "$value": "40px" },
+      "4xl": { "$value": "48px" }
+    },
+    "radius": {
+      "$description": "Échelle d'arrondi brute.",
+      "none": { "$value": "0" },
+      "sm":   { "$value": "4px" },
+      "md":   { "$value": "8px" },
+      "lg":   { "$value": "16px" },
+      "xl":   { "$value": "24px" },
+      "full": { "$value": "9999px" }
+    },
+    "border": {
+      "$description": "Échelle d'épaisseur de bordure brute.",
+      "none": { "$value": "0" },
+      "sm":   { "$value": "1px" },
+      "md":   { "$value": "2px" },
+      "lg":   { "$value": "4px" }
+    },
+    "breakpoint": {
+      "$description": "Points de rupture. Une media query CSS ne peut pas lire une custom property : la valeur est inlinée par le build.",
+      "xs": { "$value": "480px" },
+      "sm": { "$value": "640px" },
+      "md": { "$value": "768px" },
+      "lg": { "$value": "1024px" },
+      "xl": { "$value": "1280px" }
+    }
+  }
+}

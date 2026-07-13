@@ -1,0 +1,19 @@
+{
+  "typography": {
+    "body": {
+      "family":     { "$type": "fontFamily", "$value": "{font.family.sans}", "$description": "Police du texte de lecture." },
+      "weight":     { "$type": "fontWeight", "$value": "{font.weight.regular}" },
+      "lineHeight": { "$type": "number",     "$value": "{font.lineHeight.normal}" }
+    },
+    "heading": {
+      "family":     { "$type": "fontFamily", "$value": "{font.family.sans}", "$description": "Police des titres." },
+      "weight":     { "$type": "fontWeight", "$value": "{font.weight.bold}" },
+      "lineHeight": { "$type": "number",     "$value": "{font.lineHeight.tight}" }
+    },
+    "code": {
+      "family":     { "$type": "fontFamily", "$value": "{font.family.mono}", "$description": "Police du code et des valeurs techniques." },
+      "weight":     { "$type": "fontWeight", "$value": "{font.weight.regular}" },
+      "lineHeight": { "$type": "number",     "$value": "{font.lineHeight.normal}" }
+    }
+  }
+}
