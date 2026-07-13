@@ -1,6 +1,6 @@
 {
   "color": {
-    "input": {
+    "select": {
       "default": {
         "background": {
           "$value": "{color.surface.base}"
@@ -12,6 +12,9 @@
           "$value": "{color.border.default}"
         },
         "placeholder": {
+          "$value": "{color.text.muted}"
+        },
+        "icon": {
           "$value": "{color.text.muted}"
         }
       },
@@ -27,6 +30,9 @@
         },
         "placeholder": {
           "$value": "{color.text.muted}"
+        },
+        "icon": {
+          "$value": "{color.text.muted}"
         }
       },
       "focus": {
@@ -40,6 +46,9 @@
           "$value": "{color.role.primary.main}"
         },
         "placeholder": {
+          "$value": "{color.text.muted}"
+        },
+        "icon": {
           "$value": "{color.text.muted}"
         }
       },
@@ -55,6 +64,9 @@
         },
         "placeholder": {
           "$value": "{color.text.disabled}"
+        },
+        "icon": {
+          "$value": "{color.text.disabled}"
         }
       },
       "error": {
@@ -69,13 +81,16 @@
         },
         "placeholder": {
           "$value": "{color.text.muted}"
+        },
+        "icon": {
+          "$value": "{color.text.muted}"
         }
       }
     },
     "$type": "color"
   },
   "size": {
-    "input": {
+    "select": {
       "sm": {
         "height": {
           "$value": "{controlHeight.sm}"
@@ -104,7 +119,7 @@
     "$type": "dimension"
   },
   "space": {
-    "input": {
+    "select": {
       "sm": {
         "paddingX": {
           "$value": "{space.sm}"
@@ -142,7 +157,7 @@
     "$type": "dimension"
   },
   "fontSize": {
-    "input": {
+    "select": {
       "sm": {
         "$value": "{fontSize.small}"
       },
@@ -156,7 +171,7 @@
     "$type": "dimension"
   },
   "radius": {
-    "input": {
+    "select": {
       "sm": {
         "$value": "{radius.sm}"
       },
@@ -170,7 +185,7 @@
     "$type": "dimension"
   },
   "borderWidth": {
-    "input": {
+    "select": {
       "sm": {
         "$value": "{borderWidth.default}"
       },

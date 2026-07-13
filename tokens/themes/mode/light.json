@@ -4,31 +4,31 @@
     "role": {
       "primary": {
         "main": {
-          "$value": "{color.brand.primary.400}",
+          "$value": "{color.brand.primary.600}",
           "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
         },
         "hover": {
-          "$value": "{color.brand.primary.300}",
+          "$value": "{color.brand.primary.700}",
           "$description": "Élévation au survol d’un composant plein."
         },
         "active": {
-          "$value": "{color.brand.primary.200}",
+          "$value": "{color.brand.primary.800}",
           "$description": "Élévation à l’état pressé."
         },
         "on": {
-          "$value": "{color.brand.neutral.900}",
+          "$value": "{color.brand.neutral.25}",
           "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
         },
         "text": {
-          "$value": "{color.brand.primary.400}",
+          "$value": "{color.brand.primary.700}",
           "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
         },
         "border": {
-          "$value": "{color.brand.primary.700}",
+          "$value": "{color.brand.primary.300}",
           "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
         },
         "subtle": {
-          "$value": "{color.brand.primary.900}",
+          "$value": "{color.brand.primary.50}",
           "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
         },
         "tint": {
@@ -42,31 +42,31 @@
       },
       "neutral": {
         "main": {
-          "$value": "{color.brand.neutral.400}",
+          "$value": "{color.brand.neutral.600}",
           "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
         },
         "hover": {
-          "$value": "{color.brand.neutral.300}",
+          "$value": "{color.brand.neutral.700}",
           "$description": "Élévation au survol d’un composant plein."
         },
         "active": {
-          "$value": "{color.brand.neutral.200}",
+          "$value": "{color.brand.neutral.800}",
           "$description": "Élévation à l’état pressé."
         },
         "on": {
-          "$value": "{color.brand.neutral.900}",
+          "$value": "{color.brand.neutral.25}",
           "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
         },
         "text": {
-          "$value": "{color.brand.neutral.400}",
+          "$value": "{color.brand.neutral.700}",
           "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
         },
         "border": {
-          "$value": "{color.brand.neutral.700}",
+          "$value": "{color.brand.neutral.300}",
           "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
         },
         "subtle": {
-          "$value": "{color.brand.neutral.900}",
+          "$value": "{color.brand.neutral.50}",
           "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
         },
         "tint": {
@@ -80,31 +80,31 @@
       },
       "success": {
         "main": {
-          "$value": "{color.brand.success.400}",
+          "$value": "{color.brand.success.600}",
           "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
         },
         "hover": {
-          "$value": "{color.brand.success.300}",
+          "$value": "{color.brand.success.700}",
           "$description": "Élévation au survol d’un composant plein."
         },
         "active": {
-          "$value": "{color.brand.success.200}",
+          "$value": "{color.brand.success.800}",
           "$description": "Élévation à l’état pressé."
         },
         "on": {
-          "$value": "{color.brand.neutral.900}",
+          "$value": "{color.brand.neutral.25}",
           "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
         },
         "text": {
-          "$value": "{color.brand.success.400}",
+          "$value": "{color.brand.success.700}",
           "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
         },
         "border": {
-          "$value": "{color.brand.success.700}",
+          "$value": "{color.brand.success.300}",
           "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
         },
         "subtle": {
-          "$value": "{color.brand.success.900}",
+          "$value": "{color.brand.success.50}",
           "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
         },
         "tint": {
@@ -118,31 +118,31 @@
       },
       "warning": {
         "main": {
-          "$value": "{color.brand.warning.400}",
+          "$value": "{color.brand.warning.600}",
           "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
         },
         "hover": {
-          "$value": "{color.brand.warning.300}",
+          "$value": "{color.brand.warning.700}",
           "$description": "Élévation au survol d’un composant plein."
         },
         "active": {
-          "$value": "{color.brand.warning.200}",
+          "$value": "{color.brand.warning.800}",
           "$description": "Élévation à l’état pressé."
         },
         "on": {
-          "$value": "{color.brand.neutral.900}",
+          "$value": "{color.brand.neutral.25}",
           "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
         },
         "text": {
-          "$value": "{color.brand.warning.400}",
+          "$value": "{color.brand.warning.700}",
           "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
         },
         "border": {
-          "$value": "{color.brand.warning.700}",
+          "$value": "{color.brand.warning.300}",
           "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
         },
         "subtle": {
-          "$value": "{color.brand.warning.900}",
+          "$value": "{color.brand.warning.50}",
           "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
         },
         "tint": {
@@ -156,31 +156,31 @@
       },
       "danger": {
         "main": {
-          "$value": "{color.brand.danger.400}",
+          "$value": "{color.brand.danger.600}",
           "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
         },
         "hover": {
-          "$value": "{color.brand.danger.300}",
+          "$value": "{color.brand.danger.700}",
           "$description": "Élévation au survol d’un composant plein."
         },
         "active": {
-          "$value": "{color.brand.danger.200}",
+          "$value": "{color.brand.danger.800}",
           "$description": "Élévation à l’état pressé."
         },
         "on": {
-          "$value": "{color.brand.neutral.900}",
+          "$value": "{color.brand.neutral.25}",
           "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
         },
         "text": {
-          "$value": "{color.brand.danger.400}",
+          "$value": "{color.brand.danger.700}",
           "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
         },
         "border": {
-          "$value": "{color.brand.danger.700}",
+          "$value": "{color.brand.danger.300}",
           "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
         },
         "subtle": {
-          "$value": "{color.brand.danger.900}",
+          "$value": "{color.brand.danger.50}",
           "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
         },
         "tint": {
@@ -194,31 +194,31 @@
       },
       "info": {
         "main": {
-          "$value": "{color.brand.info.400}",
+          "$value": "{color.brand.info.600}",
           "$description": "Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle."
         },
         "hover": {
-          "$value": "{color.brand.info.300}",
+          "$value": "{color.brand.info.700}",
           "$description": "Élévation au survol d’un composant plein."
         },
         "active": {
-          "$value": "{color.brand.info.200}",
+          "$value": "{color.brand.info.800}",
           "$description": "Élévation à l’état pressé."
         },
         "on": {
-          "$value": "{color.brand.neutral.900}",
+          "$value": "{color.brand.neutral.25}",
           "$description": "Texte et icônes posés SUR une surface « main ». Contraste AA garanti."
         },
         "text": {
-          "$value": "{color.brand.info.400}",
+          "$value": "{color.brand.info.700}",
           "$description": "Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte)."
         },
         "border": {
-          "$value": "{color.brand.info.700}",
+          "$value": "{color.brand.info.300}",
           "$description": "Bordure discrète aux couleurs du rôle (outlined, alerte)."
         },
         "subtle": {
-          "$value": "{color.brand.info.900}",
+          "$value": "{color.brand.info.50}",
           "$description": "Fond clair SOLIDE (fond d’alerte, badge doux)."
         },
         "tint": {
@@ -233,27 +233,27 @@
     },
     "surface": {
       "base": {
-        "$value": "{color.brand.neutral.900}",
+        "$value": "{color.brand.neutral.25}",
         "$description": "Fond de l’application."
       },
       "raised": {
-        "$value": "{color.brand.neutral.800}",
+        "$value": "{color.brand.neutral.50}",
         "$description": "Fond d’un bloc surélevé (carte, panneau)."
       },
       "overlay": {
-        "$value": "{color.brand.neutral.700}",
+        "$value": "{color.brand.neutral.25}",
         "$description": "Fond d’un élément flottant (popover, menu, modale)."
       },
       "sunken": {
-        "$value": "{color.brand.neutral.900}",
+        "$value": "{color.brand.neutral.100}",
         "$description": "Fond en creux (piste de slider, zone de dépôt)."
       },
       "inverse": {
-        "$value": "{color.brand.neutral.25}",
+        "$value": "{color.brand.neutral.900}",
         "$description": "Rupture visuelle négative (tooltip, bandeau)."
       },
       "disabled": {
-        "$value": "{color.brand.neutral.800}",
+        "$value": "{color.brand.neutral.100}",
         "$description": "Fond d’un composant désactivé."
       },
       "transparent": {
@@ -262,38 +262,46 @@
       }
     },
     "text": {
+      "strong": {
+        "$value": "{color.brand.neutral.900}",
+        "$description": "Titres et libellés d’interface appuyés. Le contraste maximal."
+      },
       "body": {
-        "$value": "{color.brand.neutral.25}",
+        "$value": "{color.brand.neutral.800}",
         "$description": "Texte de lecture."
       },
       "muted": {
-        "$value": "{color.brand.neutral.300}",
-        "$description": "Texte secondaire, moins appuyé."
+        "$value": "{color.brand.neutral.600}",
+        "$description": "Texte secondaire (légende, description)."
+      },
+      "faint": {
+        "$value": "{color.brand.neutral.400}",
+        "$description": "⚠ NE PASSE PAS AA — décoratif uniquement (séparateurs, échafaudage). Jamais pour du texte à lire."
       },
       "disabled": {
-        "$value": "{color.brand.neutral.600}",
+        "$value": "{color.brand.neutral.300}",
         "$description": "Texte d’un composant désactivé."
       },
       "inverse": {
-        "$value": "{color.brand.neutral.900}",
+        "$value": "{color.brand.neutral.25}",
         "$description": "Texte posé sur `surface.inverse`."
       }
     },
     "border": {
       "default": {
-        "$value": "{color.brand.neutral.700}",
+        "$value": "{color.brand.neutral.200}",
         "$description": "Bordure par défaut de tous les composants."
       },
       "strong": {
-        "$value": "{color.brand.neutral.500}",
+        "$value": "{color.brand.neutral.400}",
         "$description": "Bordure appuyée."
       },
       "divider": {
-        "$value": "{color.brand.neutral.800}",
+        "$value": "{color.brand.neutral.100}",
         "$description": "Séparateur entre deux blocs de contenu."
       },
       "disabled": {
-        "$value": "{color.brand.neutral.700}",
+        "$value": "{color.brand.neutral.200}",
         "$description": "Bordure d’un composant désactivé."
       },
       "transparent": {
@@ -301,14 +309,28 @@
         "$description": "Bordure absente."
       }
     },
+    "state": {
+      "hover": {
+        "$value": "{color.alpha.black.4}",
+        "$description": "Voile de survol neutre (ligne de tableau, item de liste)."
+      },
+      "selected": {
+        "$value": "{color.alpha.black.8}",
+        "$description": "Voile d’un élément sélectionné."
+      },
+      "active": {
+        "$value": "{color.alpha.black.12}",
+        "$description": "Voile d’un élément pressé."
+      }
+    },
     "focus": {
       "ring": {
-        "$value": "{color.brand.primary.400}",
+        "$value": "{color.brand.primary.500}",
         "$description": "Anneau de focus clavier. Doit rester visible sur tous les fonds."
       }
     },
     "scrim": {
-      "$value": "{color.brand.neutral.alpha.10}",
+      "$value": "{color.alpha.black.60}",
       "$description": "Voile assombrissant sous une modale ou un drawer."
     },
     "categorical": {
@@ -360,6 +382,39 @@
           "$value": "{color.brand.categorical.6.tint}"
         }
       }
+    }
+  },
+  "shadow": {
+    "$type": "shadow",
+    "raised": {
+      "$value": {
+        "offsetX": "0",
+        "offsetY": "{elevation.raised.offsetY}",
+        "blur": "{elevation.raised.blur}",
+        "spread": "{elevation.raised.spread}",
+        "color": "{color.alpha.black.8}"
+      },
+      "$description": "Légère élévation (carte au repos)."
+    },
+    "float": {
+      "$value": {
+        "offsetX": "0",
+        "offsetY": "{elevation.float.offsetY}",
+        "blur": "{elevation.float.blur}",
+        "spread": "{elevation.float.spread}",
+        "color": "{color.alpha.black.16}"
+      },
+      "$description": "Élément flottant (carte au survol, dropdown)."
+    },
+    "overlay": {
+      "$value": {
+        "offsetX": "0",
+        "offsetY": "{elevation.overlay.offsetY}",
+        "blur": "{elevation.overlay.blur}",
+        "spread": "{elevation.overlay.spread}",
+        "color": "{color.alpha.black.40}"
+      },
+      "$description": "Élément détaché de la page (modale, drawer)."
     }
   }
 }

@@ -1,32 +1,99 @@
 {
   "space": {
     "$type": "dimension",
-    "xs": { "$value": "{size.spacing.1}" },
-    "sm": { "$value": "{size.spacing.2}" },
-    "md": { "$value": "{size.spacing.4}" },
-    "lg": { "$value": "{size.spacing.5}" },
-    "xl": { "$value": "{size.spacing.7}" }
+    "xs": {
+      "$value": "{size.spacing.1}"
+    },
+    "sm": {
+      "$value": "{size.spacing.2}"
+    },
+    "md": {
+      "$value": "{size.spacing.4}"
+    },
+    "lg": {
+      "$value": "{size.spacing.5}"
+    },
+    "xl": {
+      "$value": "{size.spacing.7}"
+    }
   },
   "radius": {
     "$type": "dimension",
-    "sm":   { "$value": "{size.radius.sm}" },
-    "md":   { "$value": "{size.radius.md}" },
-    "lg":   { "$value": "{size.radius.md}" },
-    "full": { "$value": "{size.radius.full}" }
+    "sm": {
+      "$value": "{size.radius.sm}"
+    },
+    "md": {
+      "$value": "{size.radius.md}"
+    },
+    "lg": {
+      "$value": "{size.radius.md}"
+    },
+    "full": {
+      "$value": "{size.radius.full}"
+    }
   },
   "borderWidth": {
     "$type": "dimension",
-    "default": { "$value": "{size.border.sm}" },
-    "strong":  { "$value": "{size.border.md}" },
-    "focus":   { "$value": "{size.border.md}" }
+    "default": {
+      "$value": "{size.border.sm}"
+    },
+    "strong": {
+      "$value": "{size.border.md}"
+    },
+    "focus": {
+      "$value": "{size.border.md}"
+    }
   },
   "fontSize": {
     "$type": "dimension",
-    "small": { "$value": "{size.font.xs}" },
-    "body":  { "$value": "{size.font.md}" },
-    "lead":  { "$value": "{size.font.md}" },
-    "h3":    { "$value": "{size.font.lg}" },
-    "h2":    { "$value": "{size.font.xl}" },
-    "h1":    { "$value": "{size.font.2xl}" }
+    "small": {
+      "$value": "{size.font.xs}"
+    },
+    "body": {
+      "$value": "{size.font.md}"
+    },
+    "lead": {
+      "$value": "{size.font.md}"
+    },
+    "h3": {
+      "$value": "{size.font.lg}"
+    },
+    "h2": {
+      "$value": "{size.font.xl}"
+    },
+    "h1": {
+      "$value": "{size.font.2xl}"
+    }
+  },
+  "controlHeight": {
+    "$type": "dimension",
+    "$description": "Hauteur des contrôles interactifs. Sur mobile, elles GRANDISSENT : une cible tactile doit faire au moins 44px (WCAG 2.5.5). C'est la seule famille de tailles qui augmente au lieu de diminuer.",
+    "xs": {
+      "$value": "{size.control.sm}"
+    },
+    "sm": {
+      "$value": "{size.control.md}"
+    },
+    "md": {
+      "$value": "{size.control.xl}"
+    },
+    "lg": {
+      "$value": "{size.control.xl}"
+    }
+  },
+  "glyphSize": {
+    "$type": "dimension",
+    "xs": {
+      "$value": "{size.glyph.sm}"
+    },
+    "sm": {
+      "$value": "{size.glyph.md}"
+    },
+    "md": {
+      "$value": "{size.glyph.md}"
+    },
+    "lg": {
+      "$value": "{size.glyph.lg}"
+    }
   }
 }

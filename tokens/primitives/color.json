@@ -2,6 +2,25 @@
   "color": {
     "$type": "color",
     "transparent": { "$value": "rgba(0, 0, 0, 0)", "$description": "Absence de couleur — fond des variantes outlined/ghost." },
+    "white": { "$value": "#ffffff" },
+    "black": { "$value": "#000000" },
+    "alpha": {
+      "$description": "Voiles neutres absolus, indépendants des palettes : survol neutre, scrim, ombres. Ne changent pas au rebranding.",
+      "white": {
+        "4":  { "$value": "rgba(255, 255, 255, 0.04)" },
+        "8":  { "$value": "rgba(255, 255, 255, 0.08)" },
+        "12": { "$value": "rgba(255, 255, 255, 0.12)" },
+        "16": { "$value": "rgba(255, 255, 255, 0.16)" }
+      },
+      "black": {
+        "4":  { "$value": "rgba(0, 0, 0, 0.04)" },
+        "8":  { "$value": "rgba(0, 0, 0, 0.08)" },
+        "12": { "$value": "rgba(0, 0, 0, 0.12)" },
+        "16": { "$value": "rgba(0, 0, 0, 0.16)" },
+        "40": { "$value": "rgba(0, 0, 0, 0.4)" },
+        "60": { "$value": "rgba(0, 0, 0, 0.6)" }
+      }
+    },
     "gray": {
       "25":  { "$value": "#f9fafc" },
       "50":  { "$value": "#f1f3f7" },

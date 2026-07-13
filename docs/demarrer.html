@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Démarrer un projet — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  
+    <div class="nav-group">
+      <h5>Comprendre</h5>
+      <ul><li><a href="index.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Architecture</a></li><li><a href="demarrer.html" class="on">
+            <span class="nav-num nav-num-off"></span>
+            Démarrer un projet</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Le système</h5>
+      <ul><li><a href="primitives.html" class="">
+            <span class="nav-num">1</span>
+            Primitives</a></li><li><a href="brand.html" class="">
+            <span class="nav-num">2</span>
+            Brand</a></li><li><a href="roles.html" class="">
+            <span class="nav-num">3</span>
+            Contrat de rôle</a></li><li><a href="semantique.html" class="">
+            <span class="nav-num">3</span>
+            Sémantique (reste)</a></li><li><a href="effets.html" class="">
+            <span class="nav-num">3</span>
+            Effets & mouvement</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Composants</h5>
+      <ul><li><a href="composants-formulaire.html" class="">
+            <span class="nav-num">4</span>
+            Formulaire</a></li><li><a href="composants-affichage.html" class="">
+            <span class="nav-num">4</span>
+            Affichage</a></li><li><a href="composants-structure.html" class="">
+            <span class="nav-num">4</span>
+            Structure</a></li></ul>
+    </div>
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>Démarrer un projet</h1>
+    <p class="lead">Quatre étapes. La seule décision réelle est à l'étape 2.</p>
+    
+  <ol class="steps">
+    <li>
+      <h3>Installer et builder</h3>
+      <pre><code>npm install
+npm run build   <span class="c"># dist/tokens.css + dist/tokens.json + docs/</span></code></pre>
+    </li>
+    <li>
+      <h3>Choisir l'identité du projet</h3>
+      <p>Éditer la table <code>BRAND</code> dans <code>scripts/generate-theme.js</code>, puis
+      lancer <code>npm run theme</code>. C'est <strong>le seul endroit</strong> à toucher.</p>
+      <pre><code>const BRAND = {
+  primary: '<b>violet</b>',      <span class="c">// ← change ça, tout suit</span>
+  neutral: 'slateBlue',
+  success: 'green', warning: 'orange', danger: 'red', info: 'blue',
+};</code></pre>
+      <p class="note">Sélection actuelle : <code>primary</code>&nbsp;→&nbsp;<code>violet</code> · <code>neutral</code>&nbsp;→&nbsp;<code>slateBlue</code> · <code>success</code>&nbsp;→&nbsp;<code>green</code> · <code>warning</code>&nbsp;→&nbsp;<code>orange</code> · <code>danger</code>&nbsp;→&nbsp;<code>red</code> · <code>info</code>&nbsp;→&nbsp;<code>blue</code></p>
+      <div class="callout">
+        N'importe quelle palette peut jouer n'importe quel rôle : elles exposent toutes les
+        mêmes 11 crans sur la <strong>même courbe de luminosité</strong>. Un swap ne casse ni le
+        build, ni les contrastes.
+      </div>
+    </li>
+    <li>
+      <h3>Consommer les tokens</h3>
+      <pre><code>@import '@fred/design-tokens/dist/tokens.css';
+
+<span class="c">/* tokens.css = le système. components.css = les tokens de composant. */</span>
+@import '@fred/design-tokens/dist/components.css';
+
+<span class="c">/* Un bouton : variante · rôle · état, et une taille */</span>
+.btn-filled {
+  background: var(--color-button-filled-<b>primary</b>-default-background);
+  color:      var(--color-button-filled-<b>primary</b>-default-text);
+  height:     var(--size-button-<b>md</b>-height);
+  padding:    0 var(--space-button-<b>md</b>-padding-x);
+  border-radius: var(--radius-button-<b>md</b>);
+  font-size:  var(--font-size-button-<b>md</b>);
+}
+<span class="c">/* Changer de couleur = changer le rôle. Aucun token nouveau. */</span>
+.btn-filled[data-color="danger"] {
+  background: var(--color-button-filled-<b>danger</b>-default-background);
+}</code></pre>
+    </li>
+    <li>
+      <h3>Activer le thème sombre</h3>
+      <pre><code>&lt;html data-theme="dark"&gt;</code></pre>
+      <p class="note">Rien d'autre à faire : seuls les rôles sémantiques sont redéfinis sous ce
+      sélecteur, les composants suivent via <code>var()</code>. Le responsive est automatique
+      (media query à 768px).</p>
+    </li>
+  </ol>
+
+  <h2>Les commandes</h2>
+  <table class="tbl">
+    <thead><tr><th>Commande</th><th>Effet</th></tr></thead>
+    <tbody>
+      <tr><td><code>npm run build</code></td><td>Génère <code>dist/</code> et <code>docs/</code>.</td></tr>
+      <tr><td><code>npm run theme</code></td><td>Régénère brand + rôles + composants depuis les tables de mapping, puis build.</td></tr>
+      <tr><td><code>npm run ramps</code></td><td>Aperçu des rampes de couleur (n'écrit rien).</td></tr>
+      <tr><td><code>npm run ramps:write</code></td><td>Régénère <code>tokens/primitives/color.json</code>.</td></tr>
+      <tr><td><code>npm run watch</code></td><td>Rebuild à chaque modification.</td></tr>
+    </tbody>
+  </table>
+    
+    <nav class="pager">
+      <a href="index.html" class="pg pg-prev"><span>← Précédent</span><b>Architecture</b></a>
+      <a href="primitives.html" class="pg pg-next"><span>Suivant →</span><b>Primitives</b></a>
+    </nav>
+  </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>

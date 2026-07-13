@@ -1,0 +1,88 @@
+{
+  "color": {
+    "menu": {
+      "default": {
+        "background": {
+          "$value": "{color.surface.overlay}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        }
+      },
+      "item": {
+        "default": {
+          "background": {
+            "$value": "{color.surface.transparent}"
+          },
+          "text": {
+            "$value": "{color.text.body}"
+          }
+        },
+        "hover": {
+          "background": {
+            "$value": "{color.state.hover}"
+          },
+          "text": {
+            "$value": "{color.text.body}"
+          }
+        },
+        "active": {
+          "background": {
+            "$value": "{color.state.active}"
+          },
+          "text": {
+            "$value": "{color.text.body}"
+          }
+        },
+        "selected": {
+          "background": {
+            "$value": "{color.state.selected}"
+          },
+          "text": {
+            "$value": "{color.role.primary.text}"
+          }
+        },
+        "disabled": {
+          "background": {
+            "$value": "{color.surface.transparent}"
+          },
+          "text": {
+            "$value": "{color.text.disabled}"
+          }
+        }
+      }
+    },
+    "$type": "color"
+  },
+  "shadow": {
+    "menu": {
+      "default": {
+        "$value": "{shadow.float}"
+      }
+    },
+    "$type": "shadow"
+  },
+  "space": {
+    "menu": {
+      "paddingX": {
+        "$value": "{space.xs}"
+      },
+      "paddingY": {
+        "$value": "{space.xs}"
+      }
+    },
+    "$type": "dimension"
+  },
+  "radius": {
+    "menu": {
+      "$value": "{radius.md}"
+    },
+    "$type": "dimension"
+  },
+  "borderWidth": {
+    "menu": {
+      "$value": "{borderWidth.default}"
+    },
+    "$type": "dimension"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "color": {
+    "link": {
+      "default": {
+        "primary": {
+          "default": {
+            "text": {
+              "$value": "{color.role.primary.text}"
+            }
+          },
+          "hover": {
+            "text": {
+              "$value": "{color.role.primary.active}"
+            }
+          },
+          "disabled": {
+            "text": {
+              "$value": "{color.text.disabled}"
+            }
+          }
+        },
+        "neutral": {
+          "default": {
+            "text": {
+              "$value": "{color.role.neutral.text}"
+            }
+          },
+          "hover": {
+            "text": {
+              "$value": "{color.role.neutral.active}"
+            }
+          },
+          "disabled": {
+            "text": {
+              "$value": "{color.text.disabled}"
+            }
+          }
+        },
+        "success": {
+          "default": {
+            "text": {
+              "$value": "{color.role.success.text}"
+            }
+          },
+          "hover": {
+            "text": {
+              "$value": "{color.role.success.active}"
+            }
+          },
+          "disabled": {
+            "text": {
+              "$value": "{color.text.disabled}"
+            }
+          }
+        },
+        "warning": {
+          "default": {
+            "text": {
+              "$value": "{color.role.warning.text}"
+            }
+          },
+          "hover": {
+            "text": {
+              "$value": "{color.role.warning.active}"
+            }
+          },
+          "disabled": {
+            "text": {
+              "$value": "{color.text.disabled}"
+            }
+          }
+        },
+        "danger": {
+          "default": {
+            "text": {
+              "$value": "{color.role.danger.text}"
+            }
+          },
+          "hover": {
+            "text": {
+              "$value": "{color.role.danger.active}"
+            }
+          },
+          "disabled": {
+            "text": {
+              "$value": "{color.text.disabled}"
+            }
+          }
+        },
+        "info": {
+          "default": {
+            "text": {
+              "$value": "{color.role.info.text}"
+            }
+          },
+          "hover": {
+            "text": {
+              "$value": "{color.role.info.active}"
+            }
+          },
+          "disabled": {
+            "text": {
+              "$value": "{color.text.disabled}"
+            }
+          }
+        }
+      }
+    },
+    "$type": "color"
+  },
+  "fontSize": {
+    "link": {
+      "$value": "{fontSize.body}"
+    },
+    "$type": "dimension"
+  }
+}

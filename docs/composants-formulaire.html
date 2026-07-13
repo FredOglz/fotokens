@@ -1,0 +1,1855 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>4 · Composants — formulaire — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  
+    <div class="nav-group">
+      <h5>Comprendre</h5>
+      <ul><li><a href="index.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Architecture</a></li><li><a href="demarrer.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Démarrer un projet</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Le système</h5>
+      <ul><li><a href="primitives.html" class="">
+            <span class="nav-num">1</span>
+            Primitives</a></li><li><a href="brand.html" class="">
+            <span class="nav-num">2</span>
+            Brand</a></li><li><a href="roles.html" class="">
+            <span class="nav-num">3</span>
+            Contrat de rôle</a></li><li><a href="semantique.html" class="">
+            <span class="nav-num">3</span>
+            Sémantique (reste)</a></li><li><a href="effets.html" class="">
+            <span class="nav-num">3</span>
+            Effets & mouvement</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Composants</h5>
+      <ul><li><a href="composants-formulaire.html" class="on">
+            <span class="nav-num">4</span>
+            Formulaire</a><ul class="sub"><li><a href="#button" data-anchor="button">Button</a></li><li><a href="#input" data-anchor="input">Input</a></li><li><a href="#textarea" data-anchor="textarea">Textarea</a></li><li><a href="#select" data-anchor="select">Select</a></li><li><a href="#checkbox" data-anchor="checkbox">Checkbox</a></li><li><a href="#radio" data-anchor="radio">Radio</a></li><li><a href="#switch" data-anchor="switch">Switch</a></li></ul></li><li><a href="composants-affichage.html" class="">
+            <span class="nav-num">4</span>
+            Affichage</a></li><li><a href="composants-structure.html" class="">
+            <span class="nav-num">4</span>
+            Structure</a></li></ul>
+    </div>
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>4 · Composants — formulaire</h1>
+    <p class="lead">Button, Input, Textarea, Select, Checkbox, Radio, Switch. Rendus <strong>uniquement</strong>
+      avec les variables générées.</p>
+    
+  <div class="callout callout-key">
+    <strong>Rien n'est écrit à la main.</strong> Les composants <em>role-aware</em>
+    (<code>button</code>, <code>checkbox</code>, <code>radio</code>, <code>switch</code>) sont générés
+    pour <strong>les 6 rôles</strong> à partir d'une table qui dit seulement quels <em>slots</em>
+    chaque variante consomme. C'est la promesse du contrat de rôle :
+    <code>&lt;Checkbox color="danger"&gt;</code> existe sans un token de plus.
+  </div>
+  <h2 id="button">Button</h2><h3><code>filled</code></h3><div class="scroll-x"><table class="tbl btn-grid ">
+    <thead><tr><th></th><th>default</th><th>hover</th><th>active</th><th>disabled</th></tr></thead><tbody><tr><th class="rh">primary</th><td><button class="demo-btn" style="
+  background: var(--color-button-filled-primary-default-background);
+  color: var(--color-button-filled-primary-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-primary-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-primary-hover-background);
+  color: var(--color-button-filled-primary-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-primary-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-primary-active-background);
+  color: var(--color-button-filled-primary-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-primary-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-primary-disabled-background);
+  color: var(--color-button-filled-primary-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-primary-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">neutral</th><td><button class="demo-btn" style="
+  background: var(--color-button-filled-neutral-default-background);
+  color: var(--color-button-filled-neutral-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-neutral-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-neutral-hover-background);
+  color: var(--color-button-filled-neutral-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-neutral-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-neutral-active-background);
+  color: var(--color-button-filled-neutral-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-neutral-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-neutral-disabled-background);
+  color: var(--color-button-filled-neutral-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-neutral-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">success</th><td><button class="demo-btn" style="
+  background: var(--color-button-filled-success-default-background);
+  color: var(--color-button-filled-success-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-success-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-success-hover-background);
+  color: var(--color-button-filled-success-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-success-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-success-active-background);
+  color: var(--color-button-filled-success-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-success-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-success-disabled-background);
+  color: var(--color-button-filled-success-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-success-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">warning</th><td><button class="demo-btn" style="
+  background: var(--color-button-filled-warning-default-background);
+  color: var(--color-button-filled-warning-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-warning-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-warning-hover-background);
+  color: var(--color-button-filled-warning-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-warning-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-warning-active-background);
+  color: var(--color-button-filled-warning-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-warning-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-warning-disabled-background);
+  color: var(--color-button-filled-warning-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-warning-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">danger</th><td><button class="demo-btn" style="
+  background: var(--color-button-filled-danger-default-background);
+  color: var(--color-button-filled-danger-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-danger-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-danger-hover-background);
+  color: var(--color-button-filled-danger-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-danger-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-danger-active-background);
+  color: var(--color-button-filled-danger-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-danger-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-danger-disabled-background);
+  color: var(--color-button-filled-danger-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-danger-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">info</th><td><button class="demo-btn" style="
+  background: var(--color-button-filled-info-default-background);
+  color: var(--color-button-filled-info-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-info-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-info-hover-background);
+  color: var(--color-button-filled-info-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-info-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-info-active-background);
+  color: var(--color-button-filled-info-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-info-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-filled-info-disabled-background);
+  color: var(--color-button-filled-info-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-info-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr></tbody></table></div><h3><code>outlined</code></h3><div class="scroll-x"><table class="tbl btn-grid checker">
+    <thead><tr><th></th><th>default</th><th>hover</th><th>active</th><th>disabled</th></tr></thead><tbody><tr><th class="rh">primary</th><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-primary-default-background);
+  color: var(--color-button-outlined-primary-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-primary-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-primary-hover-background);
+  color: var(--color-button-outlined-primary-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-primary-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-primary-active-background);
+  color: var(--color-button-outlined-primary-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-primary-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-primary-disabled-background);
+  color: var(--color-button-outlined-primary-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-primary-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">neutral</th><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-neutral-default-background);
+  color: var(--color-button-outlined-neutral-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-neutral-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-neutral-hover-background);
+  color: var(--color-button-outlined-neutral-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-neutral-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-neutral-active-background);
+  color: var(--color-button-outlined-neutral-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-neutral-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-neutral-disabled-background);
+  color: var(--color-button-outlined-neutral-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-neutral-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">success</th><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-success-default-background);
+  color: var(--color-button-outlined-success-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-success-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-success-hover-background);
+  color: var(--color-button-outlined-success-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-success-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-success-active-background);
+  color: var(--color-button-outlined-success-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-success-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-success-disabled-background);
+  color: var(--color-button-outlined-success-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-success-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">warning</th><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-warning-default-background);
+  color: var(--color-button-outlined-warning-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-warning-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-warning-hover-background);
+  color: var(--color-button-outlined-warning-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-warning-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-warning-active-background);
+  color: var(--color-button-outlined-warning-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-warning-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-warning-disabled-background);
+  color: var(--color-button-outlined-warning-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-warning-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">danger</th><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-danger-default-background);
+  color: var(--color-button-outlined-danger-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-danger-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-danger-hover-background);
+  color: var(--color-button-outlined-danger-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-danger-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-danger-active-background);
+  color: var(--color-button-outlined-danger-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-danger-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-danger-disabled-background);
+  color: var(--color-button-outlined-danger-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-danger-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">info</th><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-info-default-background);
+  color: var(--color-button-outlined-info-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-info-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-info-hover-background);
+  color: var(--color-button-outlined-info-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-info-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-info-active-background);
+  color: var(--color-button-outlined-info-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-info-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-outlined-info-disabled-background);
+  color: var(--color-button-outlined-info-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-outlined-info-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr></tbody></table></div><h3><code>ghost</code></h3><div class="scroll-x"><table class="tbl btn-grid checker">
+    <thead><tr><th></th><th>default</th><th>hover</th><th>active</th><th>disabled</th></tr></thead><tbody><tr><th class="rh">primary</th><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-primary-default-background);
+  color: var(--color-button-ghost-primary-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-primary-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-primary-hover-background);
+  color: var(--color-button-ghost-primary-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-primary-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-primary-active-background);
+  color: var(--color-button-ghost-primary-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-primary-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-primary-disabled-background);
+  color: var(--color-button-ghost-primary-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-primary-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">neutral</th><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-neutral-default-background);
+  color: var(--color-button-ghost-neutral-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-neutral-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-neutral-hover-background);
+  color: var(--color-button-ghost-neutral-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-neutral-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-neutral-active-background);
+  color: var(--color-button-ghost-neutral-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-neutral-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-neutral-disabled-background);
+  color: var(--color-button-ghost-neutral-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-neutral-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">success</th><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-success-default-background);
+  color: var(--color-button-ghost-success-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-success-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-success-hover-background);
+  color: var(--color-button-ghost-success-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-success-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-success-active-background);
+  color: var(--color-button-ghost-success-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-success-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-success-disabled-background);
+  color: var(--color-button-ghost-success-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-success-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">warning</th><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-warning-default-background);
+  color: var(--color-button-ghost-warning-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-warning-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-warning-hover-background);
+  color: var(--color-button-ghost-warning-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-warning-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-warning-active-background);
+  color: var(--color-button-ghost-warning-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-warning-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-warning-disabled-background);
+  color: var(--color-button-ghost-warning-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-warning-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">danger</th><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-danger-default-background);
+  color: var(--color-button-ghost-danger-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-danger-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-danger-hover-background);
+  color: var(--color-button-ghost-danger-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-danger-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-danger-active-background);
+  color: var(--color-button-ghost-danger-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-danger-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-danger-disabled-background);
+  color: var(--color-button-ghost-danger-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-danger-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr><tr><th class="rh">info</th><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-info-default-background);
+  color: var(--color-button-ghost-info-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-info-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-info-hover-background);
+  color: var(--color-button-ghost-info-hover-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-info-hover-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-info-active-background);
+  color: var(--color-button-ghost-info-active-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-info-active-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td><td><button class="demo-btn" style="
+  background: var(--color-button-ghost-info-disabled-background);
+  color: var(--color-button-ghost-info-disabled-text);
+  border: var(--border-width-button-md) solid var(--color-button-ghost-info-disabled-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button CTA</button></td></tr></tbody></table></div>
+      <h3>Tailles</h3>
+      <div class="demo"><div class="demo-item">
+        <button class="demo-btn" style="
+  background: var(--color-button-filled-primary-default-background);
+  color: var(--color-button-filled-primary-default-text);
+  border: var(--border-width-button-sm) solid var(--color-button-filled-primary-default-border);
+  border-radius: var(--radius-button-sm);
+  padding: 0 var(--space-button-sm-padding-x);
+  height: var(--size-button-sm-height);
+  font-size: var(--font-size-button-sm);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button</button>
+        <span class="demo-label">sm</span></div><div class="demo-item">
+        <button class="demo-btn" style="
+  background: var(--color-button-filled-primary-default-background);
+  color: var(--color-button-filled-primary-default-text);
+  border: var(--border-width-button-md) solid var(--color-button-filled-primary-default-border);
+  border-radius: var(--radius-button-md);
+  padding: 0 var(--space-button-md-padding-x);
+  height: var(--size-button-md-height);
+  font-size: var(--font-size-button-md);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button</button>
+        <span class="demo-label">md</span></div><div class="demo-item">
+        <button class="demo-btn" style="
+  background: var(--color-button-filled-primary-default-background);
+  color: var(--color-button-filled-primary-default-text);
+  border: var(--border-width-button-lg) solid var(--color-button-filled-primary-default-border);
+  border-radius: var(--radius-button-lg);
+  padding: 0 var(--space-button-lg-padding-x);
+  height: var(--size-button-lg-height);
+  font-size: var(--font-size-button-lg);
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);">Button</button>
+        <span class="demo-label">lg</span></div></div>
+      <div class="callout callout-warn">
+        <strong>Sur mobile, les contrôles GRANDISSENT.</strong> C'est la seule famille de tailles qui
+        augmente au lieu de diminuer : une cible tactile doit faire au moins 44px (WCAG 2.5.5). Un
+        bouton <code>md</code> passe de <strong>40px</strong> en desktop à <strong>52px</strong> sous
+        <code>768px</code>.
+      </div>
+      <table class="tbl"><thead><tr><th>Famille</th><th>Tokens</th><th>Exemple de variable</th></tr></thead><tbody><tr><td><code>color</code></td><td class="mono">216</td>
+         <td class="mono tiny">--color-button-filled-primary-default-background … <span class="note">(+215)</span></td></tr><tr><td><code>size</code></td><td class="mono">6</td>
+         <td class="mono tiny">--size-button-sm-height … <span class="note">(+5)</span></td></tr><tr><td><code>space</code></td><td class="mono">9</td>
+         <td class="mono tiny">--space-button-sm-padding-x … <span class="note">(+8)</span></td></tr><tr><td><code>fontSize</code></td><td class="mono">3</td>
+         <td class="mono tiny">--font-size-button-sm … <span class="note">(+2)</span></td></tr><tr><td><code>radius</code></td><td class="mono">3</td>
+         <td class="mono tiny">--radius-button-sm … <span class="note">(+2)</span></td></tr><tr><td><code>borderWidth</code></td><td class="mono">3</td>
+         <td class="mono tiny">--border-width-button-sm … <span class="note">(+2)</span></td></tr></tbody></table>
+<h2 id="input">Input</h2><div class="demo"><div class="demo-item">
+        <input class="demo-input" value="Saisie" readonly style="
+    background: var(--color-input-default-background);
+    color: var(--color-input-default-text);
+    border: var(--border-width-input-md) solid var(--color-input-default-border);
+    border-radius: var(--radius-input-md);
+    padding: 0 var(--space-input-md-padding-x);
+    height: var(--size-input-md-height);
+    font-size: var(--font-size-input-md);
+    font-family: var(--typography-body-family);">
+        <span class="demo-label">default</span></div><div class="demo-item">
+        <input class="demo-input" value="Saisie" readonly style="
+    background: var(--color-input-hover-background);
+    color: var(--color-input-hover-text);
+    border: var(--border-width-input-md) solid var(--color-input-hover-border);
+    border-radius: var(--radius-input-md);
+    padding: 0 var(--space-input-md-padding-x);
+    height: var(--size-input-md-height);
+    font-size: var(--font-size-input-md);
+    font-family: var(--typography-body-family);">
+        <span class="demo-label">hover</span></div><div class="demo-item">
+        <input class="demo-input" value="Saisie" readonly style="
+    background: var(--color-input-focus-background);
+    color: var(--color-input-focus-text);
+    border: var(--border-width-input-md) solid var(--color-input-focus-border);
+    border-radius: var(--radius-input-md);
+    padding: 0 var(--space-input-md-padding-x);
+    height: var(--size-input-md-height);
+    font-size: var(--font-size-input-md);
+    font-family: var(--typography-body-family);">
+        <span class="demo-label">focus</span></div><div class="demo-item">
+        <input class="demo-input" value="Saisie" readonly style="
+    background: var(--color-input-disabled-background);
+    color: var(--color-input-disabled-text);
+    border: var(--border-width-input-md) solid var(--color-input-disabled-border);
+    border-radius: var(--radius-input-md);
+    padding: 0 var(--space-input-md-padding-x);
+    height: var(--size-input-md-height);
+    font-size: var(--font-size-input-md);
+    font-family: var(--typography-body-family);">
+        <span class="demo-label">disabled</span></div><div class="demo-item">
+        <input class="demo-input" value="Saisie" readonly style="
+    background: var(--color-input-error-background);
+    color: var(--color-input-error-text);
+    border: var(--border-width-input-md) solid var(--color-input-error-border);
+    border-radius: var(--radius-input-md);
+    padding: 0 var(--space-input-md-padding-x);
+    height: var(--size-input-md-height);
+    font-size: var(--font-size-input-md);
+    font-family: var(--typography-body-family);">
+        <span class="demo-label">error</span></div></div><table class="tbl"><thead><tr><th>Famille</th><th>Tokens</th><th>Exemple de variable</th></tr></thead><tbody><tr><td><code>color</code></td><td class="mono">20</td>
+         <td class="mono tiny">--color-input-default-background … <span class="note">(+19)</span></td></tr><tr><td><code>size</code></td><td class="mono">6</td>
+         <td class="mono tiny">--size-input-sm-height … <span class="note">(+5)</span></td></tr><tr><td><code>space</code></td><td class="mono">9</td>
+         <td class="mono tiny">--space-input-sm-padding-x … <span class="note">(+8)</span></td></tr><tr><td><code>fontSize</code></td><td class="mono">3</td>
+         <td class="mono tiny">--font-size-input-sm … <span class="note">(+2)</span></td></tr><tr><td><code>radius</code></td><td class="mono">3</td>
+         <td class="mono tiny">--radius-input-sm … <span class="note">(+2)</span></td></tr><tr><td><code>borderWidth</code></td><td class="mono">3</td>
+         <td class="mono tiny">--border-width-input-sm … <span class="note">(+2)</span></td></tr></tbody></table>
+<h2 id="textarea">Textarea</h2><div class="demo"><div class="demo-item">
+        <div class="demo-input demo-textarea" style="
+          background: var(--color-textarea-default-background);
+          color: var(--color-textarea-default-text);
+          border: var(--border-width-textarea) solid var(--color-textarea-default-border);
+          border-radius: var(--radius-textarea);
+          padding: var(--space-textarea-padding-y) var(--space-textarea-padding-x);
+          font-size: var(--font-size-textarea);
+          font-family: var(--typography-body-family);">Saisie multiligne</div>
+        <span class="demo-label">default</span></div><div class="demo-item">
+        <div class="demo-input demo-textarea" style="
+          background: var(--color-textarea-hover-background);
+          color: var(--color-textarea-hover-text);
+          border: var(--border-width-textarea) solid var(--color-textarea-hover-border);
+          border-radius: var(--radius-textarea);
+          padding: var(--space-textarea-padding-y) var(--space-textarea-padding-x);
+          font-size: var(--font-size-textarea);
+          font-family: var(--typography-body-family);">Saisie multiligne</div>
+        <span class="demo-label">hover</span></div><div class="demo-item">
+        <div class="demo-input demo-textarea" style="
+          background: var(--color-textarea-focus-background);
+          color: var(--color-textarea-focus-text);
+          border: var(--border-width-textarea) solid var(--color-textarea-focus-border);
+          border-radius: var(--radius-textarea);
+          padding: var(--space-textarea-padding-y) var(--space-textarea-padding-x);
+          font-size: var(--font-size-textarea);
+          font-family: var(--typography-body-family);">Saisie multiligne</div>
+        <span class="demo-label">focus</span></div><div class="demo-item">
+        <div class="demo-input demo-textarea" style="
+          background: var(--color-textarea-disabled-background);
+          color: var(--color-textarea-disabled-text);
+          border: var(--border-width-textarea) solid var(--color-textarea-disabled-border);
+          border-radius: var(--radius-textarea);
+          padding: var(--space-textarea-padding-y) var(--space-textarea-padding-x);
+          font-size: var(--font-size-textarea);
+          font-family: var(--typography-body-family);">Saisie multiligne</div>
+        <span class="demo-label">disabled</span></div><div class="demo-item">
+        <div class="demo-input demo-textarea" style="
+          background: var(--color-textarea-error-background);
+          color: var(--color-textarea-error-text);
+          border: var(--border-width-textarea) solid var(--color-textarea-error-border);
+          border-radius: var(--radius-textarea);
+          padding: var(--space-textarea-padding-y) var(--space-textarea-padding-x);
+          font-size: var(--font-size-textarea);
+          font-family: var(--typography-body-family);">Saisie multiligne</div>
+        <span class="demo-label">error</span></div></div>
+<h2 id="select">Select</h2><div class="demo"><div class="demo-item">
+        <div class="demo-input demo-select" style="
+    background: var(--color-select-default-background);
+    color: var(--color-select-default-text);
+    border: var(--border-width-select-md) solid var(--color-select-default-border);
+    border-radius: var(--radius-select-md);
+    padding: 0 var(--space-select-md-padding-x);
+    height: var(--size-select-md-height);
+    font-size: var(--font-size-select-md);
+    font-family: var(--typography-body-family);">
+          <span>Choix</span>
+          <span style="color: var(--color-select-default-icon)">▾</span>
+        </div>
+        <span class="demo-label">default</span></div><div class="demo-item">
+        <div class="demo-input demo-select" style="
+    background: var(--color-select-hover-background);
+    color: var(--color-select-hover-text);
+    border: var(--border-width-select-md) solid var(--color-select-hover-border);
+    border-radius: var(--radius-select-md);
+    padding: 0 var(--space-select-md-padding-x);
+    height: var(--size-select-md-height);
+    font-size: var(--font-size-select-md);
+    font-family: var(--typography-body-family);">
+          <span>Choix</span>
+          <span style="color: var(--color-select-hover-icon)">▾</span>
+        </div>
+        <span class="demo-label">hover</span></div><div class="demo-item">
+        <div class="demo-input demo-select" style="
+    background: var(--color-select-focus-background);
+    color: var(--color-select-focus-text);
+    border: var(--border-width-select-md) solid var(--color-select-focus-border);
+    border-radius: var(--radius-select-md);
+    padding: 0 var(--space-select-md-padding-x);
+    height: var(--size-select-md-height);
+    font-size: var(--font-size-select-md);
+    font-family: var(--typography-body-family);">
+          <span>Choix</span>
+          <span style="color: var(--color-select-focus-icon)">▾</span>
+        </div>
+        <span class="demo-label">focus</span></div><div class="demo-item">
+        <div class="demo-input demo-select" style="
+    background: var(--color-select-disabled-background);
+    color: var(--color-select-disabled-text);
+    border: var(--border-width-select-md) solid var(--color-select-disabled-border);
+    border-radius: var(--radius-select-md);
+    padding: 0 var(--space-select-md-padding-x);
+    height: var(--size-select-md-height);
+    font-size: var(--font-size-select-md);
+    font-family: var(--typography-body-family);">
+          <span>Choix</span>
+          <span style="color: var(--color-select-disabled-icon)">▾</span>
+        </div>
+        <span class="demo-label">disabled</span></div><div class="demo-item">
+        <div class="demo-input demo-select" style="
+    background: var(--color-select-error-background);
+    color: var(--color-select-error-text);
+    border: var(--border-width-select-md) solid var(--color-select-error-border);
+    border-radius: var(--radius-select-md);
+    padding: 0 var(--space-select-md-padding-x);
+    height: var(--size-select-md-height);
+    font-size: var(--font-size-select-md);
+    font-family: var(--typography-body-family);">
+          <span>Choix</span>
+          <span style="color: var(--color-select-error-icon)">▾</span>
+        </div>
+        <span class="demo-label">error</span></div></div>
+<h2 id="checkbox">Checkbox</h2><div class="scroll-x"><table class="tbl btn-grid checker">
+    <thead><tr><th></th><th>unchecked</th><th>uncheckedHover</th><th>checked</th><th>checkedHover</th><th>indeterminate</th><th>disabled</th><th>disabledChecked</th></tr></thead><tbody><tr><th class="rh">primary</th><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-primary-unchecked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-unchecked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-primary-unchecked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-primary-unchecked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-unchecked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-primary-unchecked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-primary-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-primary-checked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-primary-checked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-checked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-primary-checked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-primary-indeterminate-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-indeterminate-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-primary-indeterminate-mark);
+      ">–</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-primary-disabled-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-disabled-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-primary-disabled-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-primary-disabled-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-disabled-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-primary-disabled-checked-mark);
+      ">✓</div></td></tr><tr><th class="rh">neutral</th><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-neutral-unchecked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-unchecked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-neutral-unchecked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-neutral-unchecked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-unchecked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-neutral-unchecked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-neutral-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-neutral-checked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-neutral-checked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-checked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-neutral-checked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-neutral-indeterminate-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-indeterminate-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-neutral-indeterminate-mark);
+      ">–</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-neutral-disabled-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-disabled-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-neutral-disabled-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-neutral-disabled-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-disabled-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-neutral-disabled-checked-mark);
+      ">✓</div></td></tr><tr><th class="rh">success</th><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-success-unchecked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-unchecked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-success-unchecked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-success-unchecked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-unchecked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-success-unchecked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-success-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-success-checked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-success-checked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-checked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-success-checked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-success-indeterminate-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-indeterminate-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-success-indeterminate-mark);
+      ">–</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-success-disabled-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-disabled-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-success-disabled-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-success-disabled-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-disabled-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-success-disabled-checked-mark);
+      ">✓</div></td></tr><tr><th class="rh">warning</th><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-warning-unchecked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-unchecked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-warning-unchecked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-warning-unchecked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-unchecked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-warning-unchecked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-warning-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-warning-checked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-warning-checked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-checked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-warning-checked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-warning-indeterminate-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-indeterminate-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-warning-indeterminate-mark);
+      ">–</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-warning-disabled-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-disabled-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-warning-disabled-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-warning-disabled-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-disabled-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-warning-disabled-checked-mark);
+      ">✓</div></td></tr><tr><th class="rh">danger</th><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-danger-unchecked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-unchecked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-danger-unchecked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-danger-unchecked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-unchecked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-danger-unchecked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-danger-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-danger-checked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-danger-checked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-checked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-danger-checked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-danger-indeterminate-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-indeterminate-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-danger-indeterminate-mark);
+      ">–</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-danger-disabled-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-disabled-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-danger-disabled-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-danger-disabled-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-disabled-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-danger-disabled-checked-mark);
+      ">✓</div></td></tr><tr><th class="rh">info</th><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-info-unchecked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-unchecked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-info-unchecked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-info-unchecked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-unchecked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-info-unchecked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-info-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-info-checked-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-info-checked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-checked-hover-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-info-checked-hover-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-info-indeterminate-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-indeterminate-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-info-indeterminate-mark);
+      ">–</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-info-disabled-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-disabled-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-info-disabled-mark);
+      ">✓</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
+        background: var(--color-checkbox-default-info-disabled-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-disabled-checked-border);
+        border-radius: var(--radius-checkbox-md);
+        color: var(--color-checkbox-default-info-disabled-checked-mark);
+      ">✓</div></td></tr></tbody></table></div>
+<h2 id="radio">Radio</h2><div class="scroll-x"><table class="tbl btn-grid checker">
+    <thead><tr><th></th><th>unchecked</th><th>uncheckedHover</th><th>checked</th><th>checkedHover</th><th>disabled</th><th>disabledChecked</th></tr></thead><tbody><tr><th class="rh">primary</th><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-primary-unchecked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-unchecked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-primary-unchecked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-primary-unchecked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-unchecked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-primary-unchecked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-primary-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-primary-checked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-primary-checked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-checked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-primary-checked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-primary-disabled-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-disabled-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-primary-disabled-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-primary-disabled-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-disabled-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-primary-disabled-checked-mark);
+      ">●</div></td></tr><tr><th class="rh">neutral</th><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-neutral-unchecked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-unchecked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-neutral-unchecked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-neutral-unchecked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-unchecked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-neutral-unchecked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-neutral-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-neutral-checked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-neutral-checked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-checked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-neutral-checked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-neutral-disabled-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-disabled-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-neutral-disabled-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-neutral-disabled-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-disabled-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-neutral-disabled-checked-mark);
+      ">●</div></td></tr><tr><th class="rh">success</th><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-success-unchecked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-success-unchecked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-success-unchecked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-success-unchecked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-success-unchecked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-success-unchecked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-success-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-success-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-success-checked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-success-checked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-success-checked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-success-checked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-success-disabled-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-success-disabled-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-success-disabled-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-success-disabled-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-success-disabled-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-success-disabled-checked-mark);
+      ">●</div></td></tr><tr><th class="rh">warning</th><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-warning-unchecked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-unchecked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-warning-unchecked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-warning-unchecked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-unchecked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-warning-unchecked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-warning-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-warning-checked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-warning-checked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-checked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-warning-checked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-warning-disabled-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-disabled-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-warning-disabled-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-warning-disabled-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-disabled-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-warning-disabled-checked-mark);
+      ">●</div></td></tr><tr><th class="rh">danger</th><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-danger-unchecked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-unchecked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-danger-unchecked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-danger-unchecked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-unchecked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-danger-unchecked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-danger-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-danger-checked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-danger-checked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-checked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-danger-checked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-danger-disabled-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-disabled-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-danger-disabled-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-danger-disabled-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-disabled-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-danger-disabled-checked-mark);
+      ">●</div></td></tr><tr><th class="rh">info</th><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-info-unchecked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-info-unchecked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-info-unchecked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-info-unchecked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-info-unchecked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-info-unchecked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-info-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-info-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-info-checked-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-info-checked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-info-checked-hover-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-info-checked-hover-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-info-disabled-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-info-disabled-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-info-disabled-mark);
+      ">●</div></td><td>
+      <div class="ctl" style="
+        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
+        background: var(--color-radio-default-info-disabled-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-default-info-disabled-checked-border);
+        border-radius: var(--radius-radio-md);
+        color: var(--color-radio-default-info-disabled-checked-mark);
+      ">●</div></td></tr></tbody></table></div>
+<h2 id="switch">Switch</h2><div class="scroll-x"><table class="tbl btn-grid checker">
+    <thead><tr><th></th><th>off</th><th>offHover</th><th>on</th><th>onHover</th><th>disabledOff</th><th>disabledOn</th></tr></thead><tbody><tr><th class="rh">primary</th><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-primary-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-primary-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-primary-off-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-primary-off-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-primary-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-primary-on-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-primary-on-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-primary-on-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-primary-disabled-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-primary-disabled-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-primary-disabled-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-primary-disabled-on-thumb);
+    "></i></div></td></tr><tr><th class="rh">neutral</th><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-neutral-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-neutral-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-neutral-off-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-neutral-off-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-neutral-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-neutral-on-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-neutral-on-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-neutral-on-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-neutral-disabled-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-neutral-disabled-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-neutral-disabled-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-neutral-disabled-on-thumb);
+    "></i></div></td></tr><tr><th class="rh">success</th><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-success-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-success-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-success-off-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-success-off-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-success-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-success-on-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-success-on-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-success-on-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-success-disabled-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-success-disabled-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-success-disabled-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-success-disabled-on-thumb);
+    "></i></div></td></tr><tr><th class="rh">warning</th><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-warning-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-warning-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-warning-off-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-warning-off-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-warning-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-warning-on-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-warning-on-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-warning-on-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-warning-disabled-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-warning-disabled-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-warning-disabled-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-warning-disabled-on-thumb);
+    "></i></div></td></tr><tr><th class="rh">danger</th><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-danger-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-danger-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-danger-off-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-danger-off-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-danger-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-danger-on-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-danger-on-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-danger-on-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-danger-disabled-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-danger-disabled-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-danger-disabled-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-danger-disabled-on-thumb);
+    "></i></div></td></tr><tr><th class="rh">info</th><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-info-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-info-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-info-off-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-info-off-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-info-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-info-on-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-info-on-hover-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-info-on-hover-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-info-disabled-off-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-start;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-info-disabled-off-thumb);
+    "></i></div></td><td>
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(--color-switch-default-info-disabled-on-track);
+      border-radius: var(--radius-switch-md);
+      justify-content: flex-end;
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(--color-switch-default-info-disabled-on-thumb);
+    "></i></div></td></tr></tbody></table></div>
+    
+    <nav class="pager">
+      <a href="effets.html" class="pg pg-prev"><span>← Précédent</span><b>Effets & mouvement</b></a>
+      <a href="composants-affichage.html" class="pg pg-next"><span>Suivant →</span><b>Affichage</b></a>
+    </nav>
+  </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>

@@ -43,6 +43,21 @@
       "md":   { "$value": "2px" },
       "lg":   { "$value": "4px" }
     },
+    "control": {
+      "$description": "Hauteurs de contrôle interactif (bouton, champ, select). L'échelle monte jusqu'à 52px pour couvrir les cibles tactiles mobiles.",
+      "xs": { "$value": "24px" },
+      "sm": { "$value": "32px" },
+      "md": { "$value": "40px" },
+      "lg": { "$value": "48px" },
+      "xl": { "$value": "52px" }
+    },
+    "glyph": {
+      "$description": "Tailles d'icône et de glyphe de contrôle (case à cocher, puce radio).",
+      "xs": { "$value": "12px" },
+      "sm": { "$value": "16px" },
+      "md": { "$value": "20px" },
+      "lg": { "$value": "24px" }
+    },
     "breakpoint": {
       "$description": "Points de rupture. Une media query CSS ne peut pas lire une custom property : la valeur est inlinée par le build.",
       "xs": { "$value": "480px" },

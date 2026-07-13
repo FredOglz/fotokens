@@ -24,9 +24,11 @@ const DIST = 'dist';
 const PRIMITIVES = 'tokens/primitives/*.json';
 const BRAND = 'tokens/brand/default.json';
 const TYPOGRAPHY = 'tokens/themes/typography/default.json';
+const EFFECT = 'tokens/themes/effect/default.json';
 const COMPONENTS = 'tokens/components/*.json';
 
-const colorTheme = (mode) => `tokens/themes/color/${mode}.json`;
+// Les fichiers de mode portent tout ce qui dépend du clair/sombre : couleurs ET ombres.
+const modeTheme = (mode) => `tokens/themes/mode/${mode}.json`;
 const sizeTheme = (mode) => `tokens/themes/size/${mode}.json`;
 
 const readJson = async (file) => JSON.parse(await fs.readFile(file, 'utf8'));
@@ -66,7 +68,14 @@ StyleDictionary.registerFormat({
   format: ({ dictionary, options }) => {
     const { selector = ':root', media = null } = options;
     const formatProperty = createPropertyFormatter({
-      outputReferences: true,
+      // Les ombres sont émises en valeurs RÉSOLUES, pas en var().
+      // Style Dictionary construit la valeur courte (`offsetX offsetY blur spread color`)
+      // puis y réinjecte les var() par recherche de chaîne. Quand deux composantes
+      // ont la même valeur — ici `offsetX: "0"` et un `spread` qui vaut aussi `0` —
+      // il remplace la mauvaise occurrence et intervertit les positions. Le rendu
+      // reste juste tant que les deux valent 0, mais un spread non nul atterrirait
+      // dans l'offset horizontal.
+      outputReferences: (token) => token.$type !== 'shadow',
       dictionary,
       format: 'css',
       // Sans ça, le formatter lit `token.value` alors que les tokens DTCG
@@ -146,65 +155,86 @@ async function main() {
   const primitives = await readJson('tokens/primitives/size.json');
   const mobileBreakpoint = primitives.size.breakpoint.md.$value;
 
-  const base = [PRIMITIVES, BRAND, colorTheme('light'), TYPOGRAPHY, sizeTheme('desktop'), COMPONENTS];
+  const base = [PRIMITIVES, BRAND, modeTheme('light'), TYPOGRAPHY, EFFECT, sizeTheme('desktop'), COMPONENTS];
 
-  const builds = [
-    {
-      label: 'root (light + desktop)',
-      source: base,
-      options: { selector: ':root' },
-      emit: null, // tout le dictionnaire
-    },
-    {
-      label: 'dark',
-      source: [PRIMITIVES, BRAND, colorTheme('dark'), TYPOGRAPHY, sizeTheme('desktop'), COMPONENTS],
-      options: { selector: '[data-theme="dark"]' },
-      emit: await changedFrom(colorTheme('light'), colorTheme('dark')),
-    },
-    {
-      label: `mobile (< ${mobileBreakpoint})`,
-      source: [PRIMITIVES, BRAND, colorTheme('light'), TYPOGRAPHY, sizeTheme('mobile'), COMPONENTS],
-      options: { selector: ':root', media: `(max-width: ${mobileBreakpoint})` },
-      emit: await changedFrom(sizeTheme('desktop'), sizeTheme('mobile')),
-    },
-  ];
+  /**
+   * Les tokens de composant pèsent ~75 % du dictionnaire. On les sort dans un
+   * fichier à part : un projet qui écrit ses propres composants n'a aucun besoin
+   * de ces 1100+ variables, et peut n'importer que le système.
+   *
+   * Ils n'apparaissent QUE dans `:root` : un token de composant pointe sur une
+   * var() sémantique, donc il est invariant par mode — c'est la couche sémantique
+   * qui bascule sous lui.
+   */
+  const isComponent = (token) => token.filePath.includes('tokens/components/');
+  const not = (fn) => (token) => !fn(token);
+  const and = (a, b) => (token) => a(token) && b(token);
 
-  const blocks = [];
-  for (const build of builds) {
-    const output = await cssBlock(build);
+  const modeChanged = await changedFrom(modeTheme('light'), modeTheme('dark'));
+  const sizeChanged = await changedFrom(sizeTheme('desktop'), sizeTheme('mobile'));
 
-    // Un token non résolu sort en `undefined` SANS faire échouer Style Dictionary :
-    // le build afficherait ✔ en produisant un CSS entièrement vide. Déjà arrivé une
-    // fois (formatter DTCG mal configuré). On échoue bruyamment.
-    const broken = output.match(/^\s*--[\w-]+:\s*undefined;/gm);
-    if (broken) {
-      throw new Error(
-        `[${build.label}] ${broken.length} token(s) non résolu(s) — valeur "undefined" :\n` +
-          broken.slice(0, 5).map((l) => `    ${l.trim()}`).join('\n') +
-          (broken.length > 5 ? `\n    … et ${broken.length - 5} autres` : ''),
-      );
+  const darkSource = [PRIMITIVES, BRAND, modeTheme('dark'), TYPOGRAPHY, EFFECT, sizeTheme('desktop'), COMPONENTS];
+  const mobileSource = [PRIMITIVES, BRAND, modeTheme('light'), TYPOGRAPHY, EFFECT, sizeTheme('mobile'), COMPONENTS];
+
+  const FILES = {
+    'tokens.css': {
+      title: 'le système : primitives, brand, rôles sémantiques',
+      builds: [
+        { label: 'tokens.css · root', source: base, options: { selector: ':root' }, emit: not(isComponent) },
+        { label: 'tokens.css · dark', source: darkSource, options: { selector: '[data-theme="dark"]' }, emit: and(modeChanged, not(isComponent)) },
+        { label: `tokens.css · mobile (< ${mobileBreakpoint})`, source: mobileSource, options: { selector: ':root', media: `(max-width: ${mobileBreakpoint})` }, emit: and(sizeChanged, not(isComponent)) },
+      ],
+    },
+    'components.css': {
+      title: 'les tokens de composant — REQUIERT tokens.css',
+      builds: [
+        { label: 'components.css · root', source: base, options: { selector: ':root' }, emit: isComponent },
+      ],
+    },
+  };
+
+  for (const [file, { title, builds }] of Object.entries(FILES)) {
+    const blocks = [];
+    for (const build of builds) {
+      const output = await cssBlock(build);
+
+      // Un token non résolu sort en `undefined` SANS faire échouer Style Dictionary :
+      // le build afficherait ✔ en produisant un CSS entièrement vide. Déjà arrivé une
+      // fois (formatter DTCG mal configuré). On échoue bruyamment.
+      const broken = output.match(/^\s*--[\w-]+:\s*undefined;/gm);
+      if (broken) {
+        throw new Error(
+          `[${build.label}] ${broken.length} token(s) non résolu(s) — valeur "undefined" :\n` +
+            broken.slice(0, 5).map((l) => `    ${l.trim()}`).join('\n') +
+            (broken.length > 5 ? `\n    … et ${broken.length - 5} autres` : ''),
+        );
+      }
+      if (output.trim()) blocks.push(output.trim());
     }
 
-    blocks.push(output.trim());
-    console.log(`  ✔ ${build.label}`);
+    const head = [
+      '/**',
+      ' * Do not edit directly, this file was auto-generated.',
+      ` * ${title}`,
+      ...(file === 'components.css'
+        ? [' *', " * @import './tokens.css' AVANT ce fichier : chaque token pointe sur une", ' * variable sémantique définie là-bas.']
+        : [
+            ' *',
+            ' * :root                → thème clair, tailles desktop',
+            ' * [data-theme="dark"]  → surcharges du thème sombre',
+            ` * @media (max-width)   → surcharges des tailles mobile (< ${mobileBreakpoint})`,
+          ]),
+      ' */',
+      '',
+    ].join('\n');
+
+    await fs.writeFile(path.join(DIST, file), `${head}\n${blocks.join('\n\n')}\n`);
+    const count = blocks.join('').match(/--[\w-]+:/g)?.length ?? 0;
+    console.log(`  ✔ ${DIST}/${file.padEnd(15)} ${String(count).padStart(5)} déclarations`);
   }
 
-  const header = [
-    '/**',
-    ' * Do not edit directly, this file was auto-generated.',
-    ' *',
-    ' * :root                → thème clair, tailles desktop',
-    ' * [data-theme="dark"]  → surcharges du thème sombre',
-    ` * @media (max-width)   → surcharges des tailles mobile (< ${mobileBreakpoint})`,
-    ' */',
-    '',
-  ].join('\n');
-
-  await fs.writeFile(path.join(DIST, 'tokens.css'), `${header}\n${blocks.join('\n\n')}\n`);
-  console.log(`  ✔ ${DIST}/tokens.css`);
-
   await jsonFlat(base);
-  console.log(`  ✔ ${DIST}/tokens.json`);
+  console.log(`  ✔ ${DIST}/tokens.json    (le dictionnaire complet, à plat)`);
 }
 
 main().catch((err) => {

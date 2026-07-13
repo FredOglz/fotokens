@@ -1,6 +1,6 @@
 {
   "color": {
-    "input": {
+    "textarea": {
       "default": {
         "background": {
           "$value": "{color.surface.base}"
@@ -74,112 +74,32 @@
     },
     "$type": "color"
   },
-  "size": {
-    "input": {
-      "sm": {
-        "height": {
-          "$value": "{controlHeight.sm}"
-        },
-        "icon": {
-          "$value": "{glyphSize.sm}"
-        }
-      },
-      "md": {
-        "height": {
-          "$value": "{controlHeight.md}"
-        },
-        "icon": {
-          "$value": "{glyphSize.md}"
-        }
-      },
-      "lg": {
-        "height": {
-          "$value": "{controlHeight.lg}"
-        },
-        "icon": {
-          "$value": "{glyphSize.lg}"
-        }
-      }
-    },
-    "$type": "dimension"
-  },
   "space": {
-    "input": {
-      "sm": {
-        "paddingX": {
-          "$value": "{space.sm}"
-        },
-        "paddingY": {
-          "$value": "{space.xs}"
-        },
-        "gap": {
-          "$value": "{space.xs}"
-        }
+    "textarea": {
+      "paddingX": {
+        "$value": "{space.sm}"
       },
-      "md": {
-        "paddingX": {
-          "$value": "{space.sm}"
-        },
-        "paddingY": {
-          "$value": "{space.sm}"
-        },
-        "gap": {
-          "$value": "{space.xs}"
-        }
-      },
-      "lg": {
-        "paddingX": {
-          "$value": "{space.md}"
-        },
-        "paddingY": {
-          "$value": "{space.sm}"
-        },
-        "gap": {
-          "$value": "{space.xs}"
-        }
+      "paddingY": {
+        "$value": "{space.sm}"
       }
     },
     "$type": "dimension"
   },
   "fontSize": {
-    "input": {
-      "sm": {
-        "$value": "{fontSize.small}"
-      },
-      "md": {
-        "$value": "{fontSize.body}"
-      },
-      "lg": {
-        "$value": "{fontSize.lead}"
-      }
+    "textarea": {
+      "$value": "{fontSize.body}"
     },
     "$type": "dimension"
   },
   "radius": {
-    "input": {
-      "sm": {
-        "$value": "{radius.sm}"
-      },
-      "md": {
-        "$value": "{radius.sm}"
-      },
-      "lg": {
-        "$value": "{radius.md}"
-      }
+    "textarea": {
+      "$value": "{radius.sm}"
     },
     "$type": "dimension"
   },
   "borderWidth": {
-    "input": {
-      "sm": {
-        "$value": "{borderWidth.default}"
-      },
-      "md": {
-        "$value": "{borderWidth.default}"
-      },
-      "lg": {
-        "$value": "{borderWidth.default}"
-      }
+    "textarea": {
+      "$value": "{borderWidth.default}"
     },
     "$type": "dimension"
   }

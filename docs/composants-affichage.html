@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>4 · Composants — affichage — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  
+    <div class="nav-group">
+      <h5>Comprendre</h5>
+      <ul><li><a href="index.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Architecture</a></li><li><a href="demarrer.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Démarrer un projet</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Le système</h5>
+      <ul><li><a href="primitives.html" class="">
+            <span class="nav-num">1</span>
+            Primitives</a></li><li><a href="brand.html" class="">
+            <span class="nav-num">2</span>
+            Brand</a></li><li><a href="roles.html" class="">
+            <span class="nav-num">3</span>
+            Contrat de rôle</a></li><li><a href="semantique.html" class="">
+            <span class="nav-num">3</span>
+            Sémantique (reste)</a></li><li><a href="effets.html" class="">
+            <span class="nav-num">3</span>
+            Effets & mouvement</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Composants</h5>
+      <ul><li><a href="composants-formulaire.html" class="">
+            <span class="nav-num">4</span>
+            Formulaire</a></li><li><a href="composants-affichage.html" class="on">
+            <span class="nav-num">4</span>
+            Affichage</a><ul class="sub"><li><a href="#badge" data-anchor="badge">Badge</a></li><li><a href="#tag" data-anchor="tag">Tag</a></li><li><a href="#alert" data-anchor="alert">Alert</a></li><li><a href="#card" data-anchor="card">Card</a></li><li><a href="#tooltip" data-anchor="tooltip">Tooltip</a></li><li><a href="#link" data-anchor="link">Link</a></li></ul></li><li><a href="composants-structure.html" class="">
+            <span class="nav-num">4</span>
+            Structure</a></li></ul>
+    </div>
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>4 · Composants — affichage</h1>
+    <p class="lead">Badge, Tag, Alert, Card, Tooltip, Link.</p>
+    <h2 id="badge">Badge</h2><p class="note">Statique : un badge ne réagit pas au survol. Un seul état.</p><h3><code>filled</code></h3><div class="demo "><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-filled-primary-default-background);
+            color: var(--color-badge-filled-primary-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-filled-primary-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">primary</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-filled-neutral-default-background);
+            color: var(--color-badge-filled-neutral-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-filled-neutral-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">neutral</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-filled-success-default-background);
+            color: var(--color-badge-filled-success-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-filled-success-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">success</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-filled-warning-default-background);
+            color: var(--color-badge-filled-warning-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-filled-warning-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">warning</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-filled-danger-default-background);
+            color: var(--color-badge-filled-danger-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-filled-danger-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">danger</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-filled-info-default-background);
+            color: var(--color-badge-filled-info-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-filled-info-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">info</span></div></div><h3><code>subtle</code></h3><div class="demo "><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-subtle-primary-default-background);
+            color: var(--color-badge-subtle-primary-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-subtle-primary-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">primary</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-subtle-neutral-default-background);
+            color: var(--color-badge-subtle-neutral-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-subtle-neutral-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">neutral</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-subtle-success-default-background);
+            color: var(--color-badge-subtle-success-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-subtle-success-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">success</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-subtle-warning-default-background);
+            color: var(--color-badge-subtle-warning-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-subtle-warning-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">warning</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-subtle-danger-default-background);
+            color: var(--color-badge-subtle-danger-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-subtle-danger-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">danger</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-subtle-info-default-background);
+            color: var(--color-badge-subtle-info-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-subtle-info-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">info</span></div></div><h3><code>outlined</code></h3><div class="demo "><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-outlined-primary-default-background);
+            color: var(--color-badge-outlined-primary-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-outlined-primary-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">primary</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-outlined-neutral-default-background);
+            color: var(--color-badge-outlined-neutral-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-outlined-neutral-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">neutral</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-outlined-success-default-background);
+            color: var(--color-badge-outlined-success-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-outlined-success-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">success</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-outlined-warning-default-background);
+            color: var(--color-badge-outlined-warning-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-outlined-warning-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">warning</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-outlined-danger-default-background);
+            color: var(--color-badge-outlined-danger-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-outlined-danger-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">danger</span></div><div class="demo-item"><span class="pill" style="
+            background: var(--color-badge-outlined-info-default-background);
+            color: var(--color-badge-outlined-info-default-text);
+            border: var(--border-width-badge-md) solid var(--color-badge-outlined-info-default-border);
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">info</span></div></div>
+<h2 id="tag">Tag</h2><p class="note">Interactif : c'est un badge qui se survole et se supprime.</p><h3><code>filled</code></h3><div class="scroll-x"><table class="tbl btn-grid ">
+    <thead><tr><th></th><th>default</th><th>hover</th><th>disabled</th></tr></thead><tbody><tr><th class="rh">primary</th><td><span class="pill" style="
+          background: var(--color-tag-filled-primary-default-background);
+          color: var(--color-tag-filled-primary-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-primary-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">primary</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-primary-hover-background);
+          color: var(--color-tag-filled-primary-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-primary-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">primary</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-primary-disabled-background);
+          color: var(--color-tag-filled-primary-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-primary-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">primary</span></td></tr><tr><th class="rh">neutral</th><td><span class="pill" style="
+          background: var(--color-tag-filled-neutral-default-background);
+          color: var(--color-tag-filled-neutral-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-neutral-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">neutral</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-neutral-hover-background);
+          color: var(--color-tag-filled-neutral-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-neutral-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">neutral</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-neutral-disabled-background);
+          color: var(--color-tag-filled-neutral-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-neutral-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">neutral</span></td></tr><tr><th class="rh">success</th><td><span class="pill" style="
+          background: var(--color-tag-filled-success-default-background);
+          color: var(--color-tag-filled-success-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-success-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">success</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-success-hover-background);
+          color: var(--color-tag-filled-success-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-success-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">success</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-success-disabled-background);
+          color: var(--color-tag-filled-success-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-success-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">success</span></td></tr><tr><th class="rh">warning</th><td><span class="pill" style="
+          background: var(--color-tag-filled-warning-default-background);
+          color: var(--color-tag-filled-warning-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-warning-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">warning</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-warning-hover-background);
+          color: var(--color-tag-filled-warning-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-warning-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">warning</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-warning-disabled-background);
+          color: var(--color-tag-filled-warning-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-warning-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">warning</span></td></tr><tr><th class="rh">danger</th><td><span class="pill" style="
+          background: var(--color-tag-filled-danger-default-background);
+          color: var(--color-tag-filled-danger-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-danger-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">danger</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-danger-hover-background);
+          color: var(--color-tag-filled-danger-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-danger-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">danger</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-danger-disabled-background);
+          color: var(--color-tag-filled-danger-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-danger-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">danger</span></td></tr><tr><th class="rh">info</th><td><span class="pill" style="
+          background: var(--color-tag-filled-info-default-background);
+          color: var(--color-tag-filled-info-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-info-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">info</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-info-hover-background);
+          color: var(--color-tag-filled-info-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-info-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">info</span></td><td><span class="pill" style="
+          background: var(--color-tag-filled-info-disabled-background);
+          color: var(--color-tag-filled-info-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-filled-info-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">info</span></td></tr></tbody></table></div><h3><code>subtle</code></h3><div class="scroll-x"><table class="tbl btn-grid checker">
+    <thead><tr><th></th><th>default</th><th>hover</th><th>disabled</th></tr></thead><tbody><tr><th class="rh">primary</th><td><span class="pill" style="
+          background: var(--color-tag-subtle-primary-default-background);
+          color: var(--color-tag-subtle-primary-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-primary-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">primary</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-primary-hover-background);
+          color: var(--color-tag-subtle-primary-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-primary-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">primary</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-primary-disabled-background);
+          color: var(--color-tag-subtle-primary-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-primary-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">primary</span></td></tr><tr><th class="rh">neutral</th><td><span class="pill" style="
+          background: var(--color-tag-subtle-neutral-default-background);
+          color: var(--color-tag-subtle-neutral-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-neutral-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">neutral</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-neutral-hover-background);
+          color: var(--color-tag-subtle-neutral-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-neutral-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">neutral</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-neutral-disabled-background);
+          color: var(--color-tag-subtle-neutral-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-neutral-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">neutral</span></td></tr><tr><th class="rh">success</th><td><span class="pill" style="
+          background: var(--color-tag-subtle-success-default-background);
+          color: var(--color-tag-subtle-success-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-success-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">success</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-success-hover-background);
+          color: var(--color-tag-subtle-success-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-success-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">success</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-success-disabled-background);
+          color: var(--color-tag-subtle-success-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-success-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">success</span></td></tr><tr><th class="rh">warning</th><td><span class="pill" style="
+          background: var(--color-tag-subtle-warning-default-background);
+          color: var(--color-tag-subtle-warning-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-warning-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">warning</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-warning-hover-background);
+          color: var(--color-tag-subtle-warning-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-warning-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">warning</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-warning-disabled-background);
+          color: var(--color-tag-subtle-warning-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-warning-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">warning</span></td></tr><tr><th class="rh">danger</th><td><span class="pill" style="
+          background: var(--color-tag-subtle-danger-default-background);
+          color: var(--color-tag-subtle-danger-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-danger-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">danger</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-danger-hover-background);
+          color: var(--color-tag-subtle-danger-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-danger-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">danger</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-danger-disabled-background);
+          color: var(--color-tag-subtle-danger-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-danger-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">danger</span></td></tr><tr><th class="rh">info</th><td><span class="pill" style="
+          background: var(--color-tag-subtle-info-default-background);
+          color: var(--color-tag-subtle-info-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-info-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">info</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-info-hover-background);
+          color: var(--color-tag-subtle-info-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-info-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">info</span></td><td><span class="pill" style="
+          background: var(--color-tag-subtle-info-disabled-background);
+          color: var(--color-tag-subtle-info-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-subtle-info-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">info</span></td></tr></tbody></table></div><h3><code>outlined</code></h3><div class="scroll-x"><table class="tbl btn-grid checker">
+    <thead><tr><th></th><th>default</th><th>hover</th><th>disabled</th></tr></thead><tbody><tr><th class="rh">primary</th><td><span class="pill" style="
+          background: var(--color-tag-outlined-primary-default-background);
+          color: var(--color-tag-outlined-primary-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-primary-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">primary</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-primary-hover-background);
+          color: var(--color-tag-outlined-primary-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-primary-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">primary</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-primary-disabled-background);
+          color: var(--color-tag-outlined-primary-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-primary-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">primary</span></td></tr><tr><th class="rh">neutral</th><td><span class="pill" style="
+          background: var(--color-tag-outlined-neutral-default-background);
+          color: var(--color-tag-outlined-neutral-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-neutral-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">neutral</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-neutral-hover-background);
+          color: var(--color-tag-outlined-neutral-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-neutral-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">neutral</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-neutral-disabled-background);
+          color: var(--color-tag-outlined-neutral-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-neutral-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">neutral</span></td></tr><tr><th class="rh">success</th><td><span class="pill" style="
+          background: var(--color-tag-outlined-success-default-background);
+          color: var(--color-tag-outlined-success-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-success-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">success</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-success-hover-background);
+          color: var(--color-tag-outlined-success-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-success-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">success</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-success-disabled-background);
+          color: var(--color-tag-outlined-success-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-success-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">success</span></td></tr><tr><th class="rh">warning</th><td><span class="pill" style="
+          background: var(--color-tag-outlined-warning-default-background);
+          color: var(--color-tag-outlined-warning-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-warning-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">warning</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-warning-hover-background);
+          color: var(--color-tag-outlined-warning-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-warning-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">warning</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-warning-disabled-background);
+          color: var(--color-tag-outlined-warning-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-warning-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">warning</span></td></tr><tr><th class="rh">danger</th><td><span class="pill" style="
+          background: var(--color-tag-outlined-danger-default-background);
+          color: var(--color-tag-outlined-danger-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-danger-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">danger</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-danger-hover-background);
+          color: var(--color-tag-outlined-danger-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-danger-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">danger</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-danger-disabled-background);
+          color: var(--color-tag-outlined-danger-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-danger-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">danger</span></td></tr><tr><th class="rh">info</th><td><span class="pill" style="
+          background: var(--color-tag-outlined-info-default-background);
+          color: var(--color-tag-outlined-info-default-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-info-default-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">info</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-info-hover-background);
+          color: var(--color-tag-outlined-info-hover-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-info-hover-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">info</span></td><td><span class="pill" style="
+          background: var(--color-tag-outlined-info-disabled-background);
+          color: var(--color-tag-outlined-info-disabled-text);
+          border: var(--border-width-tag-md) solid var(--color-tag-outlined-info-disabled-border);
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">info</span></td></tr></tbody></table></div>
+<h2 id="alert">Alert</h2><h3><code>subtle</code></h3><div class="alerts"><div class="alert" style="
+            background: var(--color-alert-subtle-primary-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-subtle-primary-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-subtle-primary-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-subtle-primary-default-title)">primary</b>
+              <p style="color: var(--color-alert-subtle-primary-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-subtle-neutral-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-subtle-neutral-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-subtle-neutral-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-subtle-neutral-default-title)">neutral</b>
+              <p style="color: var(--color-alert-subtle-neutral-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-subtle-success-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-subtle-success-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-subtle-success-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-subtle-success-default-title)">success</b>
+              <p style="color: var(--color-alert-subtle-success-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-subtle-warning-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-subtle-warning-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-subtle-warning-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-subtle-warning-default-title)">warning</b>
+              <p style="color: var(--color-alert-subtle-warning-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-subtle-danger-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-subtle-danger-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-subtle-danger-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-subtle-danger-default-title)">danger</b>
+              <p style="color: var(--color-alert-subtle-danger-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-subtle-info-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-subtle-info-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-subtle-info-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-subtle-info-default-title)">info</b>
+              <p style="color: var(--color-alert-subtle-info-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div></div><h3><code>filled</code></h3><div class="alerts"><div class="alert" style="
+            background: var(--color-alert-filled-primary-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-filled-primary-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-filled-primary-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-filled-primary-default-title)">primary</b>
+              <p style="color: var(--color-alert-filled-primary-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-filled-neutral-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-filled-neutral-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-filled-neutral-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-filled-neutral-default-title)">neutral</b>
+              <p style="color: var(--color-alert-filled-neutral-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-filled-success-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-filled-success-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-filled-success-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-filled-success-default-title)">success</b>
+              <p style="color: var(--color-alert-filled-success-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-filled-warning-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-filled-warning-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-filled-warning-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-filled-warning-default-title)">warning</b>
+              <p style="color: var(--color-alert-filled-warning-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-filled-danger-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-filled-danger-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-filled-danger-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-filled-danger-default-title)">danger</b>
+              <p style="color: var(--color-alert-filled-danger-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div><div class="alert" style="
+            background: var(--color-alert-filled-info-default-background);
+            border: var(--border-width-alert) solid var(--color-alert-filled-info-default-border);
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(--color-alert-filled-info-default-icon); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(--color-alert-filled-info-default-title)">info</b>
+              <p style="color: var(--color-alert-filled-info-default-text); margin:0">Un message d'alerte.</p>
+            </div>
+          </div></div>
+<h2 id="card">Card</h2><div class="demo"><div class="demo-item"><div class="card-demo" style="
+        background: var(--color-card-default-background);
+        border: var(--border-width-card) solid var(--color-card-default-border);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-card-default);
+        padding: var(--space-card-padding-y) var(--space-card-padding-x);
+      ">Carte</div><span class="demo-label">default</span></div><div class="demo-item"><div class="card-demo" style="
+        background: var(--color-card-hover-background);
+        border: var(--border-width-card) solid var(--color-card-hover-border);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-card-hover);
+        padding: var(--space-card-padding-y) var(--space-card-padding-x);
+      ">Carte</div><span class="demo-label">hover</span></div><div class="demo-item"><div class="card-demo" style="
+        background: var(--color-card-selected-background);
+        border: var(--border-width-card) solid var(--color-card-selected-border);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-card-selected);
+        padding: var(--space-card-padding-y) var(--space-card-padding-x);
+      ">Carte</div><span class="demo-label">selected</span></div></div>
+      <p class="note">La carte est le seul composant qui consomme un token d'<strong>ombre</strong> :
+      <code>shadow.raised</code> au repos, <code>shadow.float</code> au survol.</p>
+<h2 id="tooltip">Tooltip</h2><div class="demo"><div class="demo-item"><span class="pill" style="
+        background: var(--color-tooltip-default-background);
+        color: var(--color-tooltip-default-text);
+        border-radius: var(--radius-tooltip);
+        padding: var(--space-tooltip-padding-y) var(--space-tooltip-padding-x);
+        font-size: var(--font-size-tooltip);
+      ">Une infobulle</span><span class="demo-label">default</span></div></div>
+      <p class="note">Il consomme <code>surface.inverse</code> — le seul rôle pensé pour une rupture
+      visuelle négative.</p>
+<h2 id="link">Link</h2><div class="scroll-x"><table class="tbl btn-grid checker">
+    <thead><tr><th></th><th>default</th><th>hover</th><th>disabled</th></tr></thead><tbody><tr><th class="rh">primary</th><td><a href="#" style="color: var(--color-link-default-primary-default-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-primary-hover-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-primary-disabled-text); font-size: var(--font-size-link)">Un lien</a></td></tr><tr><th class="rh">neutral</th><td><a href="#" style="color: var(--color-link-default-neutral-default-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-neutral-hover-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-neutral-disabled-text); font-size: var(--font-size-link)">Un lien</a></td></tr><tr><th class="rh">success</th><td><a href="#" style="color: var(--color-link-default-success-default-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-success-hover-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-success-disabled-text); font-size: var(--font-size-link)">Un lien</a></td></tr><tr><th class="rh">warning</th><td><a href="#" style="color: var(--color-link-default-warning-default-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-warning-hover-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-warning-disabled-text); font-size: var(--font-size-link)">Un lien</a></td></tr><tr><th class="rh">danger</th><td><a href="#" style="color: var(--color-link-default-danger-default-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-danger-hover-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-danger-disabled-text); font-size: var(--font-size-link)">Un lien</a></td></tr><tr><th class="rh">info</th><td><a href="#" style="color: var(--color-link-default-info-default-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-info-hover-text); font-size: var(--font-size-link)">Un lien</a></td><td><a href="#" style="color: var(--color-link-default-info-disabled-text); font-size: var(--font-size-link)">Un lien</a></td></tr></tbody></table></div>
+    
+    <nav class="pager">
+      <a href="composants-formulaire.html" class="pg pg-prev"><span>← Précédent</span><b>Formulaire</b></a>
+      <a href="composants-structure.html" class="pg pg-next"><span>Suivant →</span><b>Structure</b></a>
+    </nav>
+  </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>

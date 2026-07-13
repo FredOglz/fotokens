@@ -1,0 +1,52 @@
+{
+  "color": {
+    "modal": {
+      "default": {
+        "background": {
+          "$value": "{color.surface.overlay}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "scrim": {
+          "$value": "{color.scrim}"
+        }
+      }
+    },
+    "$type": "color"
+  },
+  "shadow": {
+    "modal": {
+      "default": {
+        "$value": "{shadow.overlay}"
+      }
+    },
+    "$type": "shadow"
+  },
+  "space": {
+    "modal": {
+      "paddingX": {
+        "$value": "{space.xl}"
+      },
+      "paddingY": {
+        "$value": "{space.xl}"
+      },
+      "gap": {
+        "$value": "{space.lg}"
+      }
+    },
+    "$type": "dimension"
+  },
+  "radius": {
+    "modal": {
+      "$value": "{radius.lg}"
+    },
+    "$type": "dimension"
+  },
+  "borderWidth": {
+    "modal": {
+      "$value": "{borderWidth.default}"
+    },
+    "$type": "dimension"
+  }
+}

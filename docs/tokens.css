@@ -1,0 +1,517 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ * le système : primitives, brand, rôles sémantiques
+ *
+ * :root                → thème clair, tailles desktop
+ * [data-theme="dark"]  → surcharges du thème sombre
+ * @media (max-width)   → surcharges des tailles mobile (< 768px)
+ */
+
+:root {
+  --color-transparent: rgba(0, 0, 0, 0); /** Absence de couleur — fond des variantes outlined/ghost. */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-alpha-white-4: rgba(255, 255, 255, 0.04);
+  --color-alpha-white-8: rgba(255, 255, 255, 0.08);
+  --color-alpha-white-12: rgba(255, 255, 255, 0.12);
+  --color-alpha-white-16: rgba(255, 255, 255, 0.16);
+  --color-alpha-black-4: rgba(0, 0, 0, 0.04);
+  --color-alpha-black-8: rgba(0, 0, 0, 0.08);
+  --color-alpha-black-12: rgba(0, 0, 0, 0.12);
+  --color-alpha-black-16: rgba(0, 0, 0, 0.16);
+  --color-alpha-black-40: rgba(0, 0, 0, 0.4);
+  --color-alpha-black-60: rgba(0, 0, 0, 0.6);
+  --color-gray-25: #f9fafc;
+  --color-gray-50: #f1f3f7;
+  --color-gray-100: #e4e8ef;
+  --color-gray-200: #cfd4e0;
+  --color-gray-300: #b3bbcb;
+  --color-gray-400: #99a2b5;
+  --color-gray-500: #7e889c;
+  --color-gray-600: #666f82;
+  --color-gray-700: #4d5566;
+  --color-gray-800: #343b48;
+  --color-gray-900: #1d222c;
+  --color-gray-alpha-5: rgba(126, 136, 156, 0.05);
+  --color-gray-alpha-10: rgba(126, 136, 156, 0.1);
+  --color-blue-25: #f8faff;
+  --color-blue-50: #eef4ff;
+  --color-blue-100: #dde8ff;
+  --color-blue-200: #bfd5ff;
+  --color-blue-300: #98baff;
+  --color-blue-400: #719eff;
+  --color-blue-500: #467eff;
+  --color-blue-600: #2b60e8;
+  --color-blue-700: #1846bf;
+  --color-blue-800: #082c90;
+  --color-blue-900: #001362;
+  --color-blue-alpha-5: rgba(70, 126, 255, 0.05);
+  --color-blue-alpha-10: rgba(70, 126, 255, 0.1);
+  --color-red-25: #fff8f7;
+  --color-red-50: #ffefed;
+  --color-red-100: #ffe0db;
+  --color-red-200: #ffc3bc;
+  --color-red-300: #ff9b90;
+  --color-red-400: #ff6b60;
+  --color-red-500: #ed3b37;
+  --color-red-600: #cd161d;
+  --color-red-700: #a3000f;
+  --color-red-800: #730007;
+  --color-red-900: #470003;
+  --color-red-alpha-5: rgba(237, 59, 55, 0.05);
+  --color-red-alpha-10: rgba(237, 59, 55, 0.1);
+  --color-green-25: #f2fef3;
+  --color-green-50: #e4fbe7;
+  --color-green-100: #ccf4d3;
+  --color-green-200: #a1e8b0;
+  --color-green-300: #6fd488;
+  --color-green-400: #33bf62;
+  --color-green-500: #00a34a;
+  --color-green-600: #00853c;
+  --color-green-700: #00672d;
+  --color-green-800: #00481d;
+  --color-green-900: #002a0e;
+  --color-green-alpha-5: rgba(0, 163, 74, 0.05);
+  --color-green-alpha-10: rgba(0, 163, 74, 0.1);
+  --color-orange-25: #fff8f6;
+  --color-orange-50: #fff0ea;
+  --color-orange-100: #ffe0d5;
+  --color-orange-200: #ffc5b0;
+  --color-orange-300: #ff9e7a;
+  --color-orange-400: #fa743e;
+  --color-orange-500: #e25200;
+  --color-orange-600: #ba4200;
+  --color-orange-700: #913200;
+  --color-orange-800: #662000;
+  --color-orange-900: #3e1000;
+  --color-orange-alpha-5: rgba(226, 82, 0, 0.05);
+  --color-orange-alpha-10: rgba(226, 82, 0, 0.1);
+  --color-turquoise-25: #effefb;
+  --color-turquoise-50: #dffaf4;
+  --color-turquoise-100: #c3f4ea;
+  --color-turquoise-200: #90e8d7;
+  --color-turquoise-300: #4bd4bf;
+  --color-turquoise-400: #00bba6;
+  --color-turquoise-500: #009d8b;
+  --color-turquoise-600: #008172;
+  --color-turquoise-700: #006458;
+  --color-turquoise-800: #00453c;
+  --color-turquoise-900: #002823;
+  --color-turquoise-alpha-5: rgba(0, 157, 139, 0.05);
+  --color-turquoise-alpha-10: rgba(0, 157, 139, 0.1);
+  --color-slate-blue-25: #f6fbff;
+  --color-slate-blue-50: #edf4fd;
+  --color-slate-blue-100: #dceaf8;
+  --color-slate-blue-200: #c0d7ef;
+  --color-slate-blue-300: #9fbede;
+  --color-slate-blue-400: #80a5cc;
+  --color-slate-blue-500: #648bb4;
+  --color-slate-blue-600: #4c7299;
+  --color-slate-blue-700: #37587a;
+  --color-slate-blue-800: #213c58;
+  --color-slate-blue-900: #0e2338;
+  --color-slate-blue-alpha-5: rgba(100, 139, 180, 0.05);
+  --color-slate-blue-alpha-10: rgba(100, 139, 180, 0.1);
+  --color-violet-25: #fbf9ff;
+  --color-violet-50: #f6f0ff;
+  --color-violet-100: #eee2ff;
+  --color-violet-200: #dfc8ff;
+  --color-violet-300: #cda5ff;
+  --color-violet-400: #bc7eff;
+  --color-violet-500: #aa4cff;
+  --color-violet-600: #9500ee;
+  --color-violet-700: #7400bb;
+  --color-violet-800: #510085;
+  --color-violet-900: #300052;
+  --color-violet-alpha-5: rgba(170, 76, 255, 0.05);
+  --color-violet-alpha-10: rgba(170, 76, 255, 0.1);
+  --color-brand-primary-25: var(--color-violet-25);
+  --color-brand-primary-50: var(--color-violet-50);
+  --color-brand-primary-100: var(--color-violet-100);
+  --color-brand-primary-200: var(--color-violet-200);
+  --color-brand-primary-300: var(--color-violet-300);
+  --color-brand-primary-400: var(--color-violet-400);
+  --color-brand-primary-500: var(--color-violet-500);
+  --color-brand-primary-600: var(--color-violet-600);
+  --color-brand-primary-700: var(--color-violet-700);
+  --color-brand-primary-800: var(--color-violet-800);
+  --color-brand-primary-900: var(--color-violet-900);
+  --color-brand-primary-alpha-5: var(--color-violet-alpha-5);
+  --color-brand-primary-alpha-10: var(--color-violet-alpha-10);
+  --color-brand-neutral-25: var(--color-slate-blue-25);
+  --color-brand-neutral-50: var(--color-slate-blue-50);
+  --color-brand-neutral-100: var(--color-slate-blue-100);
+  --color-brand-neutral-200: var(--color-slate-blue-200);
+  --color-brand-neutral-300: var(--color-slate-blue-300);
+  --color-brand-neutral-400: var(--color-slate-blue-400);
+  --color-brand-neutral-500: var(--color-slate-blue-500);
+  --color-brand-neutral-600: var(--color-slate-blue-600);
+  --color-brand-neutral-700: var(--color-slate-blue-700);
+  --color-brand-neutral-800: var(--color-slate-blue-800);
+  --color-brand-neutral-900: var(--color-slate-blue-900);
+  --color-brand-neutral-alpha-5: var(--color-slate-blue-alpha-5);
+  --color-brand-neutral-alpha-10: var(--color-slate-blue-alpha-10);
+  --color-brand-success-25: var(--color-green-25);
+  --color-brand-success-50: var(--color-green-50);
+  --color-brand-success-100: var(--color-green-100);
+  --color-brand-success-200: var(--color-green-200);
+  --color-brand-success-300: var(--color-green-300);
+  --color-brand-success-400: var(--color-green-400);
+  --color-brand-success-500: var(--color-green-500);
+  --color-brand-success-600: var(--color-green-600);
+  --color-brand-success-700: var(--color-green-700);
+  --color-brand-success-800: var(--color-green-800);
+  --color-brand-success-900: var(--color-green-900);
+  --color-brand-success-alpha-5: var(--color-green-alpha-5);
+  --color-brand-success-alpha-10: var(--color-green-alpha-10);
+  --color-brand-warning-25: var(--color-orange-25);
+  --color-brand-warning-50: var(--color-orange-50);
+  --color-brand-warning-100: var(--color-orange-100);
+  --color-brand-warning-200: var(--color-orange-200);
+  --color-brand-warning-300: var(--color-orange-300);
+  --color-brand-warning-400: var(--color-orange-400);
+  --color-brand-warning-500: var(--color-orange-500);
+  --color-brand-warning-600: var(--color-orange-600);
+  --color-brand-warning-700: var(--color-orange-700);
+  --color-brand-warning-800: var(--color-orange-800);
+  --color-brand-warning-900: var(--color-orange-900);
+  --color-brand-warning-alpha-5: var(--color-orange-alpha-5);
+  --color-brand-warning-alpha-10: var(--color-orange-alpha-10);
+  --color-brand-danger-25: var(--color-red-25);
+  --color-brand-danger-50: var(--color-red-50);
+  --color-brand-danger-100: var(--color-red-100);
+  --color-brand-danger-200: var(--color-red-200);
+  --color-brand-danger-300: var(--color-red-300);
+  --color-brand-danger-400: var(--color-red-400);
+  --color-brand-danger-500: var(--color-red-500);
+  --color-brand-danger-600: var(--color-red-600);
+  --color-brand-danger-700: var(--color-red-700);
+  --color-brand-danger-800: var(--color-red-800);
+  --color-brand-danger-900: var(--color-red-900);
+  --color-brand-danger-alpha-5: var(--color-red-alpha-5);
+  --color-brand-danger-alpha-10: var(--color-red-alpha-10);
+  --color-brand-info-25: var(--color-blue-25);
+  --color-brand-info-50: var(--color-blue-50);
+  --color-brand-info-100: var(--color-blue-100);
+  --color-brand-info-200: var(--color-blue-200);
+  --color-brand-info-300: var(--color-blue-300);
+  --color-brand-info-400: var(--color-blue-400);
+  --color-brand-info-500: var(--color-blue-500);
+  --color-brand-info-600: var(--color-blue-600);
+  --color-brand-info-700: var(--color-blue-700);
+  --color-brand-info-800: var(--color-blue-800);
+  --color-brand-info-900: var(--color-blue-900);
+  --color-brand-info-alpha-5: var(--color-blue-alpha-5);
+  --color-brand-info-alpha-10: var(--color-blue-alpha-10);
+  --color-brand-categorical-1-main: var(--color-violet-600);
+  --color-brand-categorical-1-tint: var(--color-violet-alpha-10);
+  --color-brand-categorical-2-main: var(--color-blue-600);
+  --color-brand-categorical-2-tint: var(--color-blue-alpha-10);
+  --color-brand-categorical-3-main: var(--color-green-600);
+  --color-brand-categorical-3-tint: var(--color-green-alpha-10);
+  --color-brand-categorical-4-main: var(--color-orange-600);
+  --color-brand-categorical-4-tint: var(--color-orange-alpha-10);
+  --color-brand-categorical-5-main: var(--color-red-600);
+  --color-brand-categorical-5-tint: var(--color-red-alpha-10);
+  --color-brand-categorical-6-main: var(--color-turquoise-600);
+  --color-brand-categorical-6-tint: var(--color-turquoise-alpha-10);
+  --color-role-primary-main: var(--color-brand-primary-600); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-primary-hover: var(--color-brand-primary-700); /** Élévation au survol d’un composant plein. */
+  --color-role-primary-active: var(--color-brand-primary-800); /** Élévation à l’état pressé. */
+  --color-role-primary-on: var(--color-brand-neutral-25); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-primary-text: var(--color-brand-primary-700); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-primary-border: var(--color-brand-primary-300); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-primary-subtle: var(--color-brand-primary-50); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-primary-tint: var(--color-brand-primary-alpha-5); /** Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark. */
+  --color-role-primary-tint-strong: var(--color-brand-primary-alpha-10); /** Voile translucide 10 % — état pressé des variantes outlined/ghost. */
+  --color-role-neutral-main: var(--color-brand-neutral-600); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-neutral-hover: var(--color-brand-neutral-700); /** Élévation au survol d’un composant plein. */
+  --color-role-neutral-active: var(--color-brand-neutral-800); /** Élévation à l’état pressé. */
+  --color-role-neutral-on: var(--color-brand-neutral-25); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-neutral-text: var(--color-brand-neutral-700); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-neutral-border: var(--color-brand-neutral-300); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-neutral-subtle: var(--color-brand-neutral-50); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-neutral-tint: var(--color-brand-neutral-alpha-5); /** Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark. */
+  --color-role-neutral-tint-strong: var(--color-brand-neutral-alpha-10); /** Voile translucide 10 % — état pressé des variantes outlined/ghost. */
+  --color-role-success-main: var(--color-brand-success-600); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-success-hover: var(--color-brand-success-700); /** Élévation au survol d’un composant plein. */
+  --color-role-success-active: var(--color-brand-success-800); /** Élévation à l’état pressé. */
+  --color-role-success-on: var(--color-brand-neutral-25); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-success-text: var(--color-brand-success-700); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-success-border: var(--color-brand-success-300); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-success-subtle: var(--color-brand-success-50); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-success-tint: var(--color-brand-success-alpha-5); /** Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark. */
+  --color-role-success-tint-strong: var(--color-brand-success-alpha-10); /** Voile translucide 10 % — état pressé des variantes outlined/ghost. */
+  --color-role-warning-main: var(--color-brand-warning-600); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-warning-hover: var(--color-brand-warning-700); /** Élévation au survol d’un composant plein. */
+  --color-role-warning-active: var(--color-brand-warning-800); /** Élévation à l’état pressé. */
+  --color-role-warning-on: var(--color-brand-neutral-25); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-warning-text: var(--color-brand-warning-700); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-warning-border: var(--color-brand-warning-300); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-warning-subtle: var(--color-brand-warning-50); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-warning-tint: var(--color-brand-warning-alpha-5); /** Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark. */
+  --color-role-warning-tint-strong: var(--color-brand-warning-alpha-10); /** Voile translucide 10 % — état pressé des variantes outlined/ghost. */
+  --color-role-danger-main: var(--color-brand-danger-600); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-danger-hover: var(--color-brand-danger-700); /** Élévation au survol d’un composant plein. */
+  --color-role-danger-active: var(--color-brand-danger-800); /** Élévation à l’état pressé. */
+  --color-role-danger-on: var(--color-brand-neutral-25); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-danger-text: var(--color-brand-danger-700); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-danger-border: var(--color-brand-danger-300); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-danger-subtle: var(--color-brand-danger-50); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-danger-tint: var(--color-brand-danger-alpha-5); /** Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark. */
+  --color-role-danger-tint-strong: var(--color-brand-danger-alpha-10); /** Voile translucide 10 % — état pressé des variantes outlined/ghost. */
+  --color-role-info-main: var(--color-brand-info-600); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-info-hover: var(--color-brand-info-700); /** Élévation au survol d’un composant plein. */
+  --color-role-info-active: var(--color-brand-info-800); /** Élévation à l’état pressé. */
+  --color-role-info-on: var(--color-brand-neutral-25); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-info-text: var(--color-brand-info-700); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-info-border: var(--color-brand-info-300); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-info-subtle: var(--color-brand-info-50); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-info-tint: var(--color-brand-info-alpha-5); /** Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark. */
+  --color-role-info-tint-strong: var(--color-brand-info-alpha-10); /** Voile translucide 10 % — état pressé des variantes outlined/ghost. */
+  --color-surface-base: var(--color-brand-neutral-25); /** Fond de l’application. */
+  --color-surface-raised: var(--color-brand-neutral-50); /** Fond d’un bloc surélevé (carte, panneau). */
+  --color-surface-overlay: var(--color-brand-neutral-25); /** Fond d’un élément flottant (popover, menu, modale). */
+  --color-surface-sunken: var(--color-brand-neutral-100); /** Fond en creux (piste de slider, zone de dépôt). */
+  --color-surface-inverse: var(--color-brand-neutral-900); /** Rupture visuelle négative (tooltip, bandeau). */
+  --color-surface-disabled: var(--color-brand-neutral-100); /** Fond d’un composant désactivé. */
+  --color-surface-transparent: var(--color-transparent); /** Fond absent (variantes outlined/ghost). */
+  --color-text-strong: var(--color-brand-neutral-900); /** Titres et libellés d’interface appuyés. Le contraste maximal. */
+  --color-text-body: var(--color-brand-neutral-800); /** Texte de lecture. */
+  --color-text-muted: var(--color-brand-neutral-600); /** Texte secondaire (légende, description). */
+  --color-text-faint: var(--color-brand-neutral-400); /** ⚠ NE PASSE PAS AA — décoratif uniquement (séparateurs, échafaudage). Jamais pour du texte à lire. */
+  --color-text-disabled: var(--color-brand-neutral-300); /** Texte d’un composant désactivé. */
+  --color-text-inverse: var(--color-brand-neutral-25); /** Texte posé sur `surface.inverse`. */
+  --color-border-default: var(--color-brand-neutral-200); /** Bordure par défaut de tous les composants. */
+  --color-border-strong: var(--color-brand-neutral-400); /** Bordure appuyée. */
+  --color-border-divider: var(--color-brand-neutral-100); /** Séparateur entre deux blocs de contenu. */
+  --color-border-disabled: var(--color-brand-neutral-200); /** Bordure d’un composant désactivé. */
+  --color-border-transparent: var(--color-transparent); /** Bordure absente. */
+  --color-state-hover: var(--color-alpha-black-4); /** Voile de survol neutre (ligne de tableau, item de liste). */
+  --color-state-selected: var(--color-alpha-black-8); /** Voile d’un élément sélectionné. */
+  --color-state-active: var(--color-alpha-black-12); /** Voile d’un élément pressé. */
+  --color-focus-ring: var(--color-brand-primary-500); /** Anneau de focus clavier. Doit rester visible sur tous les fonds. */
+  --color-scrim: var(--color-alpha-black-60); /** Voile assombrissant sous une modale ou un drawer. */
+  --color-categorical-1-main: var(--color-brand-categorical-1-main);
+  --color-categorical-1-tint: var(--color-brand-categorical-1-tint);
+  --color-categorical-2-main: var(--color-brand-categorical-2-main);
+  --color-categorical-2-tint: var(--color-brand-categorical-2-tint);
+  --color-categorical-3-main: var(--color-brand-categorical-3-main);
+  --color-categorical-3-tint: var(--color-brand-categorical-3-tint);
+  --color-categorical-4-main: var(--color-brand-categorical-4-main);
+  --color-categorical-4-tint: var(--color-brand-categorical-4-tint);
+  --color-categorical-5-main: var(--color-brand-categorical-5-main);
+  --color-categorical-5-tint: var(--color-brand-categorical-5-tint);
+  --color-categorical-6-main: var(--color-brand-categorical-6-main);
+  --color-categorical-6-tint: var(--color-brand-categorical-6-tint);
+  --duration-instant: 0ms;
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1); /** Défaut : accélère vite, décélère long. Pour les changements d'état. */
+  --easing-enter: cubic-bezier(0, 0, 0.2, 1); /** Entrée : démarre à pleine vitesse, se pose en douceur. */
+  --easing-exit: cubic-bezier(0.4, 0, 1, 1); /** Sortie : part doucement puis s'échappe. */
+  --easing-emphasized: cubic-bezier(0.2, 0, 0, 1); /** Mouvements appuyés (modale, drawer). */
+  --opacity-0: 0;
+  --opacity-40: 0.4;
+  --opacity-60: 0.6;
+  --opacity-100: 1;
+  --opacity-disabled: var(--opacity-40); /** Alternative aux couleurs `disabled` dédiées : atténue un composant entier d'un coup. */
+  --elevation-raised-offset-y: 1px;
+  --elevation-raised-blur: 2px;
+  --elevation-raised-spread: 0;
+  --elevation-float-offset-y: 12px;
+  --elevation-float-blur: 32px;
+  --elevation-float-spread: -8px;
+  --elevation-overlay-offset-y: 16px;
+  --elevation-overlay-blur: 48px;
+  --elevation-overlay-spread: -12px;
+  --size-spacing-0: 0;
+  --size-spacing-1: 2px;
+  --size-spacing-2: 4px;
+  --size-spacing-3: 8px;
+  --size-spacing-4: 12px;
+  --size-spacing-5: 16px;
+  --size-spacing-6: 20px;
+  --size-spacing-7: 24px;
+  --size-spacing-8: 32px;
+  --size-spacing-9: 40px;
+  --size-spacing-10: 48px;
+  --size-spacing-11: 64px;
+  --size-font-xs: 12px;
+  --size-font-sm: 14px;
+  --size-font-md: 16px;
+  --size-font-lg: 20px;
+  --size-font-xl: 24px;
+  --size-font-2xl: 32px;
+  --size-font-3xl: 40px;
+  --size-font-4xl: 48px;
+  --size-radius-none: 0;
+  --size-radius-sm: 4px;
+  --size-radius-md: 8px;
+  --size-radius-lg: 16px;
+  --size-radius-xl: 24px;
+  --size-radius-full: 9999px;
+  --size-border-none: 0;
+  --size-border-sm: 1px;
+  --size-border-md: 2px;
+  --size-border-lg: 4px;
+  --size-control-xs: 24px;
+  --size-control-sm: 32px;
+  --size-control-md: 40px;
+  --size-control-lg: 48px;
+  --size-control-xl: 52px;
+  --size-glyph-xs: 12px;
+  --size-glyph-sm: 16px;
+  --size-glyph-md: 20px;
+  --size-glyph-lg: 24px;
+  --size-breakpoint-xs: 480px;
+  --size-breakpoint-sm: 640px;
+  --size-breakpoint-md: 768px;
+  --size-breakpoint-lg: 1024px;
+  --size-breakpoint-xl: 1280px;
+  --font-family-sans: Inter, system-ui, -apple-system, sans-serif;
+  --font-family-serif: Georgia, 'Times New Roman', serif;
+  --font-family-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-line-height-tight: 1.2;
+  --font-line-height-normal: 1.5;
+  --font-line-height-relaxed: 1.75;
+  --shadow-raised: 0 1px 2px 0 rgba(0, 0, 0, 0.08); /** Légère élévation (carte au repos). */
+  --shadow-float: 0 12px 32px -8px rgba(0, 0, 0, 0.16); /** Élément flottant (carte au survol, dropdown). */
+  --shadow-overlay: 0 16px 48px -12px rgba(0, 0, 0, 0.4); /** Élément détaché de la page (modale, drawer). */
+  --typography-body-family: var(--font-family-sans); /** Police du texte de lecture. */
+  --typography-body-weight: var(--font-weight-regular);
+  --typography-body-line-height: var(--font-line-height-normal);
+  --typography-heading-family: var(--font-family-sans); /** Police des titres. */
+  --typography-heading-weight: var(--font-weight-bold);
+  --typography-heading-line-height: var(--font-line-height-tight);
+  --typography-code-family: var(--font-family-mono); /** Police du code et des valeurs techniques. */
+  --typography-code-weight: var(--font-weight-regular);
+  --typography-code-line-height: var(--font-line-height-normal);
+  --motion-duration-hover: var(--duration-fast); /** Changement d'état au survol / focus. */
+  --motion-duration-expand: var(--duration-base); /** Ouverture d'un accordéon, d'un menu. */
+  --motion-duration-modal: var(--duration-slow); /** Entrée d'une modale ou d'un drawer. */
+  --motion-easing-default: var(--easing-standard);
+  --motion-easing-enter: var(--easing-enter);
+  --motion-easing-exit: var(--easing-exit);
+  --space-xs: var(--size-spacing-2);
+  --space-sm: var(--size-spacing-3);
+  --space-md: var(--size-spacing-5);
+  --space-lg: var(--size-spacing-7);
+  --space-xl: var(--size-spacing-8);
+  --radius-sm: var(--size-radius-sm);
+  --radius-md: var(--size-radius-md);
+  --radius-lg: var(--size-radius-lg);
+  --radius-full: var(--size-radius-full);
+  --border-width-default: var(--size-border-sm);
+  --border-width-strong: var(--size-border-md);
+  --border-width-focus: var(--size-border-md);
+  --font-size-small: var(--size-font-sm);
+  --font-size-body: var(--size-font-md);
+  --font-size-lead: var(--size-font-lg);
+  --font-size-h3: var(--size-font-xl);
+  --font-size-h2: var(--size-font-2xl);
+  --font-size-h1: var(--size-font-4xl);
+  --control-height-xs: var(--size-control-xs);
+  --control-height-sm: var(--size-control-sm);
+  --control-height-md: var(--size-control-md);
+  --control-height-lg: var(--size-control-lg);
+  --glyph-size-xs: var(--size-glyph-xs);
+  --glyph-size-sm: var(--size-glyph-sm);
+  --glyph-size-md: var(--size-glyph-md);
+  --glyph-size-lg: var(--size-glyph-lg);
+}
+
+[data-theme="dark"] {
+  --color-role-primary-main: var(--color-brand-primary-400); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-primary-hover: var(--color-brand-primary-300); /** Élévation au survol d’un composant plein. */
+  --color-role-primary-active: var(--color-brand-primary-200); /** Élévation à l’état pressé. */
+  --color-role-primary-on: var(--color-brand-neutral-900); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-primary-text: var(--color-brand-primary-400); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-primary-border: var(--color-brand-primary-700); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-primary-subtle: var(--color-brand-primary-900); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-neutral-main: var(--color-brand-neutral-400); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-neutral-hover: var(--color-brand-neutral-300); /** Élévation au survol d’un composant plein. */
+  --color-role-neutral-active: var(--color-brand-neutral-200); /** Élévation à l’état pressé. */
+  --color-role-neutral-on: var(--color-brand-neutral-900); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-neutral-text: var(--color-brand-neutral-400); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-neutral-border: var(--color-brand-neutral-700); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-neutral-subtle: var(--color-brand-neutral-900); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-success-main: var(--color-brand-success-400); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-success-hover: var(--color-brand-success-300); /** Élévation au survol d’un composant plein. */
+  --color-role-success-active: var(--color-brand-success-200); /** Élévation à l’état pressé. */
+  --color-role-success-on: var(--color-brand-neutral-900); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-success-text: var(--color-brand-success-400); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-success-border: var(--color-brand-success-700); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-success-subtle: var(--color-brand-success-900); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-warning-main: var(--color-brand-warning-400); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-warning-hover: var(--color-brand-warning-300); /** Élévation au survol d’un composant plein. */
+  --color-role-warning-active: var(--color-brand-warning-200); /** Élévation à l’état pressé. */
+  --color-role-warning-on: var(--color-brand-neutral-900); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-warning-text: var(--color-brand-warning-400); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-warning-border: var(--color-brand-warning-700); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-warning-subtle: var(--color-brand-warning-900); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-danger-main: var(--color-brand-danger-400); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-danger-hover: var(--color-brand-danger-300); /** Élévation au survol d’un composant plein. */
+  --color-role-danger-active: var(--color-brand-danger-200); /** Élévation à l’état pressé. */
+  --color-role-danger-on: var(--color-brand-neutral-900); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-danger-text: var(--color-brand-danger-400); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-danger-border: var(--color-brand-danger-700); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-danger-subtle: var(--color-brand-danger-900); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-role-info-main: var(--color-brand-info-400); /** Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle. */
+  --color-role-info-hover: var(--color-brand-info-300); /** Élévation au survol d’un composant plein. */
+  --color-role-info-active: var(--color-brand-info-200); /** Élévation à l’état pressé. */
+  --color-role-info-on: var(--color-brand-neutral-900); /** Texte et icônes posés SUR une surface « main ». Contraste AA garanti. */
+  --color-role-info-text: var(--color-brand-info-400); /** Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte). */
+  --color-role-info-border: var(--color-brand-info-700); /** Bordure discrète aux couleurs du rôle (outlined, alerte). */
+  --color-role-info-subtle: var(--color-brand-info-900); /** Fond clair SOLIDE (fond d’alerte, badge doux). */
+  --color-surface-base: var(--color-brand-neutral-900); /** Fond de l’application. */
+  --color-surface-raised: var(--color-brand-neutral-800); /** Fond d’un bloc surélevé (carte, panneau). */
+  --color-surface-overlay: var(--color-brand-neutral-700); /** Fond d’un élément flottant (popover, menu, modale). */
+  --color-surface-sunken: var(--color-brand-neutral-900); /** Fond en creux (piste de slider, zone de dépôt). */
+  --color-surface-inverse: var(--color-brand-neutral-25); /** Rupture visuelle négative (tooltip, bandeau). */
+  --color-surface-disabled: var(--color-brand-neutral-800); /** Fond d’un composant désactivé. */
+  --color-text-strong: var(--color-brand-neutral-25); /** Titres et libellés d’interface appuyés. Le contraste maximal. */
+  --color-text-body: var(--color-brand-neutral-100); /** Texte de lecture. */
+  --color-text-muted: var(--color-brand-neutral-300); /** Texte secondaire (légende, description). */
+  --color-text-faint: var(--color-brand-neutral-500); /** ⚠ NE PASSE PAS AA — décoratif uniquement (séparateurs, échafaudage). Jamais pour du texte à lire. */
+  --color-text-disabled: var(--color-brand-neutral-600); /** Texte d’un composant désactivé. */
+  --color-text-inverse: var(--color-brand-neutral-900); /** Texte posé sur `surface.inverse`. */
+  --color-border-default: var(--color-brand-neutral-700); /** Bordure par défaut de tous les composants. */
+  --color-border-strong: var(--color-brand-neutral-500); /** Bordure appuyée. */
+  --color-border-divider: var(--color-brand-neutral-800); /** Séparateur entre deux blocs de contenu. */
+  --color-border-disabled: var(--color-brand-neutral-700); /** Bordure d’un composant désactivé. */
+  --color-state-hover: var(--color-alpha-white-4); /** Voile de survol neutre (ligne de tableau, item de liste). */
+  --color-state-selected: var(--color-alpha-white-8); /** Voile d’un élément sélectionné. */
+  --color-state-active: var(--color-alpha-white-12); /** Voile d’un élément pressé. */
+  --color-focus-ring: var(--color-brand-primary-400); /** Anneau de focus clavier. Doit rester visible sur tous les fonds. */
+  --shadow-raised: 0 1px 2px 0 rgba(0, 0, 0, 0.4); /** Légère élévation (carte au repos). */
+  --shadow-float: 0 12px 32px -8px rgba(0, 0, 0, 0.6); /** Élément flottant (carte au survol, dropdown). */
+  --shadow-overlay: 0 16px 48px -12px rgba(0, 0, 0, 0.6); /** Élément détaché de la page (modale, drawer). */
+}
+
+@media (max-width: 768px) {
+  :root {
+    --space-xs: var(--size-spacing-1);
+    --space-sm: var(--size-spacing-2);
+    --space-md: var(--size-spacing-4);
+    --space-lg: var(--size-spacing-5);
+    --space-xl: var(--size-spacing-7);
+    --radius-lg: var(--size-radius-md);
+    --font-size-small: var(--size-font-xs);
+    --font-size-lead: var(--size-font-md);
+    --font-size-h3: var(--size-font-lg);
+    --font-size-h2: var(--size-font-xl);
+    --font-size-h1: var(--size-font-2xl);
+    --control-height-xs: var(--size-control-sm);
+    --control-height-sm: var(--size-control-md);
+    --control-height-md: var(--size-control-xl);
+    --control-height-lg: var(--size-control-xl);
+    --glyph-size-xs: var(--size-glyph-sm);
+    --glyph-size-sm: var(--size-glyph-md);
+  }
+}

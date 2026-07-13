@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>4 · Composants — structure — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  
+    <div class="nav-group">
+      <h5>Comprendre</h5>
+      <ul><li><a href="index.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Architecture</a></li><li><a href="demarrer.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Démarrer un projet</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Le système</h5>
+      <ul><li><a href="primitives.html" class="">
+            <span class="nav-num">1</span>
+            Primitives</a></li><li><a href="brand.html" class="">
+            <span class="nav-num">2</span>
+            Brand</a></li><li><a href="roles.html" class="">
+            <span class="nav-num">3</span>
+            Contrat de rôle</a></li><li><a href="semantique.html" class="">
+            <span class="nav-num">3</span>
+            Sémantique (reste)</a></li><li><a href="effets.html" class="">
+            <span class="nav-num">3</span>
+            Effets & mouvement</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Composants</h5>
+      <ul><li><a href="composants-formulaire.html" class="">
+            <span class="nav-num">4</span>
+            Formulaire</a></li><li><a href="composants-affichage.html" class="">
+            <span class="nav-num">4</span>
+            Affichage</a></li><li><a href="composants-structure.html" class="on">
+            <span class="nav-num">4</span>
+            Structure</a><ul class="sub"><li><a href="#tabs" data-anchor="tabs">Tabs</a></li><li><a href="#menu" data-anchor="menu">Menu</a></li><li><a href="#table" data-anchor="table">Table</a></li><li><a href="#modal" data-anchor="modal">Modal</a></li></ul></li></ul>
+    </div>
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>4 · Composants — structure</h1>
+    <p class="lead">Modal, Menu, Tabs, Table. Ce sont eux qui consomment les <strong>voiles d'état neutres</strong>.</p>
+    
+  <div class="callout callout-key">
+    <strong>Le survol d'une ligne de tableau ou d'un item de menu utilise
+    <code>state.hover</code>, pas <code>role.primary.tint</code>.</strong> Un voile de rôle
+    teinterait la ligne en violet. Le voile neutre, lui, s'inverse selon le mode : il assombrit en
+    clair, il éclaircit en sombre. Bascule le thème pour le voir.
+  </div>
+  <h2 id="tabs">Tabs</h2><div class="tabs-demo"><div class="tab" style="
+        background: var(--color-tabs-default-background);
+        color: var(--color-tabs-default-text);
+        border-bottom: var(--border-width-tabs) solid var(--color-tabs-default-indicator);
+        padding: var(--space-tabs-padding-y) var(--space-tabs-padding-x);
+        font-size: var(--font-size-tabs);
+      ">default</div><div class="tab" style="
+        background: var(--color-tabs-hover-background);
+        color: var(--color-tabs-hover-text);
+        border-bottom: var(--border-width-tabs) solid var(--color-tabs-hover-indicator);
+        padding: var(--space-tabs-padding-y) var(--space-tabs-padding-x);
+        font-size: var(--font-size-tabs);
+      ">hover</div><div class="tab" style="
+        background: var(--color-tabs-selected-background);
+        color: var(--color-tabs-selected-text);
+        border-bottom: var(--border-width-tabs) solid var(--color-tabs-selected-indicator);
+        padding: var(--space-tabs-padding-y) var(--space-tabs-padding-x);
+        font-size: var(--font-size-tabs);
+      ">selected</div><div class="tab" style="
+        background: var(--color-tabs-disabled-background);
+        color: var(--color-tabs-disabled-text);
+        border-bottom: var(--border-width-tabs) solid var(--color-tabs-disabled-indicator);
+        padding: var(--space-tabs-padding-y) var(--space-tabs-padding-x);
+        font-size: var(--font-size-tabs);
+      ">disabled</div></div>
+<h2 id="menu">Menu</h2><div class="menu-demo" style="
+        background: var(--color-menu-default-background);
+        border: var(--border-width-menu) solid var(--color-menu-default-border);
+        border-radius: var(--radius-menu);
+        box-shadow: var(--shadow-menu-default);
+        padding: var(--space-menu-padding-y) var(--space-menu-padding-x);
+      "><div class="menu-item" style="
+        background: var(--color-menu-item-default-background);
+        color: var(--color-menu-item-default-text);
+      ">default</div><div class="menu-item" style="
+        background: var(--color-menu-item-hover-background);
+        color: var(--color-menu-item-hover-text);
+      ">hover</div><div class="menu-item" style="
+        background: var(--color-menu-item-active-background);
+        color: var(--color-menu-item-active-text);
+      ">active</div><div class="menu-item" style="
+        background: var(--color-menu-item-selected-background);
+        color: var(--color-menu-item-selected-text);
+      ">selected</div><div class="menu-item" style="
+        background: var(--color-menu-item-disabled-background);
+        color: var(--color-menu-item-disabled-text);
+      ">disabled</div></div>
+<h2 id="table">Table</h2><table class="tbl table-demo">
+        <thead><tr>
+          <th style="background: var(--color-table-header-default-background); color: var(--color-table-header-default-text); border-bottom: var(--border-width-table) solid var(--color-table-header-default-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">État de la ligne</th>
+          <th style="background: var(--color-table-header-default-background); color: var(--color-table-header-default-text); border-bottom: var(--border-width-table) solid var(--color-table-header-default-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">Colonne</th>
+        </tr></thead>
+        <tbody><tr style="background: var(--color-table-row-default-background)">
+        <td style="color: var(--color-table-row-default-text); border-bottom: var(--border-width-table) solid var(--color-table-row-default-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">default</td>
+        <td style="color: var(--color-table-row-default-text); border-bottom: var(--border-width-table) solid var(--color-table-row-default-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">Valeur</td>
+      </tr><tr style="background: var(--color-table-row-hover-background)">
+        <td style="color: var(--color-table-row-hover-text); border-bottom: var(--border-width-table) solid var(--color-table-row-hover-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">hover</td>
+        <td style="color: var(--color-table-row-hover-text); border-bottom: var(--border-width-table) solid var(--color-table-row-hover-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">Valeur</td>
+      </tr><tr style="background: var(--color-table-row-selected-background)">
+        <td style="color: var(--color-table-row-selected-text); border-bottom: var(--border-width-table) solid var(--color-table-row-selected-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">selected</td>
+        <td style="color: var(--color-table-row-selected-text); border-bottom: var(--border-width-table) solid var(--color-table-row-selected-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">Valeur</td>
+      </tr><tr style="background: var(--color-table-row-disabled-background)">
+        <td style="color: var(--color-table-row-disabled-text); border-bottom: var(--border-width-table) solid var(--color-table-row-disabled-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">disabled</td>
+        <td style="color: var(--color-table-row-disabled-text); border-bottom: var(--border-width-table) solid var(--color-table-row-disabled-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">Valeur</td>
+      </tr></tbody>
+      </table>
+<h2 id="modal">Modal</h2><div class="modal-stage" style="background: var(--color-modal-default-scrim)">
+        <div style="
+          background: var(--color-modal-default-background);
+          border: var(--border-width-modal) solid var(--color-modal-default-border);
+          border-radius: var(--radius-modal);
+          box-shadow: var(--shadow-modal-default);
+          padding: var(--space-modal-padding-y) var(--space-modal-padding-x);
+        "><b>Une modale</b><p class="note" style="margin:0">Posée sur <code>scrim</code>.</p></div>
+      </div>
+      <div class="callout callout-warn">
+        <strong>Le scrim était cassé.</strong> Il pointait sur un neutre <em>teinté</em> : la luminance
+        de la page ne passait que de 0,96 à 0,86, la modale ne se détachait pas. Il pointe maintenant
+        sur <code>alpha.black.60</code> → 0,96 → <strong>0,13</strong>.
+      </div>
+    
+    <nav class="pager">
+      <a href="composants-affichage.html" class="pg pg-prev"><span>← Précédent</span><b>Affichage</b></a>
+      <span></span>
+    </nav>
+  </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>

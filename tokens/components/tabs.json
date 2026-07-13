@@ -1,0 +1,77 @@
+{
+  "color": {
+    "tabs": {
+      "default": {
+        "background": {
+          "$value": "{color.surface.transparent}"
+        },
+        "text": {
+          "$value": "{color.text.muted}"
+        },
+        "indicator": {
+          "$value": "{color.border.transparent}"
+        }
+      },
+      "hover": {
+        "background": {
+          "$value": "{color.state.hover}"
+        },
+        "text": {
+          "$value": "{color.text.body}"
+        },
+        "indicator": {
+          "$value": "{color.border.transparent}"
+        }
+      },
+      "selected": {
+        "background": {
+          "$value": "{color.surface.transparent}"
+        },
+        "text": {
+          "$value": "{color.role.primary.text}"
+        },
+        "indicator": {
+          "$value": "{color.role.primary.main}"
+        }
+      },
+      "disabled": {
+        "background": {
+          "$value": "{color.surface.transparent}"
+        },
+        "text": {
+          "$value": "{color.text.disabled}"
+        },
+        "indicator": {
+          "$value": "{color.border.transparent}"
+        }
+      }
+    },
+    "$type": "color"
+  },
+  "space": {
+    "tabs": {
+      "paddingX": {
+        "$value": "{space.md}"
+      },
+      "paddingY": {
+        "$value": "{space.sm}"
+      },
+      "gap": {
+        "$value": "{space.xs}"
+      }
+    },
+    "$type": "dimension"
+  },
+  "fontSize": {
+    "tabs": {
+      "$value": "{fontSize.body}"
+    },
+    "$type": "dimension"
+  },
+  "borderWidth": {
+    "tabs": {
+      "$value": "{borderWidth.strong}"
+    },
+    "$type": "dimension"
+  }
+}

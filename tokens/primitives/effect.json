@@ -1,0 +1,44 @@
+{
+  "duration": {
+    "$type": "duration",
+    "$description": "Durées d'animation brutes.",
+    "instant": { "$value": "0ms" },
+    "fast":    { "$value": "120ms" },
+    "base":    { "$value": "200ms" },
+    "slow":    { "$value": "320ms" }
+  },
+  "easing": {
+    "$type": "cubicBezier",
+    "$description": "Courbes d'accélération brutes.",
+    "standard":   { "$value": [0.2, 0, 0, 1],    "$description": "Défaut : accélère vite, décélère long. Pour les changements d'état." },
+    "enter":      { "$value": [0, 0, 0.2, 1],    "$description": "Entrée : démarre à pleine vitesse, se pose en douceur." },
+    "exit":       { "$value": [0.4, 0, 1, 1],    "$description": "Sortie : part doucement puis s'échappe." },
+    "emphasized": { "$value": [0.2, 0, 0, 1],    "$description": "Mouvements appuyés (modale, drawer)." }
+  },
+  "opacity": {
+    "$type": "number",
+    "$description": "Opacités brutes, nommées par leur valeur — un primitive ne porte aucune sémantique. (Les nommer `disabled`/`muted` provoquerait en plus une collision de chemin avec la couche sémantique.)",
+    "0":   { "$value": "0" },
+    "40":  { "$value": "0.4" },
+    "60":  { "$value": "0.6" },
+    "100": { "$value": "1" }
+  },
+  "elevation": {
+    "$description": "Géométries d'ombre brutes (décalage / flou / étalement). La COULEUR est ajoutée par la couche sémantique, car elle dépend du mode clair/sombre.",
+    "raised": {
+      "offsetY": { "$type": "dimension", "$value": "1px" },
+      "blur":    { "$type": "dimension", "$value": "2px" },
+      "spread":  { "$type": "dimension", "$value": "0" }
+    },
+    "float": {
+      "offsetY": { "$type": "dimension", "$value": "12px" },
+      "blur":    { "$type": "dimension", "$value": "32px" },
+      "spread":  { "$type": "dimension", "$value": "-8px" }
+    },
+    "overlay": {
+      "offsetY": { "$type": "dimension", "$value": "16px" },
+      "blur":    { "$type": "dimension", "$value": "48px" },
+      "spread":  { "$type": "dimension", "$value": "-12px" }
+    }
+  }
+}

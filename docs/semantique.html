@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3 · Sémantique (le reste) — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  
+    <div class="nav-group">
+      <h5>Comprendre</h5>
+      <ul><li><a href="index.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Architecture</a></li><li><a href="demarrer.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Démarrer un projet</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Le système</h5>
+      <ul><li><a href="primitives.html" class="">
+            <span class="nav-num">1</span>
+            Primitives</a></li><li><a href="brand.html" class="">
+            <span class="nav-num">2</span>
+            Brand</a></li><li><a href="roles.html" class="">
+            <span class="nav-num">3</span>
+            Contrat de rôle</a></li><li><a href="semantique.html" class="on">
+            <span class="nav-num">3</span>
+            Sémantique (reste)</a></li><li><a href="effets.html" class="">
+            <span class="nav-num">3</span>
+            Effets & mouvement</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Composants</h5>
+      <ul><li><a href="composants-formulaire.html" class="">
+            <span class="nav-num">4</span>
+            Formulaire</a></li><li><a href="composants-affichage.html" class="">
+            <span class="nav-num">4</span>
+            Affichage</a></li><li><a href="composants-structure.html" class="">
+            <span class="nav-num">4</span>
+            Structure</a></li></ul>
+    </div>
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>3 · Sémantique (le reste)</h1>
+    <p class="lead">Au-delà du contrat de rôle : les fonds, le texte, les bordures, le focus, les tailles et la typo.</p>
+    
+  <h2>Couleur</h2>
+  <p><code>surface</code> est le <strong>seul</strong> groupe qui parle de fonds.</p>
+  <div class="roles"><div class="role-group"><h4>surface</h4><div class="role-list"><div class="role">
+            <div class="role-chip " style="background:var(--color-surface-base)"></div>
+            <div class="role-name">base</div>
+            <span class="role-desc">Fond de l’application.</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-surface-raised)"></div>
+            <div class="role-name">raised</div>
+            <span class="role-desc">Fond d’un bloc surélevé (carte, panneau).</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-surface-overlay)"></div>
+            <div class="role-name">overlay</div>
+            <span class="role-desc">Fond d’un élément flottant (popover, menu, modale).</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-surface-sunken)"></div>
+            <div class="role-name">sunken</div>
+            <span class="role-desc">Fond en creux (piste de slider, zone de dépôt).</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-surface-inverse)"></div>
+            <div class="role-name">inverse</div>
+            <span class="role-desc">Rupture visuelle négative (tooltip, bandeau).</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-surface-disabled)"></div>
+            <div class="role-name">disabled</div>
+            <span class="role-desc">Fond d’un composant désactivé.</span>
+          </div><div class="role">
+            <div class="role-chip sw-alpha" style="background:var(--color-surface-transparent)"></div>
+            <div class="role-name">transparent</div>
+            <span class="role-desc">Fond absent (variantes outlined/ghost).</span>
+          </div></div></div><div class="role-group"><h4>text</h4><div class="role-list"><div class="role">
+            <div class="role-chip " style="background:var(--color-text-strong)"></div>
+            <div class="role-name">strong</div>
+            <span class="role-desc">Titres et libellés d’interface appuyés. Le contraste maximal.</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-text-body)"></div>
+            <div class="role-name">body</div>
+            <span class="role-desc">Texte de lecture.</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-text-muted)"></div>
+            <div class="role-name">muted</div>
+            <span class="role-desc">Texte secondaire (légende, description).</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-text-faint)"></div>
+            <div class="role-name">faint</div>
+            <span class="role-desc">⚠ NE PASSE PAS AA — décoratif uniquement (séparateurs, échafaudage). Jamais pour du texte à lire.</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-text-disabled)"></div>
+            <div class="role-name">disabled</div>
+            <span class="role-desc">Texte d’un composant désactivé.</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-text-inverse)"></div>
+            <div class="role-name">inverse</div>
+            <span class="role-desc">Texte posé sur `surface.inverse`.</span>
+          </div></div></div><div class="role-group"><h4>border</h4><div class="role-list"><div class="role">
+            <div class="role-chip " style="background:var(--color-border-default)"></div>
+            <div class="role-name">default</div>
+            <span class="role-desc">Bordure par défaut de tous les composants.</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-border-strong)"></div>
+            <div class="role-name">strong</div>
+            <span class="role-desc">Bordure appuyée.</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-border-divider)"></div>
+            <div class="role-name">divider</div>
+            <span class="role-desc">Séparateur entre deux blocs de contenu.</span>
+          </div><div class="role">
+            <div class="role-chip " style="background:var(--color-border-disabled)"></div>
+            <div class="role-name">disabled</div>
+            <span class="role-desc">Bordure d’un composant désactivé.</span>
+          </div><div class="role">
+            <div class="role-chip sw-alpha" style="background:var(--color-border-transparent)"></div>
+            <div class="role-name">transparent</div>
+            <span class="role-desc">Bordure absente.</span>
+          </div></div></div></div>
+
+  <h3>Focus &amp; scrim</h3>
+  <div class="roles">
+    <div class="role-group"><div class="role-list">
+      <div class="role"><div class="role-chip" style="background:var(--color-focus-ring)"></div>
+        <div class="role-name">focus.ring</div>
+        <span class="role-desc">Anneau de focus clavier. Doit rester visible sur tous les fonds.</span></div>
+      <div class="role"><div class="role-chip sw-alpha" style="background:var(--color-scrim)"></div>
+        <div class="role-name">scrim</div>
+        <span class="role-desc">Voile assombrissant sous une modale ou un drawer.</span></div>
+    </div></div>
+  </div>
+
+  <h2>Tailles — desktop vs mobile</h2>
+  <p class="note">Seules les lignes <span class="tag">≠</span> sont réémises dans la media query du
+  CSS généré. Les autres sont identiques : aucune ligne inutile.</p>
+  <table class="tbl">
+    <thead><tr><th>Rôle</th><th>Desktop</th><th>Mobile (&lt; 768px)</th></tr></thead>
+    <tbody><tr class="changed">
+            <td><code>space.xs</code></td><td class="mono">4px</td>
+            <td class="mono">2px <span class="tag">≠</span></td></tr><tr class="changed">
+            <td><code>space.sm</code></td><td class="mono">8px</td>
+            <td class="mono">4px <span class="tag">≠</span></td></tr><tr class="changed">
+            <td><code>space.md</code></td><td class="mono">16px</td>
+            <td class="mono">12px <span class="tag">≠</span></td></tr><tr class="changed">
+            <td><code>space.lg</code></td><td class="mono">24px</td>
+            <td class="mono">16px <span class="tag">≠</span></td></tr><tr class="changed">
+            <td><code>space.xl</code></td><td class="mono">32px</td>
+            <td class="mono">24px <span class="tag">≠</span></td></tr><tr class="">
+            <td><code>radius.sm</code></td><td class="mono">4px</td>
+            <td class="mono">4px</td></tr><tr class="">
+            <td><code>radius.md</code></td><td class="mono">8px</td>
+            <td class="mono">8px</td></tr><tr class="changed">
+            <td><code>radius.lg</code></td><td class="mono">16px</td>
+            <td class="mono">8px <span class="tag">≠</span></td></tr><tr class="">
+            <td><code>radius.full</code></td><td class="mono">9999px</td>
+            <td class="mono">9999px</td></tr><tr class="">
+            <td><code>borderWidth.default</code></td><td class="mono">1px</td>
+            <td class="mono">1px</td></tr><tr class="">
+            <td><code>borderWidth.strong</code></td><td class="mono">2px</td>
+            <td class="mono">2px</td></tr><tr class="">
+            <td><code>borderWidth.focus</code></td><td class="mono">2px</td>
+            <td class="mono">2px</td></tr><tr class="changed">
+            <td><code>fontSize.small</code></td><td class="mono">14px</td>
+            <td class="mono">12px <span class="tag">≠</span></td></tr><tr class="">
+            <td><code>fontSize.body</code></td><td class="mono">16px</td>
+            <td class="mono">16px</td></tr><tr class="changed">
+            <td><code>fontSize.lead</code></td><td class="mono">20px</td>
+            <td class="mono">16px <span class="tag">≠</span></td></tr><tr class="changed">
+            <td><code>fontSize.h3</code></td><td class="mono">24px</td>
+            <td class="mono">20px <span class="tag">≠</span></td></tr><tr class="changed">
+            <td><code>fontSize.h2</code></td><td class="mono">32px</td>
+            <td class="mono">24px <span class="tag">≠</span></td></tr><tr class="changed">
+            <td><code>fontSize.h1</code></td><td class="mono">48px</td>
+            <td class="mono">32px <span class="tag">≠</span></td></tr></tbody>
+  </table>
+  <div class="callout callout-warn">
+    <strong>Breakpoints.</strong> Une media query CSS <em>ne peut pas</em> lire une custom property
+    — <code>@media (max-width: var(--size-breakpoint-md))</code> ne fonctionne pas. Le build lit
+    donc <code>size.breakpoint.md</code> dans les tokens et inline sa valeur. Une seule source de
+    vérité.
+  </div>
+
+  <h2>Typographie</h2>
+  <table class="tbl">
+    <thead><tr><th>Rôle</th><th>Aperçu</th><th>Graisse / interligne</th></tr></thead>
+    <tbody><tr><td><code>typography.body</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-weight:400">Le vif renard brun saute</td>
+        <td class="mono">400 / 1.5</td></tr><tr><td><code>typography.heading</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-weight:700">Le vif renard brun saute</td>
+        <td class="mono">700 / 1.2</td></tr><tr><td><code>typography.code</code></td>
+        <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-weight:400">Le vif renard brun saute</td>
+        <td class="mono">400 / 1.5</td></tr></tbody>
+  </table>
+    
+    <nav class="pager">
+      <a href="roles.html" class="pg pg-prev"><span>← Précédent</span><b>Contrat de rôle</b></a>
+      <a href="effets.html" class="pg pg-next"><span>Suivant →</span><b>Effets & mouvement</b></a>
+    </nav>
+  </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>

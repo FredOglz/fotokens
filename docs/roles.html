@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3 · Le contrat de rôle — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  
+    <div class="nav-group">
+      <h5>Comprendre</h5>
+      <ul><li><a href="index.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Architecture</a></li><li><a href="demarrer.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Démarrer un projet</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Le système</h5>
+      <ul><li><a href="primitives.html" class="">
+            <span class="nav-num">1</span>
+            Primitives</a></li><li><a href="brand.html" class="">
+            <span class="nav-num">2</span>
+            Brand</a></li><li><a href="roles.html" class="on">
+            <span class="nav-num">3</span>
+            Contrat de rôle</a></li><li><a href="semantique.html" class="">
+            <span class="nav-num">3</span>
+            Sémantique (reste)</a></li><li><a href="effets.html" class="">
+            <span class="nav-num">3</span>
+            Effets & mouvement</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Composants</h5>
+      <ul><li><a href="composants-formulaire.html" class="">
+            <span class="nav-num">4</span>
+            Formulaire</a></li><li><a href="composants-affichage.html" class="">
+            <span class="nav-num">4</span>
+            Affichage</a></li><li><a href="composants-structure.html" class="">
+            <span class="nav-num">4</span>
+            Structure</a></li></ul>
+    </div>
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>3 · Le contrat de rôle</h1>
+    <p class="lead">La pièce maîtresse. Les 6 rôles exposent <strong>exactement les mêmes
+      9 slots</strong>, mappés sur <strong>exactement les mêmes crans</strong>.</p>
+    
+  <div class="scroll-x">
+    <table class="tbl contract">
+      <thead><tr><th></th><th>main</th><th>hover</th><th>active</th><th>on</th><th>text</th><th>border</th><th>subtle</th><th>tint</th><th>tintStrong</th></tr></thead>
+      <tbody><tr><th class="rh">primary</th><td><div class="slot "
+        style="background:var(--color-role-primary-main)" title="color.role.primary.main"></div></td><td><div class="slot "
+        style="background:var(--color-role-primary-hover)" title="color.role.primary.hover"></div></td><td><div class="slot "
+        style="background:var(--color-role-primary-active)" title="color.role.primary.active"></div></td><td><div class="slot "
+        style="background:var(--color-role-primary-on)" title="color.role.primary.on"></div></td><td><div class="slot "
+        style="background:var(--color-role-primary-text)" title="color.role.primary.text"></div></td><td><div class="slot "
+        style="background:var(--color-role-primary-border)" title="color.role.primary.border"></div></td><td><div class="slot "
+        style="background:var(--color-role-primary-subtle)" title="color.role.primary.subtle"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-primary-tint)" title="color.role.primary.tint"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-primary-tint-strong)" title="color.role.primary.tintStrong"></div></td></tr><tr><th class="rh">neutral</th><td><div class="slot "
+        style="background:var(--color-role-neutral-main)" title="color.role.neutral.main"></div></td><td><div class="slot "
+        style="background:var(--color-role-neutral-hover)" title="color.role.neutral.hover"></div></td><td><div class="slot "
+        style="background:var(--color-role-neutral-active)" title="color.role.neutral.active"></div></td><td><div class="slot "
+        style="background:var(--color-role-neutral-on)" title="color.role.neutral.on"></div></td><td><div class="slot "
+        style="background:var(--color-role-neutral-text)" title="color.role.neutral.text"></div></td><td><div class="slot "
+        style="background:var(--color-role-neutral-border)" title="color.role.neutral.border"></div></td><td><div class="slot "
+        style="background:var(--color-role-neutral-subtle)" title="color.role.neutral.subtle"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-neutral-tint)" title="color.role.neutral.tint"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-neutral-tint-strong)" title="color.role.neutral.tintStrong"></div></td></tr><tr><th class="rh">success</th><td><div class="slot "
+        style="background:var(--color-role-success-main)" title="color.role.success.main"></div></td><td><div class="slot "
+        style="background:var(--color-role-success-hover)" title="color.role.success.hover"></div></td><td><div class="slot "
+        style="background:var(--color-role-success-active)" title="color.role.success.active"></div></td><td><div class="slot "
+        style="background:var(--color-role-success-on)" title="color.role.success.on"></div></td><td><div class="slot "
+        style="background:var(--color-role-success-text)" title="color.role.success.text"></div></td><td><div class="slot "
+        style="background:var(--color-role-success-border)" title="color.role.success.border"></div></td><td><div class="slot "
+        style="background:var(--color-role-success-subtle)" title="color.role.success.subtle"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-success-tint)" title="color.role.success.tint"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-success-tint-strong)" title="color.role.success.tintStrong"></div></td></tr><tr><th class="rh">warning</th><td><div class="slot "
+        style="background:var(--color-role-warning-main)" title="color.role.warning.main"></div></td><td><div class="slot "
+        style="background:var(--color-role-warning-hover)" title="color.role.warning.hover"></div></td><td><div class="slot "
+        style="background:var(--color-role-warning-active)" title="color.role.warning.active"></div></td><td><div class="slot "
+        style="background:var(--color-role-warning-on)" title="color.role.warning.on"></div></td><td><div class="slot "
+        style="background:var(--color-role-warning-text)" title="color.role.warning.text"></div></td><td><div class="slot "
+        style="background:var(--color-role-warning-border)" title="color.role.warning.border"></div></td><td><div class="slot "
+        style="background:var(--color-role-warning-subtle)" title="color.role.warning.subtle"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-warning-tint)" title="color.role.warning.tint"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-warning-tint-strong)" title="color.role.warning.tintStrong"></div></td></tr><tr><th class="rh">danger</th><td><div class="slot "
+        style="background:var(--color-role-danger-main)" title="color.role.danger.main"></div></td><td><div class="slot "
+        style="background:var(--color-role-danger-hover)" title="color.role.danger.hover"></div></td><td><div class="slot "
+        style="background:var(--color-role-danger-active)" title="color.role.danger.active"></div></td><td><div class="slot "
+        style="background:var(--color-role-danger-on)" title="color.role.danger.on"></div></td><td><div class="slot "
+        style="background:var(--color-role-danger-text)" title="color.role.danger.text"></div></td><td><div class="slot "
+        style="background:var(--color-role-danger-border)" title="color.role.danger.border"></div></td><td><div class="slot "
+        style="background:var(--color-role-danger-subtle)" title="color.role.danger.subtle"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-danger-tint)" title="color.role.danger.tint"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-danger-tint-strong)" title="color.role.danger.tintStrong"></div></td></tr><tr><th class="rh">info</th><td><div class="slot "
+        style="background:var(--color-role-info-main)" title="color.role.info.main"></div></td><td><div class="slot "
+        style="background:var(--color-role-info-hover)" title="color.role.info.hover"></div></td><td><div class="slot "
+        style="background:var(--color-role-info-active)" title="color.role.info.active"></div></td><td><div class="slot "
+        style="background:var(--color-role-info-on)" title="color.role.info.on"></div></td><td><div class="slot "
+        style="background:var(--color-role-info-text)" title="color.role.info.text"></div></td><td><div class="slot "
+        style="background:var(--color-role-info-border)" title="color.role.info.border"></div></td><td><div class="slot "
+        style="background:var(--color-role-info-subtle)" title="color.role.info.subtle"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-info-tint)" title="color.role.info.tint"></div></td><td><div class="slot sw-alpha"
+        style="background:var(--color-role-info-tint-strong)" title="color.role.info.tintStrong"></div></td></tr></tbody>
+    </table>
+  </div>
+  <p class="note">Bascule le thème : les couleurs changent, <strong>les noms ne changent pas</strong>.</p>
+
+  <h2>À quoi sert chaque slot</h2>
+  <table class="tbl">
+    <thead><tr><th>Slot</th><th>Usage</th></tr></thead>
+    <tbody><tr><td><code>main</code></td><td>Fond des composants pleins (bouton, badge, case cochée) et bordure du rôle.</td></tr><tr><td><code>hover</code></td><td>Élévation au survol d’un composant plein.</td></tr><tr><td><code>active</code></td><td>Élévation à l’état pressé.</td></tr><tr><td><code>on</code></td><td>Texte et icônes posés SUR une surface « main ». Contraste AA garanti.</td></tr><tr><td><code>text</code></td><td>Le rôle utilisé comme texte sur un fond clair (lien, texte d’alerte).</td></tr><tr><td><code>border</code></td><td>Bordure discrète aux couleurs du rôle (outlined, alerte).</td></tr><tr><td><code>subtle</code></td><td>Fond clair SOLIDE (fond d’alerte, badge doux).</td></tr><tr><td><code>tint</code></td><td>Voile TRANSLUCIDE 5 % — survol des variantes outlined/ghost. Se compose sur le fond, donc identique en dark.</td></tr><tr><td><code>tintStrong</code></td><td>Voile translucide 10 % — état pressé des variantes outlined/ghost.</td></tr></tbody>
+  </table>
+
+  <h2>Pourquoi l'uniformité garantit le contraste</h2>
+  <p>Toutes les palettes sont sur la même courbe de luminosité (couche 1). Donc si
+  <code>main</code> = cran 600 et <code>on</code> = <code>neutral.25</code> passe AA pour
+  <em>un</em> rôle, ça passe AA pour <em>les six</em>.</p>
+  <div class="callout callout-key">
+    <strong>Mesuré sur le CSS généré</strong> — texte sur fond, pour les 6 rôles :
+    <br>bouton plein, thème clair : <strong>4,56:1 → 5,74:1</strong> ·
+    thème sombre : <strong>5,72:1 → 6,66:1</strong>.
+    <br>Les 12 combinaisons passent <strong>WCAG AA</strong>, sans un seul token écrit à la main.
+  </div>
+  <p>Conséquence directe : <code>&lt;Button color="danger"&gt;</code> fonctionne
+  <strong>sans un token de plus</strong>. Un composant qui sait afficher <code>primary</code> sait
+  afficher les cinq autres.</p>
+
+  <h2>Deux règles de nommage non négociables</h2>
+  <div class="callout callout-warn">
+    <strong>Un nom de rôle décrit un usage, jamais une apparence.</strong>
+    Pas de <code>dark</code> / <code>darker</code> pour dire « survol » et « pressé » : en thème
+    sombre, le survol doit être <em>plus clair</em> — le nom deviendrait un mensonge. D'où
+    <code>hover</code> et <code>active</code>.
+  </div>
+  <div class="callout callout-warn">
+    <strong>Un mot, un sens.</strong> <code>surface</code> désigne <em>uniquement</em> les fonds
+    (<code>surface.base</code>, <code>surface.raised</code>…). Le voile alpha d'un rôle s'appelle
+    <code>tint</code> — jamais <code>surface</code>.
+  </div>
+    
+    <nav class="pager">
+      <a href="brand.html" class="pg pg-prev"><span>← Précédent</span><b>Brand</b></a>
+      <a href="semantique.html" class="pg pg-next"><span>Suivant →</span><b>Sémantique (reste)</b></a>
+    </nav>
+  </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>

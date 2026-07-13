@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2 · Brand — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  
+    <div class="nav-group">
+      <h5>Comprendre</h5>
+      <ul><li><a href="index.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Architecture</a></li><li><a href="demarrer.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Démarrer un projet</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Le système</h5>
+      <ul><li><a href="primitives.html" class="">
+            <span class="nav-num">1</span>
+            Primitives</a></li><li><a href="brand.html" class="on">
+            <span class="nav-num">2</span>
+            Brand</a></li><li><a href="roles.html" class="">
+            <span class="nav-num">3</span>
+            Contrat de rôle</a></li><li><a href="semantique.html" class="">
+            <span class="nav-num">3</span>
+            Sémantique (reste)</a></li><li><a href="effets.html" class="">
+            <span class="nav-num">3</span>
+            Effets & mouvement</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Composants</h5>
+      <ul><li><a href="composants-formulaire.html" class="">
+            <span class="nav-num">4</span>
+            Formulaire</a></li><li><a href="composants-affichage.html" class="">
+            <span class="nav-num">4</span>
+            Affichage</a></li><li><a href="composants-structure.html" class="">
+            <span class="nav-num">4</span>
+            Structure</a></li></ul>
+    </div>
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>2 · Brand</h1>
+    <p class="lead">Quelle palette du catalogue joue quel rôle. <strong>Le seul endroit à éditer pour rebrander un projet.</strong></p>
+    
+  <div class="brand-table"><div class="brand-row">
+      <div class="brand-role">primary</div>
+      <div class="brand-arrow">→</div>
+      <div class="brand-palette">violet</div>
+      <div class="brand-strip"><i style="background:#fbf9ff"></i><i style="background:#f6f0ff"></i><i style="background:#eee2ff"></i><i style="background:#dfc8ff"></i><i style="background:#cda5ff"></i><i style="background:#bc7eff"></i><i style="background:#aa4cff"></i><i style="background:#9500ee"></i><i style="background:#7400bb"></i><i style="background:#510085"></i><i style="background:#300052"></i></div>
+    </div><div class="brand-row">
+      <div class="brand-role">neutral</div>
+      <div class="brand-arrow">→</div>
+      <div class="brand-palette">slateBlue</div>
+      <div class="brand-strip"><i style="background:#f6fbff"></i><i style="background:#edf4fd"></i><i style="background:#dceaf8"></i><i style="background:#c0d7ef"></i><i style="background:#9fbede"></i><i style="background:#80a5cc"></i><i style="background:#648bb4"></i><i style="background:#4c7299"></i><i style="background:#37587a"></i><i style="background:#213c58"></i><i style="background:#0e2338"></i></div>
+    </div><div class="brand-row">
+      <div class="brand-role">success</div>
+      <div class="brand-arrow">→</div>
+      <div class="brand-palette">green</div>
+      <div class="brand-strip"><i style="background:#f2fef3"></i><i style="background:#e4fbe7"></i><i style="background:#ccf4d3"></i><i style="background:#a1e8b0"></i><i style="background:#6fd488"></i><i style="background:#33bf62"></i><i style="background:#00a34a"></i><i style="background:#00853c"></i><i style="background:#00672d"></i><i style="background:#00481d"></i><i style="background:#002a0e"></i></div>
+    </div><div class="brand-row">
+      <div class="brand-role">warning</div>
+      <div class="brand-arrow">→</div>
+      <div class="brand-palette">orange</div>
+      <div class="brand-strip"><i style="background:#fff8f6"></i><i style="background:#fff0ea"></i><i style="background:#ffe0d5"></i><i style="background:#ffc5b0"></i><i style="background:#ff9e7a"></i><i style="background:#fa743e"></i><i style="background:#e25200"></i><i style="background:#ba4200"></i><i style="background:#913200"></i><i style="background:#662000"></i><i style="background:#3e1000"></i></div>
+    </div><div class="brand-row">
+      <div class="brand-role">danger</div>
+      <div class="brand-arrow">→</div>
+      <div class="brand-palette">red</div>
+      <div class="brand-strip"><i style="background:#fff8f7"></i><i style="background:#ffefed"></i><i style="background:#ffe0db"></i><i style="background:#ffc3bc"></i><i style="background:#ff9b90"></i><i style="background:#ff6b60"></i><i style="background:#ed3b37"></i><i style="background:#cd161d"></i><i style="background:#a3000f"></i><i style="background:#730007"></i><i style="background:#470003"></i></div>
+    </div><div class="brand-row">
+      <div class="brand-role">info</div>
+      <div class="brand-arrow">→</div>
+      <div class="brand-palette">blue</div>
+      <div class="brand-strip"><i style="background:#f8faff"></i><i style="background:#eef4ff"></i><i style="background:#dde8ff"></i><i style="background:#bfd5ff"></i><i style="background:#98baff"></i><i style="background:#719eff"></i><i style="background:#467eff"></i><i style="background:#2b60e8"></i><i style="background:#1846bf"></i><i style="background:#082c90"></i><i style="background:#001362"></i></div>
+    </div></div>
+
+  <div class="callout callout-key">
+    <strong>Le cœur du système.</strong> Changer la tonique = éditer une ligne dans
+    <code>scripts/generate-theme.js</code>, puis <code>npm run theme</code>.
+    <pre><code>const BRAND = {
+  primary: '<b>turquoise</b>',   <span class="c">// était 'violet'</span>
+  neutral: 'slateBlue', success: 'green', …
+};</code></pre>
+    Ni le contrat de rôle, ni les composants ne bougent. Tous les boutons, liens et états actifs
+    de l'app suivent.
+  </div>
+
+  <h2>Sans cette couche</h2>
+  <p>Si un rôle sémantique pointait directement sur une palette
+  (<code>role.primary.main → {color.violet.600}</code>), rebrander obligerait à réécrire
+  <strong>chaque rôle, en light ET en dark</strong>. Des dizaines d'éditions à la main, avec la
+  certitude d'en oublier une.</p>
+
+  <h2>Couleurs catégorielles</h2>
+  <p>Teintes distinguables pour graphiques, avatars et tags.</p>
+  <div class="cats"><div class="cat"><i style="background:#9500ee"></i><span>1</span></div><div class="cat"><i style="background:#2b60e8"></i><span>2</span></div><div class="cat"><i style="background:#00853c"></i><span>3</span></div><div class="cat"><i style="background:#ba4200"></i><span>4</span></div><div class="cat"><i style="background:#cd161d"></i><span>5</span></div><div class="cat"><i style="background:#008172"></i><span>6</span></div></div>
+  <p class="note">Elles ne suivent volontairement <strong>pas</strong> le contrat de rôle (seulement
+  <code>main</code> + <code>tint</code>) : ce ne sont pas des rôles sémantiques, juste des couleurs
+  qu'on doit pouvoir différencier les unes des autres.</p>
+    
+    <nav class="pager">
+      <a href="primitives.html" class="pg pg-prev"><span>← Précédent</span><b>Primitives</b></a>
+      <a href="roles.html" class="pg pg-next"><span>Suivant →</span><b>Contrat de rôle</b></a>
+    </nav>
+  </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>

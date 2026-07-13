@@ -1,0 +1,20 @@
+{
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "hover":  { "$value": "{duration.fast}",  "$description": "Changement d'état au survol / focus." },
+      "expand": { "$value": "{duration.base}",  "$description": "Ouverture d'un accordéon, d'un menu." },
+      "modal":  { "$value": "{duration.slow}",  "$description": "Entrée d'une modale ou d'un drawer." }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "default": { "$value": "{easing.standard}" },
+      "enter":   { "$value": "{easing.enter}" },
+      "exit":    { "$value": "{easing.exit}" }
+    }
+  },
+  "opacity": {
+    "$type": "number",
+    "disabled": { "$value": "{opacity.40}", "$description": "Alternative aux couleurs `disabled` dédiées : atténue un composant entier d'un coup." }
+  }
+}

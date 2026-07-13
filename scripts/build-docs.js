@@ -1,5 +1,6 @@
 /**
- * Génère `docs/index.html` — la documentation visuelle.
+ * Génère la documentation visuelle dans `docs/` — une page par couche, plus une
+ * vue d'ensemble, avec une navigation latérale.
  *
  * La doc est ENTIÈREMENT dérivée des fichiers de tokens : palettes, mapping brand,
  * contrat de rôle et chaînes de résolution sont lus à la source. Elle ne peut donc
@@ -8,22 +9,29 @@
  *
  *   node scripts/build-docs.js
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync } from 'node:fs';
 import { hexToOklch } from './oklch.js';
+
+const OUT = 'docs';
 
 const read = (p) => JSON.parse(readFileSync(p, 'utf8'));
 
 const colors = read('tokens/primitives/color.json').color;
 const sizes = read('tokens/primitives/size.json').size;
 const brand = read('tokens/brand/default.json').color.brand;
-const light = read('tokens/themes/color/light.json').color;
-const dark = read('tokens/themes/color/dark.json').color;
+const light = read('tokens/themes/mode/light.json').color;
 const sizeDesktop = read('tokens/themes/size/desktop.json');
 const sizeMobile = read('tokens/themes/size/mobile.json');
 const typography = read('tokens/themes/typography/default.json').typography;
-const button = read('tokens/components/button.json');
-const input = read('tokens/components/input.json');
-const tokensCss = readFileSync('dist/tokens.css', 'utf8');
+const effects = read('tokens/primitives/effect.json');
+const effectTheme = read('tokens/themes/effect/default.json');
+const shadow = read('tokens/themes/mode/light.json').shadow;
+import { readdirSync } from 'node:fs';
+const COMP = Object.fromEntries(
+  readdirSync('tokens/components')
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => [f.replace('.json', ''), read(`tokens/components/${f}`)]),
+);
 
 /* ---------- résolution des références ---------- */
 
@@ -39,18 +47,17 @@ function flatten(obj, prefix = [], out = new Map()) {
   return out;
 }
 
-// Dictionnaire global (light + desktop), pour dérouler les chaînes de résolution.
 const DICT = new Map();
 for (const file of [
   'tokens/primitives/color.json', 'tokens/primitives/size.json', 'tokens/primitives/typography.json',
-  'tokens/brand/default.json', 'tokens/themes/color/light.json',
+  'tokens/brand/default.json', 'tokens/themes/mode/light.json',
+  'tokens/primitives/effect.json', 'tokens/themes/effect/default.json',
   'tokens/themes/typography/default.json', 'tokens/themes/size/desktop.json',
-  'tokens/components/button.json', 'tokens/components/input.json',
+  ...readdirSync('tokens/components').map((f) => `tokens/components/${f}`),
 ]) {
   for (const [k, v] of flatten(read(file))) DICT.set(k, v);
 }
 
-/** Déroule `a.b.c` jusqu'à la valeur brute. Retourne la chaîne complète. */
 function chain(path) {
   const steps = [];
   let cur = path;
@@ -77,98 +84,321 @@ const cssVar = (path) =>
 
 /* ---------- vocabulaire ---------- */
 
+// `alpha` est un groupe de voiles absolus, pas une rampe. `white`/`black`/`transparent`
+// sont des tokens isolés.
 const PALETTES = Object.entries(colors)
-  .filter(([k, v]) => !k.startsWith('$') && !isToken(v))
+  .filter(([k, v]) => !k.startsWith('$') && !isToken(v) && k !== 'alpha')
   .map(([k]) => k);
 const STEPS = Object.keys(colors[PALETTES[0]]).filter((k) => k !== 'alpha' && !k.startsWith('$'));
 const ALPHAS = Object.keys(colors[PALETTES[0]].alpha);
-
 const ROLES = Object.keys(light.role);
 const SLOTS = Object.keys(light.role[ROLES[0]]);
 const CATEGORICAL = Object.keys(light.categorical);
+const VARIANTS = Object.keys(COMP.button.color.button).filter((k) => !k.startsWith('$'));
+const STATES = Object.keys(COMP.button.color.button[VARIANTS[0]][ROLES[0]]);
 
-/** Quelle palette joue ce rôle ? (lu depuis la référence du cran 500 de la couche brand) */
 const roleSource = (role) => /^\{color\.([^.]+)\./.exec(brand[role]['500'].$value)?.[1] ?? '?';
-
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-/* ---------- sections ---------- */
+/* ---------- navigation ---------- */
 
-function sectionArchitecture() {
-  return `
-<section id="architecture">
-  <h2>L'architecture en 4 couches</h2>
-  <div class="layers">
-    <div class="lyr"><span class="layer-num">1</span><b>Primitives</b><em>le catalogue</em><small>#9500ee</small></div>
-    <div class="lyr-arrow">→</div>
-    <div class="lyr lyr-key"><span class="layer-num">2</span><b>Brand</b><em>le projet choisit</em><small>primary → violet<br>neutral → slateBlue</small></div>
-    <div class="lyr-arrow">→</div>
-    <div class="lyr lyr-key"><span class="layer-num">3</span><b>Sémantique</b><em>le contrat de rôle</em><small>role.danger.main<br>light / dark</small></div>
-    <div class="lyr-arrow">→</div>
-    <div class="lyr"><span class="layer-num">4</span><b>Composant</b><em>l'usage</em><small>button.outlined<br>.danger.hover</small></div>
+const NAV = [
+  {
+    group: 'Comprendre',
+    items: [
+      { id: 'index', file: 'index.html', label: 'Architecture' },
+      { id: 'start', file: 'demarrer.html', label: 'Démarrer un projet' },
+    ],
+  },
+  {
+    group: 'Le système',
+    items: [
+      { id: 'primitives', file: 'primitives.html', label: 'Primitives', num: 1 },
+      { id: 'brand', file: 'brand.html', label: 'Brand', num: 2 },
+      { id: 'roles', file: 'roles.html', label: 'Contrat de rôle', num: 3 },
+      { id: 'semantic', file: 'semantique.html', label: 'Sémantique (reste)', num: 3 },
+      { id: 'effects', file: 'effets.html', label: 'Effets & mouvement', num: 3 },
+    ],
+  },
+  {
+    group: 'Composants',
+    items: [
+      { id: 'form', file: 'composants-formulaire.html', label: 'Formulaire', num: 4 },
+      { id: 'display', file: 'composants-affichage.html', label: 'Affichage', num: 4 },
+      { id: 'structure', file: 'composants-structure.html', label: 'Structure', num: 4 },
+    ],
+  },
+];
+
+const FLAT_NAV = NAV.flatMap((g) => g.items);
+
+/**
+ * Une section de page. Les `sections` d'une page servent À LA FOIS à rendre les
+ * titres (avec leur ancre) et à construire le sous-menu — même source, donc le
+ * menu ne peut pas dériver du contenu.
+ */
+const section = (id, label, html) => ({ id, label, html });
+const renderSections = (secs) =>
+  secs.map((s) => `<h2 id="${s.id}">${s.label}</h2>${s.html}`).join('\n');
+
+function layout({ id, title, lead, body, sections = [] }) {
+  const i = FLAT_NAV.findIndex((p) => p.id === id);
+  const prev = FLAT_NAV[i - 1];
+  const next = FLAT_NAV[i + 1];
+
+  // Le sous-menu ne se déploie que sous la page courante : afficher les ancres de
+  // toutes les pages produirait une colonne de 40 liens inutilisables.
+  const subNav = (itemId) =>
+    itemId === id && sections.length
+      ? `<ul class="sub">${sections
+          .map((s) => `<li><a href="#${s.id}" data-anchor="${s.id}">${s.label}</a></li>`)
+          .join('')}</ul>`
+      : '';
+
+  const nav = NAV.map(
+    (g) => `
+    <div class="nav-group">
+      <h5>${g.group}</h5>
+      <ul>${g.items
+        .map(
+          (it) => `<li><a href="${it.file}" class="${it.id === id ? 'on' : ''}">
+            ${it.num ? `<span class="nav-num">${it.num}</span>` : '<span class="nav-num nav-num-off"></span>'}
+            ${it.label}</a>${subNav(it.id)}</li>`,
+        )
+        .join('')}</ul>
+    </div>`,
+  ).join('');
+
+  const pager = `
+    <nav class="pager">
+      ${prev ? `<a href="${prev.file}" class="pg pg-prev"><span>← Précédent</span><b>${prev.label}</b></a>` : '<span></span>'}
+      ${next ? `<a href="${next.file}" class="pg pg-next"><span>Suivant →</span><b>${next.label}</b></a>` : '<span></span>'}
+    </nav>`;
+
+  return `<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(title)} — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  ${nav}
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>${title}</h1>
+    ${lead ? `<p class="lead">${lead}</p>` : ''}
+    ${body}
+    ${pager}
   </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>
+`;
+}
+
+/* ---------- fragments ---------- */
+
+function renderChain(path) {
+  const layerOf = (p) =>
+    p.startsWith('color.brand.') ? 'brand'
+      : /^color\.(button|input)\./.test(p) ? 'component'
+        : /^(color\.(role|surface|text|border|focus|scrim|state|categorical)|shadow|motion|opacity\.[a-z])/.test(p) ? 'semantic'
+          : 'primitive';
+
+  const items = chain(path)
+    .map((s, i, arr) => {
+      const isLast = i === arr.length - 1;
+      return `<li class="chain-step chain-${layerOf(s.path)}">
+        <span class="chain-layer">${layerOf(s.path)}</span>
+        <code>${s.path}</code>
+        ${isLast ? `<span class="chain-final"><i class="sw-alpha" style="background:${s.value}"></i>${s.value}</span>` : ''}
+      </li>`;
+    })
+    .join('');
+  return `<ol class="chain">${items}</ol>`;
+}
+
+/* ---------- pages ---------- */
+
+const pageIndex = () =>
+  layout({
+    id: 'index',
+    title: 'Architecture',
+    lead: `Librairie de design tokens agnostique de tout framework, au format <strong>DTCG</strong>
+      (<code>$value</code> / <code>$type</code> / <code>$description</code>). Ce repo ne contient
+      <strong>que les tokens</strong> — pas de composants UI.`,
+    body: `
+  <div class="layers">
+    <a class="lyr" href="primitives.html"><span class="layer-num">1</span><b>Primitives</b><em>le catalogue</em><small>#9500ee</small></a>
+    <div class="lyr-arrow">→</div>
+    <a class="lyr lyr-key" href="brand.html"><span class="layer-num">2</span><b>Brand</b><em>le projet choisit</em><small>primary → violet</small></a>
+    <div class="lyr-arrow">→</div>
+    <a class="lyr lyr-key" href="roles.html"><span class="layer-num">3</span><b>Sémantique</b><em>le contrat de rôle</em><small>role.danger.main</small></a>
+    <div class="lyr-arrow">→</div>
+    <a class="lyr" href="composants-formulaire.html"><span class="layer-num">4</span><b>Composant</b><em>l'usage</em><small>button.outlined<br>.danger.hover</small></a>
+  </div>
+
   <div class="callout callout-key">
     <strong>Les deux couches du milieu portent tout le système.</strong>
-    <em>Brand</em> rend un projet rebrandable en éditant un seul fichier.
+    <em>Brand</em> rend un projet rebrandable en éditant une ligne.
     <em>Sémantique</em> impose un contrat uniforme : les 6 rôles exposent les mêmes 9 slots,
     mappés sur les mêmes crans — c'est ce qui rend <code>&lt;Button color="danger"&gt;</code>
     aussi lisible que <code>&lt;Button color="primary"&gt;</code>, sans le vérifier à la main.
   </div>
-</section>`;
-}
 
-function sectionQuickstart() {
+  <h2>Les 3 règles de layering</h2>
+  <ul class="rules">
+    <li>Un token de <b>composant</b> référence un rôle <b>sémantique</b>, jamais une couche plus basse.</li>
+    <li>Un rôle <b>sémantique</b> de couleur référence la couche <b>brand</b>, jamais un primitive.</li>
+    <li>Un token <b>brand</b> référence un <b>primitive</b>, jamais une valeur brute.</li>
+  </ul>
+  <p>Elles sont mécaniquement vérifiables : un <code>grep</code> suffit à prouver qu'aucun
+  composant ne pointe sur une palette.</p>
+
+  <h2>La chaîne de résolution</h2>
+  <p>C'est <em>la</em> chose à comprendre. Un token de composant ne connaît ni les palettes ni les
+  hex : il ne connaît qu'un rôle. Chaque cran descend d'une couche.</p>
+  ${renderChain('color.button.filled.primary.default.background')}
+
+  <h2>Ce que le build produit</h2>
+  <table class="tbl">
+    <thead><tr><th>Fichier</th><th>Contenu</th></tr></thead>
+    <tbody>
+      <tr><td><code>dist/tokens.css</code></td><td>Custom properties : <code>:root</code> + <code>[data-theme="dark"]</code> + media query mobile. Les blocs de surcharge ne réémettent <strong>que</strong> les tokens qui changent réellement.</td></tr>
+      <tr><td><code>dist/tokens.json</code></td><td>Le dictionnaire à plat, valeurs résolues, pour inspection.</td></tr>
+      <tr><td><code>docs/</code></td><td>Cette documentation — générée depuis les tokens, stylée avec les tokens.</td></tr>
+    </tbody>
+  </table>`,
+  });
+
+const pageStart = () => {
   const roleList = ROLES.map((r) => `<code>${r}</code>&nbsp;→&nbsp;<code>${roleSource(r)}</code>`).join(' · ');
-  return `
-<section id="quickstart">
-  <h2>Démarrer un projet</h2>
+  return layout({
+    id: 'start',
+    title: 'Démarrer un projet',
+    lead: 'Quatre étapes. La seule décision réelle est à l\'étape 2.',
+    body: `
   <ol class="steps">
     <li>
-      <h4>Installer et builder</h4>
+      <h3>Installer et builder</h3>
       <pre><code>npm install
 npm run build   <span class="c"># dist/tokens.css + dist/tokens.json + docs/</span></code></pre>
     </li>
     <li>
-      <h4>Choisir l'identité du projet</h4>
+      <h3>Choisir l'identité du projet</h3>
       <p>Éditer la table <code>BRAND</code> dans <code>scripts/generate-theme.js</code>, puis
-      <code>npm run theme</code>. C'est <strong>le seul endroit</strong> à toucher.</p>
+      lancer <code>npm run theme</code>. C'est <strong>le seul endroit</strong> à toucher.</p>
       <pre><code>const BRAND = {
-  primary: '<b>violet</b>',      <span class="c">// ← change ça…</span>
+  primary: '<b>violet</b>',      <span class="c">// ← change ça, tout suit</span>
   neutral: 'slateBlue',
   success: 'green', warning: 'orange', danger: 'red', info: 'blue',
 };</code></pre>
       <p class="note">Sélection actuelle : ${roleList}</p>
+      <div class="callout">
+        N'importe quelle palette peut jouer n'importe quel rôle : elles exposent toutes les
+        mêmes 11 crans sur la <strong>même courbe de luminosité</strong>. Un swap ne casse ni le
+        build, ni les contrastes.
+      </div>
     </li>
     <li>
-      <h4>Consommer les tokens</h4>
+      <h3>Consommer les tokens</h3>
       <pre><code>@import '@fred/design-tokens/dist/tokens.css';
 
-<span class="c">/* Un bouton, n'importe quelle couleur de rôle */</span>
+<span class="c">/* tokens.css = le système. components.css = les tokens de composant. */</span>
+@import '@fred/design-tokens/dist/components.css';
+
+<span class="c">/* Un bouton : variante · rôle · état, et une taille */</span>
 .btn-filled {
   background: var(--color-button-filled-<b>primary</b>-default-background);
   color:      var(--color-button-filled-<b>primary</b>-default-text);
+  height:     var(--size-button-<b>md</b>-height);
+  padding:    0 var(--space-button-<b>md</b>-padding-x);
+  border-radius: var(--radius-button-<b>md</b>);
+  font-size:  var(--font-size-button-<b>md</b>);
 }
+<span class="c">/* Changer de couleur = changer le rôle. Aucun token nouveau. */</span>
 .btn-filled[data-color="danger"] {
   background: var(--color-button-filled-<b>danger</b>-default-background);
 }</code></pre>
     </li>
     <li>
-      <h4>Activer le thème sombre</h4>
+      <h3>Activer le thème sombre</h3>
       <pre><code>&lt;html data-theme="dark"&gt;</code></pre>
-      <p class="note">Le responsive est automatique (media query à ${sizes.breakpoint.md.$value}).</p>
+      <p class="note">Rien d'autre à faire : seuls les rôles sémantiques sont redéfinis sous ce
+      sélecteur, les composants suivent via <code>var()</code>. Le responsive est automatique
+      (media query à ${sizes.breakpoint.md.$value}).</p>
     </li>
   </ol>
-</section>`;
-}
 
-function sectionPrimitives() {
+  <h2>Les commandes</h2>
+  <table class="tbl">
+    <thead><tr><th>Commande</th><th>Effet</th></tr></thead>
+    <tbody>
+      <tr><td><code>npm run build</code></td><td>Génère <code>dist/</code> et <code>docs/</code>.</td></tr>
+      <tr><td><code>npm run theme</code></td><td>Régénère brand + rôles + composants depuis les tables de mapping, puis build.</td></tr>
+      <tr><td><code>npm run ramps</code></td><td>Aperçu des rampes de couleur (n'écrit rien).</td></tr>
+      <tr><td><code>npm run ramps:write</code></td><td>Régénère <code>tokens/primitives/color.json</code>.</td></tr>
+      <tr><td><code>npm run watch</code></td><td>Rebuild à chaque modification.</td></tr>
+    </tbody>
+  </table>`,
+  });
+};
+
+const pagePrimitives = () => {
   const rows = PALETTES.map((name) => {
     const swatches = STEPS.map((step) => {
       const hex = colors[name][step].$value;
       const L = hexToOklch(hex)[0] * 100;
       return `<div class="sw" style="background:${hex}" title="${name}.${step} — ${hex} — L*${L.toFixed(0)}%">
-        <span class="sw-step" style="color:${L > 60 ? '#000' : '#fff'}">${step}</span>
-      </div>`;
+        <span class="sw-step" style="color:${L > 60 ? '#000' : '#fff'}">${step}</span></div>`;
     }).join('');
     const alphas = ALPHAS.map((a) => {
       const rgba = colors[name].alpha[a].$value;
@@ -182,17 +412,32 @@ function sectionPrimitives() {
     </div>`;
   }).join('');
 
-  return `
-<section id="primitives">
-  <h2><span class="layer-num">1</span> Primitives — le catalogue</h2>
-  <p>Palette brute, aucune sémantique. <strong>Jamais modifiée par projet.</strong></p>
+  const sizeGroups = ['spacing', 'radius', 'border', 'breakpoint']
+    .map((g) => {
+      const items = Object.keys(sizes[g])
+        .filter((k) => !k.startsWith('$'))
+        .map((k) => `<tr><td><code>size.${g}.${k}</code></td><td class="mono">${sizes[g][k].$value}</td></tr>`)
+        .join('');
+      return `<h3><code>size.${g}</code></h3>
+        <p class="note">${esc(sizes[g].$description ?? '')}</p>
+        <table class="tbl"><tbody>${items}</tbody></table>`;
+    })
+    .join('');
+
+  return layout({
+    id: 'primitives',
+    title: '1 · Primitives',
+    lead: 'Le catalogue brut. Aucune sémantique, aucune référence. <strong>Jamais modifié par projet.</strong>',
+    body: `
   <div class="callout callout-warn">
-    <strong>Fichier généré</strong> par <code>npm run ramps:write</code> — ne l'édite pas à la main.
-    Chaque palette est définie par une <em>teinte</em> + un <em>pic de chroma</em>, et ses 11 crans
-    sont calculés en OKLCH sur une <strong>courbe de luminosité commune à toutes les palettes</strong>.
-    À cran égal, deux palettes ont la même luminosité perçue — c'est ce qui permet au contrat de
-    rôle de garantir le contraste quelle que soit la palette choisie.
+    <strong>Fichier généré.</strong> <code>tokens/primitives/color.json</code> est produit par
+    <code>npm run ramps:write</code> — ne l'édite pas à la main, il serait écrasé.
   </div>
+
+  <h2>Les rampes de couleur</h2>
+  <p>Chaque palette est définie par une <em>teinte</em> + un <em>pic de chroma</em>. Ses 11 crans
+  sont calculés en <strong>OKLCH</strong> sur une <strong>courbe de luminosité commune à toutes
+  les palettes</strong>.</p>
   <div class="ramps">
     <div class="ramp ramp-head">
       <div></div>
@@ -201,13 +446,37 @@ function sectionPrimitives() {
     </div>
     ${rows}
   </div>
-  <p class="note">Survole un aplat pour son hex et sa luminosité perçue (L*). Les colonnes α sont
-  les voiles translucides (5 % / 10 %), affichés sur damier. Ils vivent <strong>dans</strong> la
-  palette : un swap de rôle les emporte avec lui.</p>
-</section>`;
-}
+  <p class="note">Survole un aplat pour son hex et sa luminosité perçue (L*).</p>
 
-function sectionBrand() {
+  <div class="callout callout-key">
+    <strong>Pourquoi une courbe commune.</strong> Des rampes dessinées à la main dérivent : le cran
+    500 valait 55 % de luminosité en <code>gray</code> et 89 % en <code>turquoise</code> (un néon).
+    Un bouton primaire en turquoise donnait alors un contraste de <strong>1,85:1 — illisible</strong>.
+    Comme les rôles sont interchangeables, un rôle sémantique ne peut tenir sa promesse de contraste
+    que si toutes les palettes partagent la même courbe. Après régénération : <strong>4,60:1</strong>.
+  </div>
+  <p class="note"><strong>OKLCH et pas HSL</strong> : la luminosité HSL n'est pas perceptuelle — un
+  jaune et un bleu à <code>L=50 %</code> n'ont rien à voir à l'œil. OKLCH, si.</p>
+
+  <h2>Les voiles alpha</h2>
+  <p>Chaque teinte expose un voile translucide à <strong>5 %</strong> et <strong>10 %</strong>
+  (colonnes α ci-dessus, sur damier), calculé sur son cran 500. Ils servent aux fonds d'états :
+  survol et état actif d'un bouton <em>outlined</em> ou <em>ghost</em>, ligne de tableau sélectionnée.</p>
+  <div class="callout">
+    <strong>L'alpha vit DANS la palette</strong>, pas dans un groupe <code>color.alpha.*</code>
+    séparé. Le rôle <code>brand.primary</code> alias la palette <em>entière</em> : changer la tonique
+    emporte donc l'alpha avec elle. Un groupe séparé obligerait à swapper deux fois — et un oubli
+    donnerait un bouton violet au survol turquoise.
+  </div>
+  <p class="note">Un voile se compose sur le fond qui est dessous : il s'adapte tout seul au thème
+  sombre. Les tokens alpha sont donc <strong>identiques en light et dark</strong>.</p>
+
+  <h2>Les échelles de taille</h2>
+  ${sizeGroups}`,
+  });
+};
+
+const pageBrand = () => {
   const rows = ROLES.map((role) => {
     const palette = roleSource(role);
     const strip = STEPS.map((s) => `<i style="background:${resolve(`color.brand.${role}.${s}`)}"></i>`).join('');
@@ -223,69 +492,104 @@ function sectionBrand() {
     (n) => `<div class="cat"><i style="background:${resolve(`color.brand.categorical.${n}.main`)}"></i><span>${n}</span></div>`,
   ).join('');
 
-  return `
-<section id="brand">
-  <h2><span class="layer-num">2</span> Brand — la sélection du projet</h2>
-  <p>Quelle palette du catalogue joue quel rôle. <strong>Un seul endroit à éditer pour rebrander.</strong></p>
+  return layout({
+    id: 'brand',
+    title: '2 · Brand',
+    lead: 'Quelle palette du catalogue joue quel rôle. <strong>Le seul endroit à éditer pour rebrander un projet.</strong>',
+    body: `
   <div class="brand-table">${rows}</div>
 
-  <h3>Couleurs catégorielles</h3>
-  <p class="note">Teintes distinguables pour graphiques, avatars et tags. Elles ne suivent pas le
-  contrat de rôle (seulement <code>main</code> + <code>tint</code>) — ce ne sont pas des rôles
-  sémantiques, juste des couleurs qu'on doit pouvoir différencier.</p>
-  <div class="cats">${cats}</div>
-</section>`;
-}
+  <div class="callout callout-key">
+    <strong>Le cœur du système.</strong> Changer la tonique = éditer une ligne dans
+    <code>scripts/generate-theme.js</code>, puis <code>npm run theme</code>.
+    <pre><code>const BRAND = {
+  primary: '<b>turquoise</b>',   <span class="c">// était 'violet'</span>
+  neutral: 'slateBlue', success: 'green', …
+};</code></pre>
+    Ni le contrat de rôle, ni les composants ne bougent. Tous les boutons, liens et états actifs
+    de l'app suivent.
+  </div>
 
-function sectionContract() {
+  <h2>Sans cette couche</h2>
+  <p>Si un rôle sémantique pointait directement sur une palette
+  (<code>role.primary.main → {color.violet.600}</code>), rebrander obligerait à réécrire
+  <strong>chaque rôle, en light ET en dark</strong>. Des dizaines d'éditions à la main, avec la
+  certitude d'en oublier une.</p>
+
+  <h2>Couleurs catégorielles</h2>
+  <p>Teintes distinguables pour graphiques, avatars et tags.</p>
+  <div class="cats">${cats}</div>
+  <p class="note">Elles ne suivent volontairement <strong>pas</strong> le contrat de rôle (seulement
+  <code>main</code> + <code>tint</code>) : ce ne sont pas des rôles sémantiques, juste des couleurs
+  qu'on doit pouvoir différencier les unes des autres.</p>`,
+  });
+};
+
+const pageRoles = () => {
   const head = SLOTS.map((s) => `<th>${s}</th>`).join('');
   const rows = ROLES.map((role) => {
     const cells = SLOTS.map((slot) => {
       const path = `color.role.${role}.${slot}`;
-      return `<td><div class="slot ${/tint/.test(slot) ? 'sw-alpha' : ''}" style="background:var(${cssVar(path)})"
-        title="${path}"></div></td>`;
+      return `<td><div class="slot ${/tint/.test(slot) ? 'sw-alpha' : ''}"
+        style="background:var(${cssVar(path)})" title="${path}"></div></td>`;
     }).join('');
     return `<tr><th class="rh">${role}</th>${cells}</tr>`;
   }).join('');
 
   const slotDocs = SLOTS.map(
-    (s) => `<li><code>${s}</code> — ${esc(light.role.primary[s].$description ?? '')}</li>`,
+    (s) => `<tr><td><code>${s}</code></td><td>${esc(light.role.primary[s].$description ?? '')}</td></tr>`,
   ).join('');
 
-  return `
-<section id="contract">
-  <h2><span class="layer-num">3</span> Le contrat de rôle</h2>
-  <p><strong>C'est la pièce maîtresse.</strong> Les ${ROLES.length} rôles exposent
-  <strong>exactement les mêmes ${SLOTS.length} slots</strong>, mappés sur
-  <strong>exactement les mêmes crans</strong>. Un composant qui sait afficher
-  <code>primary</code> sait afficher <code>danger</code> — sans un token de plus.</p>
-
+  return layout({
+    id: 'roles',
+    title: '3 · Le contrat de rôle',
+    lead: `La pièce maîtresse. Les ${ROLES.length} rôles exposent <strong>exactement les mêmes
+      ${SLOTS.length} slots</strong>, mappés sur <strong>exactement les mêmes crans</strong>.`,
+    body: `
   <div class="scroll-x">
     <table class="tbl contract">
       <thead><tr><th></th>${head}</tr></thead>
       <tbody>${rows}</tbody>
     </table>
   </div>
+  <p class="note">Bascule le thème : les couleurs changent, <strong>les noms ne changent pas</strong>.</p>
 
-  <ul class="slot-docs">${slotDocs}</ul>
+  <h2>À quoi sert chaque slot</h2>
+  <table class="tbl">
+    <thead><tr><th>Slot</th><th>Usage</th></tr></thead>
+    <tbody>${slotDocs}</tbody>
+  </table>
 
+  <h2>Pourquoi l'uniformité garantit le contraste</h2>
+  <p>Toutes les palettes sont sur la même courbe de luminosité (couche 1). Donc si
+  <code>main</code> = cran 600 et <code>on</code> = <code>neutral.25</code> passe AA pour
+  <em>un</em> rôle, ça passe AA pour <em>les six</em>.</p>
   <div class="callout callout-key">
-    <strong>Pourquoi l'uniformité garantit le contraste.</strong> Toutes les palettes sont sur la
-    même courbe de luminosité (couche 1). Donc si <code>main</code> = cran 600 et <code>on</code> =
-    <code>neutral.25</code> passe AA pour <em>un</em> rôle, ça passe AA pour <em>les six</em>.
-    Mesuré : <code>on</code>/<code>main</code> va de 4,56:1 à 5,74:1 en clair, et de 5,72:1 à
-    6,66:1 en sombre. <strong>Les 6 rôles passent AA, avec le même mapping.</strong>
+    <strong>Mesuré sur le CSS généré</strong> — texte sur fond, pour les 6 rôles :
+    <br>bouton plein, thème clair : <strong>4,56:1 → 5,74:1</strong> ·
+    thème sombre : <strong>5,72:1 → 6,66:1</strong>.
+    <br>Les 12 combinaisons passent <strong>WCAG AA</strong>, sans un seul token écrit à la main.
+  </div>
+  <p>Conséquence directe : <code>&lt;Button color="danger"&gt;</code> fonctionne
+  <strong>sans un token de plus</strong>. Un composant qui sait afficher <code>primary</code> sait
+  afficher les cinq autres.</p>
+
+  <h2>Deux règles de nommage non négociables</h2>
+  <div class="callout callout-warn">
+    <strong>Un nom de rôle décrit un usage, jamais une apparence.</strong>
+    Pas de <code>dark</code> / <code>darker</code> pour dire « survol » et « pressé » : en thème
+    sombre, le survol doit être <em>plus clair</em> — le nom deviendrait un mensonge. D'où
+    <code>hover</code> et <code>active</code>.
   </div>
   <div class="callout callout-warn">
-    <strong>Un nom de rôle ne décrit jamais une apparence.</strong> Pas de <code>dark</code> ni
-    <code>darker</code> pour dire « survol » et « pressé » : en thème sombre, le survol doit être
-    <em>plus clair</em>, et le nom deviendrait un mensonge. D'où <code>hover</code> et
-    <code>active</code> — des rôles, pas des couleurs.
-  </div>
-</section>`;
-}
+    <strong>Un mot, un sens.</strong> <code>surface</code> désigne <em>uniquement</em> les fonds
+    (<code>surface.base</code>, <code>surface.raised</code>…). Le voile alpha d'un rôle s'appelle
+    <code>tint</code> — jamais <code>surface</code>.
+  </div>`,
+  });
+};
 
-function sectionSemantic() {
+const pageSemantic = () => {
   const groups = ['surface', 'text', 'border']
     .map((group) => {
       const items = Object.keys(light[group])
@@ -295,7 +599,7 @@ function sectionSemantic() {
           return `<div class="role">
             <div class="role-chip ${/transparent/.test(name) ? 'sw-alpha' : ''}" style="background:var(${cssVar(path)})"></div>
             <div class="role-name">${name}</div>
-            <code class="role-var">${esc(light[group][name].$description ?? '')}</code>
+            <span class="role-desc">${esc(light[group][name].$description ?? '')}</span>
           </div>`;
         })
         .join('');
@@ -330,11 +634,13 @@ function sectionSemantic() {
     })
     .join('');
 
-  return `
-<section id="semantic">
-  <h2>Le reste de la couche sémantique</h2>
-  <p><code>surface</code> est le <strong>seul</strong> groupe qui parle de fonds. Le voile alpha des
-  rôles s'appelle <code>tint</code>, jamais <code>surface</code> — un mot, un sens.</p>
+  return layout({
+    id: 'semantic',
+    title: '3 · Sémantique (le reste)',
+    lead: 'Au-delà du contrat de rôle : les fonds, le texte, les bordures, le focus, les tailles et la typo.',
+    body: `
+  <h2>Couleur</h2>
+  <p><code>surface</code> est le <strong>seul</strong> groupe qui parle de fonds.</p>
   <div class="roles">${groups}</div>
 
   <h3>Focus &amp; scrim</h3>
@@ -342,156 +648,624 @@ function sectionSemantic() {
     <div class="role-group"><div class="role-list">
       <div class="role"><div class="role-chip" style="background:var(--color-focus-ring)"></div>
         <div class="role-name">focus.ring</div>
-        <code class="role-var">${esc(light.focus.ring.$description)}</code></div>
+        <span class="role-desc">${esc(light.focus.ring.$description)}</span></div>
       <div class="role"><div class="role-chip sw-alpha" style="background:var(--color-scrim)"></div>
         <div class="role-name">scrim</div>
-        <code class="role-var">${esc(light.scrim.$description)}</code></div>
+        <span class="role-desc">${esc(light.scrim.$description)}</span></div>
     </div></div>
   </div>
 
-  <h3>Tailles — desktop vs mobile</h3>
-  <p class="note">Seules les lignes <span class="tag">≠</span> sont réémises dans la media query.</p>
+  <h2>Tailles — desktop vs mobile</h2>
+  <p class="note">Seules les lignes <span class="tag">≠</span> sont réémises dans la media query du
+  CSS généré. Les autres sont identiques : aucune ligne inutile.</p>
   <table class="tbl">
     <thead><tr><th>Rôle</th><th>Desktop</th><th>Mobile (&lt; ${sizes.breakpoint.md.$value})</th></tr></thead>
     <tbody>${sizeRows}</tbody>
   </table>
+  <div class="callout callout-warn">
+    <strong>Breakpoints.</strong> Une media query CSS <em>ne peut pas</em> lire une custom property
+    — <code>@media (max-width: var(--size-breakpoint-md))</code> ne fonctionne pas. Le build lit
+    donc <code>size.breakpoint.md</code> dans les tokens et inline sa valeur. Une seule source de
+    vérité.
+  </div>
 
-  <h3>Typographie</h3>
+  <h2>Typographie</h2>
   <table class="tbl">
     <thead><tr><th>Rôle</th><th>Aperçu</th><th>Graisse / interligne</th></tr></thead>
     <tbody>${typoRows}</tbody>
-  </table>
-</section>`;
-}
+  </table>`,
+  });
+};
 
-function renderChain(path) {
-  const layerOf = (p) =>
-    p.startsWith('color.brand.') ? 'brand'
-      : /^color\.(button|input)\./.test(p) ? 'component'
-        : /^color\.(role|surface|text|border|focus|scrim|categorical)/.test(p) ? 'semantic'
-          : 'primitive';
-
-  const items = chain(path)
-    .map((s, i, arr) => {
-      const isLast = i === arr.length - 1;
-      return `<li class="chain-step chain-${layerOf(s.path)}">
-        <span class="chain-layer">${layerOf(s.path)}</span>
-        <code>${s.path}</code>
-        ${isLast ? `<span class="chain-final"><i class="sw-alpha" style="background:${s.value}"></i>${s.value}</span>` : ''}
-      </li>`;
-    })
-    .join('');
-  return `<ol class="chain">${items}</ol>`;
-}
-
-function sectionComponents() {
-  const VARIANTS = Object.keys(button.color.button);
-  const STATES = Object.keys(button.color.button[VARIANTS[0]][ROLES[0]]);
-
-  const grids = VARIANTS.map((variant) => {
-    const rows = ROLES.map((role) => {
-      const btns = STATES.map((state) => {
-        const v = (p) => `var(${cssVar(`color.button.${variant}.${role}.${state}.${p}`)})`;
-        return `<td><button class="demo-btn" style="
-          background:${v('background')}; color:${v('text')};
-          border: var(--border-width-button) solid ${v('border')};
-          border-radius: var(--radius-button);
-          padding: var(--space-button-padding-y) var(--space-button-padding-x);
-          font-size: var(--font-size-button);
-          font-family: var(--typography-button-family);
-          font-weight: var(--typography-button-weight);
-        ">Button CTA</button></td>`;
-      }).join('');
-      return `<tr><th class="rh">${role}</th>${btns}</tr>`;
-    }).join('');
-    return `
-      <h4 class="variant-title">${variant}</h4>
-      <div class="scroll-x">
-        <table class="tbl btn-grid ${variant !== 'filled' ? 'checker' : ''}">
-          <thead><tr><th></th>${STATES.map((s) => `<th>${s}</th>`).join('')}</tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>`;
-  }).join('');
-
-  const inputStates = Object.keys(input.color.input);
-  const inputs = inputStates
-    .map((state) => {
-      const v = (p) => `var(${cssVar(`color.input.${state}.${p}`)})`;
-      const bw = state === 'focus' ? 'focus' : 'default';
-      return `<div class="demo-item">
-      <input class="demo-input" value="Saisie" readonly style="
-        background:${v('background')}; color:${v('text')};
-        border: var(--border-width-input-${bw}) solid ${v('border')};
-        border-radius: var(--radius-input);
-        padding: var(--space-input-padding-y) var(--space-input-padding-x);
-        font-size: var(--font-size-input);
-        font-family: var(--typography-input-family);">
-      <span class="demo-label">${state}</span></div>`;
-    })
+const pageEffects = () => {
+  const shadowDemo = Object.keys(shadow)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (name) => `<div class="demo-item">
+        <div class="shadow-box" style="box-shadow: var(--shadow-${name})"></div>
+        <span class="demo-label">shadow.${name}</span>
+      </div>`,
+    )
     .join('');
 
-  return `
-<section id="components">
-  <h2><span class="layer-num">4</span> Composants — l'usage</h2>
-  <p>Rendus <strong>uniquement avec les variables CSS générées</strong>, aucune valeur en dur.
-  ${VARIANTS.length} variantes × ${ROLES.length} rôles × ${STATES.length} états — et
-  <strong>zéro token écrit à la main</strong> : la variante déclare quels slots du rôle elle
-  consomme, le reste est mécanique.</p>
-  ${grids}
+  const shadowDocs = Object.keys(shadow)
+    .filter((k) => !k.startsWith('$'))
+    .map((n) => `<tr><td><code>shadow.${n}</code></td><td>${esc(shadow[n].$description ?? '')}</td></tr>`)
+    .join('');
 
-  <h3>Input</h3>
-  <div class="demo">${inputs}</div>
+  const stateSwatches = Object.keys(light.state)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (name) => `<div class="role">
+        <div class="role-chip sw-alpha" style="background:var(--color-state-${name})"></div>
+        <div class="role-name">state.${name}</div>
+        <span class="role-desc">${esc(light.state[name].$description ?? '')}</span>
+      </div>`,
+    )
+    .join('');
 
-  <h3>La chaîne de résolution</h3>
-  <p>Un token de composant ne connaît ni les palettes ni les hex : il ne connaît qu'un rôle.
-  Chaque flèche traverse une couche.</p>
-  ${renderChain('color.button.filled.primary.default.background')}
-  ${renderChain('color.button.outlined.danger.hover.background')}
-  <div class="callout">
-    <strong>Les 3 règles, mécaniquement vérifiables.</strong>
-    Un composant référence un rôle sémantique, jamais plus bas.
-    Un rôle sémantique de couleur référence la couche <em>brand</em>, jamais un primitive.
-    Un token <em>brand</em> référence un primitive, jamais une valeur brute.
+  const alphaLadder = (family) =>
+    Object.keys(colors.alpha[family])
+      .filter((k) => !k.startsWith('$'))
+      .map(
+        (a) => `<div class="cat">
+          <i class="sw-alpha" style="background:${colors.alpha[family][a].$value}"></i>
+          <span>${a}%</span></div>`,
+      )
+      .join('');
+
+  const durations = Object.keys(effectTheme.motion.duration)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (n) => `<tr>
+        <td><code>motion.duration.${n}</code></td>
+        <td class="mono">${resolve(`motion.duration.${n}`)}</td>
+        <td><div class="motion-demo" style="animation-duration: var(--motion-duration-${n})"></div></td>
+        <td>${esc(effectTheme.motion.duration[n].$description ?? '')}</td>
+      </tr>`,
+    )
+    .join('');
+
+  const easings = Object.keys(effects.easing)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (n) => `<tr><td><code>easing.${n}</code></td>
+        <td class="mono">cubic-bezier(${effects.easing[n].$value.join(', ')})</td>
+        <td>${esc(effects.easing[n].$description ?? '')}</td></tr>`,
+    )
+    .join('');
+
+  return layout({
+    id: 'effects',
+    title: '3 · Effets & mouvement',
+    lead: `Ombres, voiles d'état neutres, durées et courbes. <strong>Trois familles qui n'existaient
+      pas</strong> — et dont l'absence cachait un bug.`,
+    body: `
+  <h2>Les voiles neutres — et le bug qu'ils corrigent</h2>
+  <p>Les voiles <code>role.X.tint</code> teintent à la couleur d'un rôle. Mais une ligne de tableau
+  survolée ne doit <em>pas</em> virer au violet, et un scrim de modale doit <em>assombrir</em>.
+  D'où des voiles <strong>blanc et noir absolus</strong>, indépendants de toute palette.</p>
+
+  <h3><code>color.alpha.black</code></h3>
+  <div class="cats">${alphaLadder('black')}</div>
+  <h3><code>color.alpha.white</code></h3>
+  <div class="cats">${alphaLadder('white')}</div>
+
+  <div class="callout callout-warn">
+    <strong>Le bug.</strong> <code>scrim</code> pointait sur <code>brand.neutral.alpha.10</code>,
+    c'est-à-dire un <em>slateBlue translucide</em>. Sous ce voile, la luminance de la page ne
+    passait que de <strong>0,96 à 0,86</strong> : une modale ne se serait jamais détachée. Il pointe
+    maintenant sur <code>alpha.black.60</code> → <strong>0,96 → 0,13</strong>.
   </div>
-</section>`;
+
+  <h3>Voiles d'état</h3>
+  <p>C'est le <strong>seul groupe qui s'inverse</strong> entre les modes : en clair on assombrit
+  (noir), en sombre on éclaircit (blanc). Bascule le thème pour le voir.</p>
+  <div class="roles"><div class="role-group"><div class="role-list">${stateSwatches}</div></div></div>
+
+  <h2>Ombres</h2>
+  <div class="demo">${shadowDemo}</div>
+  <table class="tbl"><tbody>${shadowDocs}</tbody></table>
+  <div class="callout">
+    <strong>Géométrie et couleur sont séparées.</strong> Le décalage, le flou et l'étalement viennent
+    des primitives (<code>elevation.*</code>) ; la <em>couleur</em> est choisie par le mode — sur fond
+    sombre, une ombre doit être bien plus opaque pour rester lisible
+    (<code>black.8</code> en clair, <code>black.40</code> en sombre pour <code>shadow.raised</code>).
+  </div>
+  <p class="note">Les ombres sont émises en valeurs <strong>résolues</strong>, pas en
+  <code>var()</code>. Style Dictionary réinjecte les <code>var()</code> dans une valeur courte par
+  recherche de chaîne : quand <code>offsetX</code> vaut <code>0</code> et que le
+  <code>spread</code> vaut <code>0</code> aussi, il intervertit les deux positions. Un spread non
+  nul se serait retrouvé dans l'offset horizontal.</p>
+
+  <h2>Mouvement</h2>
+  <table class="tbl">
+    <thead><tr><th>Token</th><th>Valeur</th><th>Aperçu</th><th>Usage</th></tr></thead>
+    <tbody>${durations}</tbody>
+  </table>
+  <h3>Courbes</h3>
+  <table class="tbl">
+    <thead><tr><th>Token</th><th>Valeur</th><th>Usage</th></tr></thead>
+    <tbody>${easings}</tbody>
+  </table>
+
+  <h2>Opacité</h2>
+  <table class="tbl">
+    <tbody>
+      <tr><td><code>opacity.disabled</code></td><td class="mono">${resolve('opacity.disabled')}</td>
+      <td>${esc(effectTheme.opacity.disabled.$description)}</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Deux façons de traiter le désactivé coexistent : les couleurs dédiées
+  (<code>surface.disabled</code>, <code>text.disabled</code>, <code>border.disabled</code>) —
+  plus contrôlables — ou cette opacité globale, qui atténue un composant entier d'un coup.
+  Choisis-en <strong>une</strong> par composant, pas les deux.</p>`,
+  });
+};
+
+
+/* ---------- pages composants ---------- */
+
+/** Un token de composant est-il role-aware ? (structure : comp.variant.role.state.prop) */
+const isRoleAware = (name) => {
+  const c = COMP[name].color?.[name];
+  if (!c) return false;
+  const v = Object.keys(c).filter((k) => !k.startsWith('$'))[0];
+  return c[v] && ROLES.every((r) => r in c[v]);
+};
+
+/** Toutes les var() CSS d'un composant, groupées par famille de type. */
+function tokenTable(name) {
+  const rows = [];
+  for (const [group, node] of Object.entries(COMP[name])) {
+    for (const [path] of flatten({ [group]: node })) rows.push(path);
+  }
+  const byGroup = {};
+  for (const p of rows) (byGroup[p.split('.')[0]] ??= []).push(p);
+  const body = Object.entries(byGroup)
+    .map(
+      ([g, paths]) =>
+        `<tr><td><code>${g}</code></td><td class="mono">${paths.length}</td>
+         <td class="mono tiny">${esc(cssVar(paths[0]))}${paths.length > 1 ? ` … <span class="note">(+${paths.length - 1})</span>` : ''}</td></tr>`,
+    )
+    .join('');
+  return `<table class="tbl"><thead><tr><th>Famille</th><th>Tokens</th><th>Exemple de variable</th></tr></thead><tbody>${body}</tbody></table>`;
 }
 
-/* ---------- page ---------- */
+const btnStyle = (name, variant, role, state, size = 'md') => `
+  background: var(${cssVar(`color.${name}.${variant}.${role}.${state}.background`)});
+  color: var(${cssVar(`color.${name}.${variant}.${role}.${state}.text`)});
+  border: var(${cssVar(`border-width.${name}.${size}`)}) solid var(${cssVar(`color.${name}.${variant}.${role}.${state}.border`)});
+  border-radius: var(${cssVar(`radius.${name}.${size}`)});
+  padding: 0 var(${cssVar(`space.${name}.${size}.paddingX`)});
+  height: var(${cssVar(`size.${name}.${size}.height`)});
+  font-size: var(${cssVar(`font-size.${name}.${size}`)});
+  font-family: var(--typography-body-family);
+  font-weight: var(--typography-heading-weight);`;
 
-const html = `<!doctype html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>@fred/design-tokens — documentation</title>
-<style>
-${tokensCss}
-</style>
-<style>
+/** Grille rôles × états pour un composant role-aware. */
+function roleGrid(name, variant, states, render) {
+  const head = states.map((st) => `<th>${st}</th>`).join('');
+  const rows = ROLES.map(
+    (role) =>
+      `<tr><th class="rh">${role}</th>${states.map((st) => `<td>${render(role, st)}</td>`).join('')}</tr>`,
+  ).join('');
+  return `<div class="scroll-x"><table class="tbl btn-grid ${variant !== 'filled' ? 'checker' : ''}">
+    <thead><tr><th></th>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+const pageForm = () => {
+  const btnStates = Object.keys(COMP.button.color.button.filled[ROLES[0]]);
+  const buttons = Object.keys(COMP.button.color.button)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (v) => `<h3><code>${v}</code></h3>` +
+        roleGrid('button', v, btnStates, (role, st) =>
+          `<button class="demo-btn" style="${btnStyle('button', v, role, st)}">Button CTA</button>`),
+    )
+    .join('');
+
+  const sizeDemo = ['sm', 'md', 'lg']
+    .map(
+      (sz) => `<div class="demo-item">
+        <button class="demo-btn" style="${btnStyle('button', 'filled', 'primary', 'default', sz)}">Button</button>
+        <span class="demo-label">${sz}</span></div>`,
+    )
+    .join('');
+
+  const field = (comp, state, sz = 'md') => `
+    background: var(${cssVar(`color.${comp}.${state}.background`)});
+    color: var(${cssVar(`color.${comp}.${state}.text`)});
+    border: var(${cssVar(`border-width.${comp}.${sz}`)}) solid var(${cssVar(`color.${comp}.${state}.border`)});
+    border-radius: var(${cssVar(`radius.${comp}.${sz}`)});
+    padding: 0 var(${cssVar(`space.${comp}.${sz}.paddingX`)});
+    height: var(${cssVar(`size.${comp}.${sz}.height`)});
+    font-size: var(${cssVar(`font-size.${comp}.${sz}`)});
+    font-family: var(--typography-body-family);`;
+
+  const inputs = Object.keys(COMP.input.color.input)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (st) => `<div class="demo-item">
+        <input class="demo-input" value="Saisie" readonly style="${field('input', st)}">
+        <span class="demo-label">${st}</span></div>`,
+    )
+    .join('');
+
+  const textareas = Object.keys(COMP.textarea.color.textarea)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (st) => `<div class="demo-item">
+        <div class="demo-input demo-textarea" style="
+          background: var(${cssVar(`color.textarea.${st}.background`)});
+          color: var(${cssVar(`color.textarea.${st}.text`)});
+          border: var(--border-width-textarea) solid var(${cssVar(`color.textarea.${st}.border`)});
+          border-radius: var(--radius-textarea);
+          padding: var(--space-textarea-padding-y) var(--space-textarea-padding-x);
+          font-size: var(--font-size-textarea);
+          font-family: var(--typography-body-family);">Saisie multiligne</div>
+        <span class="demo-label">${st}</span></div>`,
+    )
+    .join('');
+
+  const selects = Object.keys(COMP.select.color.select)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (st) => `<div class="demo-item">
+        <div class="demo-input demo-select" style="${field('select', st)}">
+          <span>Choix</span>
+          <span style="color: var(${cssVar(`color.select.${st}.icon`)})">▾</span>
+        </div>
+        <span class="demo-label">${st}</span></div>`,
+    )
+    .join('');
+
+  // Chaque composant déclare SES états : une radio n'a pas d'état indéterminé.
+  const boxes = (comp) =>
+    roleGrid(comp, 'default', Object.keys(COMP[comp].color[comp].default[ROLES[0]]), (role, st) => `
+      <div class="ctl" style="
+        width: var(${cssVar(`size.${comp}.md.box`)}); height: var(${cssVar(`size.${comp}.md.box`)});
+        background: var(${cssVar(`color.${comp}.default.${role}.${st}.background`)});
+        border: var(${cssVar(`border-width.${comp}.md`)}) solid var(${cssVar(`color.${comp}.default.${role}.${st}.border`)});
+        border-radius: var(${cssVar(`radius.${comp}.md`)});
+        color: var(${cssVar(`color.${comp}.default.${role}.${st}.mark`)});
+      ">${comp === 'radio' ? '●' : st === 'indeterminate' ? '–' : '✓'}</div>`);
+
+  const swStates = Object.keys(COMP.switch.color.switch.default[ROLES[0]]);
+  const switches = roleGrid('switch', 'default', swStates, (role, st) => `
+    <div class="sw-track" style="
+      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
+      background: var(${cssVar(`color.switch.default.${role}.${st}.track`)});
+      border-radius: var(--radius-switch-md);
+      justify-content: ${/^on/.test(st) || st === 'disabledOn' ? 'flex-end' : 'flex-start'};
+    "><i style="
+      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
+      background: var(${cssVar(`color.switch.default.${role}.${st}.thumb`)});
+    "></i></div>`);
+
+  const secs = [
+    section('button', 'Button', `${buttons}
+      <h3>Tailles</h3>
+      <div class="demo">${sizeDemo}</div>
+      <div class="callout callout-warn">
+        <strong>Sur mobile, les contrôles GRANDISSENT.</strong> C'est la seule famille de tailles qui
+        augmente au lieu de diminuer : une cible tactile doit faire au moins 44px (WCAG 2.5.5). Un
+        bouton <code>md</code> passe de <strong>40px</strong> en desktop à <strong>52px</strong> sous
+        <code>${sizes.breakpoint.md.$value}</code>.
+      </div>
+      ${tokenTable('button')}`),
+    section('input', 'Input', `<div class="demo">${inputs}</div>${tokenTable('input')}`),
+    section('textarea', 'Textarea', `<div class="demo">${textareas}</div>`),
+    section('select', 'Select', `<div class="demo">${selects}</div>`),
+    section('checkbox', 'Checkbox', boxes('checkbox')),
+    section('radio', 'Radio', boxes('radio')),
+    section('switch', 'Switch', switches),
+  ];
+
+  return layout({
+    id: 'form',
+    title: '4 · Composants — formulaire',
+    lead: `Button, Input, Textarea, Select, Checkbox, Radio, Switch. Rendus <strong>uniquement</strong>
+      avec les variables générées.`,
+    sections: secs,
+    body: `
+  <div class="callout callout-key">
+    <strong>Rien n'est écrit à la main.</strong> Les composants <em>role-aware</em>
+    (<code>button</code>, <code>checkbox</code>, <code>radio</code>, <code>switch</code>) sont générés
+    pour <strong>les 6 rôles</strong> à partir d'une table qui dit seulement quels <em>slots</em>
+    chaque variante consomme. C'est la promesse du contrat de rôle :
+    <code>&lt;Checkbox color="danger"&gt;</code> existe sans un token de plus.
+  </div>
+  ${renderSections(secs)}`,
+  });
+};
+
+const pageDisplay = () => {
+  const badgeVariants = Object.keys(COMP.badge.color.badge).filter((k) => !k.startsWith('$'));
+  const badges = badgeVariants
+    .map(
+      (v) => `<h3><code>${v}</code></h3><div class="demo ${v !== 'filled' ? '' : ''}">` +
+        ROLES.map(
+          (role) => `<div class="demo-item"><span class="pill" style="
+            background: var(${cssVar(`color.badge.${v}.${role}.default.background`)});
+            color: var(${cssVar(`color.badge.${v}.${role}.default.text`)});
+            border: var(--border-width-badge-md) solid var(${cssVar(`color.badge.${v}.${role}.default.border`)});
+            border-radius: var(--radius-badge-md);
+            padding: 0 var(--space-badge-md-padding-x);
+            height: var(--size-badge-md-height);
+            font-size: var(--font-size-badge-md);
+          ">${role}</span></div>`,
+        ).join('') + '</div>',
+    )
+    .join('');
+
+  const tagStates = Object.keys(COMP.tag.color.tag.subtle[ROLES[0]]);
+  const tags = Object.keys(COMP.tag.color.tag)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (v) => `<h3><code>${v}</code></h3>` +
+        roleGrid('tag', v, tagStates, (role, st) => `<span class="pill" style="
+          background: var(${cssVar(`color.tag.${v}.${role}.${st}.background`)});
+          color: var(${cssVar(`color.tag.${v}.${role}.${st}.text`)});
+          border: var(--border-width-tag-md) solid var(${cssVar(`color.tag.${v}.${role}.${st}.border`)});
+          border-radius: var(--radius-tag-md);
+          padding: 0 var(--space-tag-md-padding-x);
+          height: var(--size-tag-md-height);
+          font-size: var(--font-size-tag-md);
+        ">${role}</span>`),
+    )
+    .join('');
+
+  const alerts = Object.keys(COMP.alert.color.alert)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (v) => `<h3><code>${v}</code></h3><div class="alerts">` +
+        ROLES.map(
+          (role) => `<div class="alert" style="
+            background: var(${cssVar(`color.alert.${v}.${role}.default.background`)});
+            border: var(--border-width-alert) solid var(${cssVar(`color.alert.${v}.${role}.default.border`)});
+            border-radius: var(--radius-alert);
+            padding: var(--space-alert-padding-y) var(--space-alert-padding-x);
+            gap: var(--space-alert-gap);
+          ">
+            <span style="color: var(${cssVar(`color.alert.${v}.${role}.default.icon`)}); font-size: var(--size-alert-icon)">●</span>
+            <div>
+              <b style="color: var(${cssVar(`color.alert.${v}.${role}.default.title`)})">${role}</b>
+              <p style="color: var(${cssVar(`color.alert.${v}.${role}.default.text`)}); margin:0">Un message d'alerte.</p>
+            </div>
+          </div>`,
+        ).join('') + '</div>',
+    )
+    .join('');
+
+  const cards = Object.keys(COMP.card.color.card)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (st) => `<div class="demo-item"><div class="card-demo" style="
+        background: var(${cssVar(`color.card.${st}.background`)});
+        border: var(--border-width-card) solid var(${cssVar(`color.card.${st}.border`)});
+        border-radius: var(--radius-card);
+        box-shadow: var(${cssVar(`shadow.card.${st}`)});
+        padding: var(--space-card-padding-y) var(--space-card-padding-x);
+      ">Carte</div><span class="demo-label">${st}</span></div>`,
+    )
+    .join('');
+
+  const links = Object.keys(COMP.link.color.link.default[ROLES[0]]);
+  const linkGrid = roleGrid('link', 'default', links, (role, st) =>
+    `<a href="#" style="color: var(${cssVar(`color.link.default.${role}.${st}.text`)}); font-size: var(--font-size-link)">Un lien</a>`);
+
+  const secs = [
+    section('badge', 'Badge', `<p class="note">Statique : un badge ne réagit pas au survol. Un seul état.</p>${badges}`),
+    section('tag', 'Tag', `<p class="note">Interactif : c'est un badge qui se survole et se supprime.</p>${tags}`),
+    section('alert', 'Alert', alerts),
+    section('card', 'Card', `<div class="demo">${cards}</div>
+      <p class="note">La carte est le seul composant qui consomme un token d'<strong>ombre</strong> :
+      <code>shadow.raised</code> au repos, <code>shadow.float</code> au survol.</p>`),
+    section('tooltip', 'Tooltip', `<div class="demo"><div class="demo-item"><span class="pill" style="
+        background: var(--color-tooltip-default-background);
+        color: var(--color-tooltip-default-text);
+        border-radius: var(--radius-tooltip);
+        padding: var(--space-tooltip-padding-y) var(--space-tooltip-padding-x);
+        font-size: var(--font-size-tooltip);
+      ">Une infobulle</span><span class="demo-label">default</span></div></div>
+      <p class="note">Il consomme <code>surface.inverse</code> — le seul rôle pensé pour une rupture
+      visuelle négative.</p>`),
+    section('link', 'Link', linkGrid),
+  ];
+
+  return layout({
+    id: 'display',
+    title: '4 · Composants — affichage',
+    lead: 'Badge, Tag, Alert, Card, Tooltip, Link.',
+    sections: secs,
+    body: renderSections(secs),
+  });
+};
+
+const pageStructure = () => {
+  const tabStates = Object.keys(COMP.tabs.color.tabs).filter((k) => !k.startsWith('$'));
+  const tabs = tabStates
+    .map(
+      (st) => `<div class="tab" style="
+        background: var(${cssVar(`color.tabs.${st}.background`)});
+        color: var(${cssVar(`color.tabs.${st}.text`)});
+        border-bottom: var(--border-width-tabs) solid var(${cssVar(`color.tabs.${st}.indicator`)});
+        padding: var(--space-tabs-padding-y) var(--space-tabs-padding-x);
+        font-size: var(--font-size-tabs);
+      ">${st}</div>`,
+    )
+    .join('');
+
+  const menuItems = Object.keys(COMP.menu.color.menu.item)
+    .filter((k) => !k.startsWith('$'))
+    .map(
+      (st) => `<div class="menu-item" style="
+        background: var(${cssVar(`color.menu.item.${st}.background`)});
+        color: var(${cssVar(`color.menu.item.${st}.text`)});
+      ">${st}</div>`,
+    )
+    .join('');
+
+  const rowStates = Object.keys(COMP.table.color.table.row).filter((k) => !k.startsWith('$'));
+  const rows = rowStates
+    .map(
+      (st) => `<tr style="background: var(${cssVar(`color.table.row.${st}.background`)})">
+        <td style="color: var(${cssVar(`color.table.row.${st}.text`)}); border-bottom: var(--border-width-table) solid var(${cssVar(`color.table.row.${st}.border`)}); padding: var(--space-table-padding-y) var(--space-table-padding-x)">${st}</td>
+        <td style="color: var(${cssVar(`color.table.row.${st}.text`)}); border-bottom: var(--border-width-table) solid var(${cssVar(`color.table.row.${st}.border`)}); padding: var(--space-table-padding-y) var(--space-table-padding-x)">Valeur</td>
+      </tr>`,
+    )
+    .join('');
+
+  const secs = [
+    section('tabs', 'Tabs', `<div class="tabs-demo">${tabs}</div>`),
+    section('menu', 'Menu', `<div class="menu-demo" style="
+        background: var(--color-menu-default-background);
+        border: var(--border-width-menu) solid var(--color-menu-default-border);
+        border-radius: var(--radius-menu);
+        box-shadow: var(--shadow-menu-default);
+        padding: var(--space-menu-padding-y) var(--space-menu-padding-x);
+      ">${menuItems}</div>`),
+    section('table', 'Table', `<table class="tbl table-demo">
+        <thead><tr>
+          <th style="background: var(--color-table-header-default-background); color: var(--color-table-header-default-text); border-bottom: var(--border-width-table) solid var(--color-table-header-default-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">État de la ligne</th>
+          <th style="background: var(--color-table-header-default-background); color: var(--color-table-header-default-text); border-bottom: var(--border-width-table) solid var(--color-table-header-default-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">Colonne</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`),
+    section('modal', 'Modal', `<div class="modal-stage" style="background: var(--color-modal-default-scrim)">
+        <div style="
+          background: var(--color-modal-default-background);
+          border: var(--border-width-modal) solid var(--color-modal-default-border);
+          border-radius: var(--radius-modal);
+          box-shadow: var(--shadow-modal-default);
+          padding: var(--space-modal-padding-y) var(--space-modal-padding-x);
+        "><b>Une modale</b><p class="note" style="margin:0">Posée sur <code>scrim</code>.</p></div>
+      </div>
+      <div class="callout callout-warn">
+        <strong>Le scrim était cassé.</strong> Il pointait sur un neutre <em>teinté</em> : la luminance
+        de la page ne passait que de 0,96 à 0,86, la modale ne se détachait pas. Il pointe maintenant
+        sur <code>alpha.black.60</code> → 0,96 → <strong>0,13</strong>.
+      </div>`),
+  ];
+
+  return layout({
+    id: 'structure',
+    title: '4 · Composants — structure',
+    lead: "Modal, Menu, Tabs, Table. Ce sont eux qui consomment les <strong>voiles d'état neutres</strong>.",
+    sections: secs,
+    body: `
+  <div class="callout callout-key">
+    <strong>Le survol d'une ligne de tableau ou d'un item de menu utilise
+    <code>state.hover</code>, pas <code>role.primary.tint</code>.</strong> Un voile de rôle
+    teinterait la ligne en violet. Le voile neutre, lui, s'inverse selon le mode : il assombrit en
+    clair, il éclaircit en sombre. Bascule le thème pour le voir.
+  </div>
+  ${renderSections(secs)}`,
+  });
+};
+
+/* ---------- feuille de style de la doc ---------- */
+
+const DOCS_CSS = `
+/* Styles de la documentation. Uniquement des var() : la doc est stylée AVEC les
+   tokens qu'elle documente. Si le design system casse, cette page casse avec. */
 *, *::before, *::after { box-sizing: border-box; }
 body {
   margin: 0; background: var(--color-surface-base); color: var(--color-text-body);
   font-family: var(--typography-body-family); font-size: var(--font-size-body);
   line-height: var(--typography-body-line-height);
 }
-.wrap { max-width: 1140px; margin: 0 auto; padding: var(--space-xl); }
-h1,h2,h3,h4 { font-family: var(--typography-heading-family); font-weight: var(--typography-heading-weight); line-height: var(--typography-heading-line-height); }
+
+/* --- Navigation latérale --- */
+.sidebar {
+  position: fixed; inset: 0 auto 0 0; width: 260px; overflow-y: auto;
+  padding: var(--space-lg); background: var(--color-surface-raised);
+  border-right: var(--border-width-default) solid var(--color-border-default);
+  display: flex; flex-direction: column; gap: var(--space-lg);
+}
+.brand {
+  font-family: var(--typography-code-family); font-weight: 700;
+  color: var(--color-text-body); text-decoration: none; font-size: var(--font-size-small);
+}
+.nav-group h5 {
+  margin: 0 0 var(--space-sm); font-size: 0.6875rem; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--color-text-muted); font-weight: 600;
+}
+.nav-group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.nav-group a {
+  display: flex; align-items: center; gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm);
+  color: var(--color-text-muted); text-decoration: none; font-size: var(--font-size-small);
+}
+.nav-group a:hover { background: var(--color-role-primary-tint); color: var(--color-text-body); }
+.nav-group a.on {
+  background: var(--color-role-primary-tint-strong);
+  color: var(--color-role-primary-text); font-weight: 600;
+}
+.nav-num {
+  display: grid; place-items: center; width: 20px; height: 20px; flex: none;
+  border-radius: var(--radius-full); background: var(--color-role-primary-main);
+  color: var(--color-role-primary-on); font-size: 0.625rem; font-weight: 700;
+}
+.nav-num-off { background: none; }
+
+/* Sous-menu : les ancres de la page courante. */
+.nav-group ul.sub { margin: 2px 0 var(--space-sm) 30px; padding-left: var(--space-sm); border-left: var(--border-width-default) solid var(--color-border-divider); gap: 0; }
+.nav-group ul.sub a { padding: 3px var(--space-sm); font-size: 0.75rem; border-radius: var(--radius-sm); }
+.nav-group ul.sub a.here { color: var(--color-role-primary-text); font-weight: 600; background: var(--color-role-primary-tint); }
+.theme-toggle {
+  margin-top: auto; cursor: pointer; background: var(--color-surface-base);
+  color: var(--color-text-body);
+  border: var(--border-width-default) solid var(--color-border-default);
+  border-radius: var(--radius-md); padding: var(--space-sm);
+  font-family: inherit; font-size: var(--font-size-small);
+}
+.theme-toggle:hover { border-color: var(--color-role-primary-main); color: var(--color-role-primary-text); }
+.burger {
+  display: none; position: fixed; top: var(--space-sm); left: var(--space-sm); z-index: 30;
+  background: var(--color-surface-raised); color: var(--color-text-body);
+  border: var(--border-width-default) solid var(--color-border-default);
+  border-radius: var(--radius-sm); padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-body); cursor: pointer;
+}
+
+/* --- Contenu --- */
+.main { margin-left: 260px; }
+.page { max-width: 900px; padding: var(--space-xl); }
+h1, h2, h3, h4 {
+  font-family: var(--typography-heading-family); font-weight: var(--typography-heading-weight);
+  line-height: var(--typography-heading-line-height);
+}
 h1 { font-size: var(--font-size-h1); margin: 0 0 var(--space-sm); }
-h2 { font-size: var(--font-size-h2); margin: 0 0 var(--space-md); display: flex; align-items: center; gap: var(--space-sm); }
-h3 { font-size: var(--font-size-h3); margin: var(--space-xl) 0 var(--space-sm); }
+h2 {
+  font-size: var(--font-size-h2); margin: var(--space-xl) 0 var(--space-md);
+  padding-top: var(--space-lg); scroll-margin-top: var(--space-md);
+  border-top: var(--border-width-default) solid var(--color-border-divider);
+}
+h3 { font-size: var(--font-size-h3); margin: var(--space-lg) 0 var(--space-sm); }
 h4 { font-size: var(--font-size-body); margin: 0 0 var(--space-xs); }
 p { margin: 0 0 var(--space-md); }
-code { font-family: var(--typography-code-family); font-size: 0.875em; background: var(--color-surface-raised); padding: 0.1em 0.35em; border-radius: var(--radius-sm); }
-pre { background: var(--color-surface-raised); border: var(--border-width-default) solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--space-md); overflow-x: auto; }
-pre code { background: none; padding: 0; font-size: 0.8125rem; line-height: 1.6; }
+.lead { font-size: var(--font-size-lead); color: var(--color-text-muted); margin-bottom: var(--space-lg); }
+code {
+  font-family: var(--typography-code-family); font-size: 0.875em;
+  background: var(--color-surface-raised); padding: .1em .35em; border-radius: var(--radius-sm);
+}
+pre {
+  background: var(--color-surface-raised);
+  border: var(--border-width-default) solid var(--color-border-default);
+  border-radius: var(--radius-md); padding: var(--space-md); overflow-x: auto;
+}
+pre code { background: none; padding: 0; font-size: .8125rem; line-height: 1.6; }
 pre .c { color: var(--color-text-muted); }
 .note { color: var(--color-text-muted); font-size: var(--font-size-small); }
 .mono { font-family: var(--typography-code-family); font-size: var(--font-size-small); }
 .scroll-x { overflow-x: auto; }
+.rules { padding-left: var(--space-lg); }
+.rules li { margin-bottom: var(--space-xs); }
 
 /* Damier : rend visible la transparence. */
-.checker, .sw-alpha, .demo-checker {
+.checker, .sw-alpha {
   background-image:
     linear-gradient(45deg, rgba(128,128,128,.22) 25%, transparent 25%, transparent 75%, rgba(128,128,128,.22) 75%),
     linear-gradient(45deg, rgba(128,128,128,.22) 25%, transparent 25%, transparent 75%, rgba(128,128,128,.22) 75%);
@@ -499,44 +1273,45 @@ pre .c { color: var(--color-text-muted); }
 }
 .sw-alpha { background-size: 8px 8px; background-position: 0 0, 4px 4px; }
 
-header.top { border-bottom: var(--border-width-default) solid var(--color-border-default); position: sticky; top: 0; background: var(--color-surface-base); z-index: 10; }
-.top-inner { max-width: 1140px; margin: 0 auto; padding: var(--space-sm) var(--space-xl); display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); }
-.top-title { font-family: var(--typography-code-family); font-weight: 600; }
-nav.toc { display: flex; gap: var(--space-md); flex-wrap: wrap; }
-nav.toc a { color: var(--color-text-muted); text-decoration: none; font-size: var(--font-size-small); }
-nav.toc a:hover { color: var(--color-role-primary-text); }
-.theme-toggle { cursor: pointer; background: var(--color-role-primary-main); color: var(--color-role-primary-on); border: 0; border-radius: var(--radius-full); padding: var(--space-xs) var(--space-md); font-family: inherit; font-size: var(--font-size-small); font-weight: 600; white-space: nowrap; }
-.theme-toggle:hover { background: var(--color-role-primary-hover); }
-
-section { padding: var(--space-xl) 0; border-top: var(--border-width-default) solid var(--color-border-divider); }
-section:first-of-type { border-top: 0; }
-.layer-num { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: var(--radius-full); background: var(--color-role-primary-main); color: var(--color-role-primary-on); font-size: 0.7em; flex: none; }
-
-.callout { border-left: 4px solid var(--color-border-strong); background: var(--color-surface-raised); padding: var(--space-md); border-radius: var(--radius-md); margin: var(--space-md) 0; }
+.callout {
+  border-left: 4px solid var(--color-border-strong); background: var(--color-surface-raised);
+  padding: var(--space-md); border-radius: var(--radius-md); margin: var(--space-md) 0;
+}
 .callout-key { border-left-color: var(--color-role-primary-main); }
 .callout-warn { border-left-color: var(--color-role-warning-main); }
+.callout pre { background: var(--color-surface-base); margin: var(--space-sm) 0 0; }
 
+.layer-num {
+  display: inline-grid; place-items: center; width: 26px; height: 26px;
+  border-radius: var(--radius-full); background: var(--color-role-primary-main);
+  color: var(--color-role-primary-on); font-size: .75rem; font-weight: 700;
+}
 .layers { display: flex; gap: var(--space-xs); flex-wrap: wrap; margin-bottom: var(--space-md); }
-.lyr { flex: 1 1 170px; border: var(--border-width-default) solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--space-md); background: var(--color-surface-raised); }
+.lyr {
+  flex: 1 1 160px; border: var(--border-width-default) solid var(--color-border-default);
+  border-radius: var(--radius-md); padding: var(--space-md);
+  background: var(--color-surface-raised); text-decoration: none; color: inherit;
+}
+.lyr:hover { border-color: var(--color-role-primary-main); }
 .lyr b { display: block; margin-top: var(--space-xs); }
 .lyr em { display: block; color: var(--color-text-muted); font-size: var(--font-size-small); font-style: normal; }
-.lyr small { display: block; margin-top: var(--space-sm); font-family: var(--typography-code-family); font-size: 0.75rem; color: var(--color-text-muted); }
+.lyr small { display: block; margin-top: var(--space-sm); font-family: var(--typography-code-family); font-size: .75rem; color: var(--color-text-muted); }
 .lyr-key { border-color: var(--color-role-primary-main); border-width: var(--border-width-strong); }
 .lyr-arrow { display: grid; place-items: center; color: var(--color-text-muted); }
 
 .ramps { display: grid; gap: var(--space-xs); }
-.ramp { display: grid; grid-template-columns: 90px 1fr 110px; align-items: center; gap: var(--space-sm); }
-.ramp-head .hd { font-size: 0.625rem; font-family: var(--typography-code-family); color: var(--color-text-muted); text-align: center; }
+.ramp { display: grid; grid-template-columns: 90px 1fr 96px; align-items: center; gap: var(--space-sm); }
+.ramp-head .hd { font-size: .625rem; font-family: var(--typography-code-family); color: var(--color-text-muted); text-align: center; }
 .ramp-name { font-family: var(--typography-code-family); font-size: var(--font-size-small); }
 .ramp-swatches { display: grid; grid-template-columns: repeat(11, 1fr); gap: 2px; }
 .ramp-alphas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
-.sw { aspect-ratio: 1.6; border-radius: var(--radius-sm); display: grid; place-items: center; cursor: help; }
+.sw { aspect-ratio: 1.5; border-radius: var(--radius-sm); display: grid; place-items: center; cursor: help; }
 .sw-alpha { border: var(--border-width-default) solid var(--color-border-default); }
 .sw-alpha .sw-step { color: var(--color-text-muted); }
-.sw-step { font-size: 0.625rem; font-family: var(--typography-code-family); opacity: .75; }
+.sw-step { font-size: .625rem; font-family: var(--typography-code-family); opacity: .75; }
 
 .brand-table { display: grid; gap: var(--space-xs); }
-.brand-row { display: grid; grid-template-columns: 90px 20px 90px 1fr; align-items: center; gap: var(--space-sm); padding: var(--space-xs); border-radius: var(--radius-sm); }
+.brand-row { display: grid; grid-template-columns: 84px 18px 84px 1fr; align-items: center; gap: var(--space-sm); padding: var(--space-xs); border-radius: var(--radius-sm); }
 .brand-row:hover { background: var(--color-role-primary-tint); }
 .brand-role, .brand-palette { font-family: var(--typography-code-family); font-size: var(--font-size-small); }
 .brand-palette { color: var(--color-role-primary-text); font-weight: 600; }
@@ -546,40 +1321,55 @@ section:first-of-type { border-top: 0; }
 .cats { display: flex; gap: var(--space-md); flex-wrap: wrap; }
 .cat { display: grid; justify-items: center; gap: 4px; }
 .cat i { display: block; width: 48px; height: 48px; border-radius: var(--radius-md); }
-.cat span { font-size: 0.6875rem; font-family: var(--typography-code-family); color: var(--color-text-muted); }
+.cat span { font-size: .6875rem; font-family: var(--typography-code-family); color: var(--color-text-muted); }
 
-.roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-lg); }
-.role-group h4 { color: var(--color-text-muted); text-transform: uppercase; font-size: 0.6875rem; letter-spacing: .06em; }
+.roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-lg); }
+.role-group h4 { color: var(--color-text-muted); text-transform: uppercase; font-size: .6875rem; letter-spacing: .06em; }
 .role-list { display: grid; gap: var(--space-sm); }
 .role { display: grid; grid-template-columns: 28px 1fr; column-gap: var(--space-sm); align-items: start; }
 .role-chip { grid-row: 1 / 3; width: 28px; height: 28px; border-radius: var(--radius-sm); border: var(--border-width-default) solid var(--color-border-default); }
 .role-name { font-size: var(--font-size-small); font-family: var(--typography-code-family); }
-.role-var { background: none; padding: 0; font-size: 0.6875rem; color: var(--color-text-muted); font-family: var(--typography-body-family); }
+.role-desc { font-size: .6875rem; color: var(--color-text-muted); }
 
 .tbl { width: 100%; border-collapse: collapse; font-size: var(--font-size-small); }
-.tbl th { text-align: left; padding: var(--space-xs) var(--space-sm); border-bottom: var(--border-width-strong) solid var(--color-border-default); color: var(--color-text-muted); font-weight: 600; font-size: 0.6875rem; font-family: var(--typography-code-family); }
-.tbl td { padding: var(--space-xs) var(--space-sm); border-bottom: var(--border-width-default) solid var(--color-border-divider); }
+.tbl th { text-align: left; padding: var(--space-xs) var(--space-sm); border-bottom: var(--border-width-strong) solid var(--color-border-default); color: var(--color-text-muted); font-weight: 600; font-size: .6875rem; font-family: var(--typography-code-family); }
+.tbl td { padding: var(--space-xs) var(--space-sm); border-bottom: var(--border-width-default) solid var(--color-border-divider); vertical-align: top; }
 .tbl tr.changed { background: var(--color-role-primary-tint); }
-.tbl .rh { color: var(--color-text-body); font-size: var(--font-size-small); white-space: nowrap; }
-.tag { display: inline-block; background: var(--color-role-primary-main); color: var(--color-role-primary-on); border-radius: var(--radius-sm); padding: 0 .35em; font-size: 0.6875rem; }
-
+.tbl .rh { color: var(--color-text-body); font-size: var(--font-size-small); white-space: nowrap; border-bottom: var(--border-width-default) solid var(--color-border-divider); }
+.tag { display: inline-block; background: var(--color-role-primary-main); color: var(--color-role-primary-on); border-radius: var(--radius-sm); padding: 0 .35em; font-size: .6875rem; }
 .contract td { padding: 3px; }
-.slot { width: 100%; min-width: 54px; height: 32px; border-radius: var(--radius-sm); border: var(--border-width-default) solid var(--color-border-divider); }
-.slot-docs { list-style: none; padding: 0; display: grid; gap: var(--space-xs); font-size: var(--font-size-small); color: var(--color-text-muted); margin: var(--space-md) 0; }
-.slot-docs code { color: var(--color-text-body); }
+.slot { width: 100%; min-width: 52px; height: 32px; border-radius: var(--radius-sm); border: var(--border-width-default) solid var(--color-border-divider); }
 
+.shadow-box { width: 120px; height: 72px; border-radius: var(--radius-md); background: var(--color-surface-base); border: var(--border-width-default) solid var(--color-border-divider); }
+.motion-demo { width: 14px; height: 14px; border-radius: var(--radius-full); background: var(--color-role-primary-main); animation: slide 1.4s infinite alternate var(--motion-easing-default); }
+@keyframes slide { from { transform: translateX(0); } to { transform: translateX(60px); } }
+.ctl { display: grid; place-items: center; font-size: 11px; line-height: 1; }
+.sw-track { display: flex; align-items: center; padding: 2px; }
+.sw-track i { display: block; border-radius: var(--radius-full); }
+.pill { display: inline-flex; align-items: center; white-space: nowrap; font-family: var(--typography-body-family); }
+.alerts { display: grid; gap: var(--space-sm); }
+.alert { display: flex; align-items: flex-start; font-size: var(--font-size-small); }
+.alert p { font-size: var(--font-size-small); }
+.card-demo { width: 160px; }
+.demo-select { display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-sm); min-width: 140px; }
+.tabs-demo { display: flex; gap: var(--space-xs); border-bottom: var(--border-width-default) solid var(--color-border-divider); }
+.tab { font-family: var(--typography-code-family); }
+.menu-demo { width: 220px; }
+.menu-item { padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); font-size: var(--font-size-small); font-family: var(--typography-code-family); }
+.table-demo th, .table-demo td { border-bottom: 0; }
+.modal-stage { display: grid; place-items: center; padding: var(--space-xl); border-radius: var(--radius-md); }
+.tiny { font-size: 0.6875rem; }
 .btn-grid td { padding: var(--space-xs); }
-.variant-title { margin: var(--space-lg) 0 var(--space-sm); font-family: var(--typography-code-family); color: var(--color-text-muted); }
 .demo { display: flex; flex-wrap: wrap; gap: var(--space-lg); align-items: flex-end; padding: var(--space-lg); background: var(--color-surface-raised); border-radius: var(--radius-md); border: var(--border-width-default) solid var(--color-border-default); }
 .demo-item { display: grid; gap: var(--space-xs); justify-items: center; }
 .demo-btn, .demo-input { cursor: default; white-space: nowrap; }
-.demo-label { font-size: 0.6875rem; color: var(--color-text-muted); font-family: var(--typography-code-family); }
+.demo-label { font-size: .6875rem; color: var(--color-text-muted); font-family: var(--typography-code-family); }
 
 .chain { list-style: none; padding: 0; margin: 0 0 var(--space-md); display: grid; gap: 2px; }
 .chain-step { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); background: var(--color-surface-raised); border-left: 4px solid var(--color-border-strong); }
 .chain-step code { background: none; padding: 0; }
 .chain-step + .chain-step { margin-left: var(--space-lg); }
-.chain-layer { font-size: 0.625rem; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-muted); min-width: 72px; }
+.chain-layer { font-size: .625rem; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-muted); min-width: 72px; }
 .chain-component { border-left-color: var(--color-role-primary-main); }
 .chain-semantic  { border-left-color: var(--color-role-info-main); }
 .chain-brand     { border-left-color: var(--color-role-warning-main); }
@@ -587,68 +1377,58 @@ section:first-of-type { border-top: 0; }
 .chain-final { margin-left: auto; display: flex; align-items: center; gap: var(--space-xs); font-family: var(--typography-code-family); font-size: var(--font-size-small); }
 .chain-final i { width: 16px; height: 16px; border-radius: 3px; }
 
-.steps { padding-left: var(--space-lg); display: grid; gap: var(--space-lg); }
+.steps { padding-left: var(--space-lg); display: grid; gap: var(--space-xl); margin: 0; }
 .steps > li::marker { color: var(--color-role-primary-main); font-weight: 700; }
-footer { padding: var(--space-xl) 0; color: var(--color-text-muted); font-size: var(--font-size-small); border-top: var(--border-width-default) solid var(--color-border-default); }
+.steps h3 { margin-top: 0; border: 0; padding: 0; }
+
+.pager { display: flex; justify-content: space-between; gap: var(--space-md); margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: var(--border-width-default) solid var(--color-border-default); }
+.pg { display: grid; gap: 2px; padding: var(--space-md); border: var(--border-width-default) solid var(--color-border-default); border-radius: var(--radius-md); text-decoration: none; color: var(--color-text-body); min-width: 200px; }
+.pg:hover { border-color: var(--color-role-primary-main); background: var(--color-role-primary-tint); }
+.pg span { font-size: .6875rem; color: var(--color-text-muted); }
+.pg-next { text-align: right; }
 
 @media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); transition: transform .2s; z-index: 20; width: 240px; }
+  .sidebar.open { transform: none; }
+  .burger { display: block; }
+  .main { margin-left: 0; }
+  .page { padding: calc(var(--space-xl) * 2) var(--space-md) var(--space-xl); }
   .ramp { grid-template-columns: 1fr; }
-  .lyr-arrow, nav.toc { display: none; }
+  .lyr-arrow { display: none; }
+  .pager { flex-direction: column; }
+  .pg-next { text-align: left; }
 }
-</style>
-</head>
-<body>
-<header class="top">
-  <div class="top-inner">
-    <span class="top-title">@fred/design-tokens</span>
-    <nav class="toc">
-      <a href="#architecture">Architecture</a>
-      <a href="#quickstart">Démarrer</a>
-      <a href="#primitives">1 · Primitives</a>
-      <a href="#brand">2 · Brand</a>
-      <a href="#contract">3 · Contrat de rôle</a>
-      <a href="#components">4 · Composants</a>
-    </nav>
-    <button class="theme-toggle" id="toggle">◐ Thème</button>
-  </div>
-</header>
-
-<div class="wrap">
-  <section>
-    <h1>Design tokens</h1>
-    <p>Librairie de tokens agnostique de tout framework, au format
-    <strong>DTCG</strong> (<code>$value</code> / <code>$type</code> / <code>$description</code>).
-    Ce repo ne contient <strong>que les tokens</strong> — pas de composants UI.</p>
-    <p class="note">Cette page est <strong>générée depuis les fichiers de tokens</strong> et
-    <strong>stylée avec les tokens qu'elle documente</strong>. Elle ne peut pas dériver du code :
-    si le système casse, la page casse avec.</p>
-  </section>
-
-  ${sectionArchitecture()}
-  ${sectionQuickstart()}
-  ${sectionPrimitives()}
-  ${sectionBrand()}
-  ${sectionContract()}
-  ${sectionSemantic()}
-  ${sectionComponents()}
-
-  <footer>Généré par <code>scripts/build-docs.js</code> — ne pas éditer <code>docs/index.html</code>.</footer>
-</div>
-
-<script>
-  const root = document.documentElement;
-  const btn = document.getElementById('toggle');
-  if (localStorage.getItem('theme') === 'dark') root.setAttribute('data-theme', 'dark');
-  btn.addEventListener('click', () => {
-    const dark = root.getAttribute('data-theme') === 'dark';
-    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
-    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
-  });
-</script>
-</body>
-</html>
 `;
 
-mkdirSync('docs', { recursive: true });
-writeFileSync('docs/index.html', html);
-console.log('  ✔ docs/index.html');
+/* ---------- écriture ---------- */
+
+mkdirSync(OUT, { recursive: true });
+
+// Purge les fichiers d'un build précédent : une page supprimée du générateur
+// resterait sinon sur le disque, avec des var() périmées et des liens morts.
+for (const f of readdirSync(OUT)) {
+  if (f.endsWith('.html') || f.endsWith('.css')) rmSync(`${OUT}/${f}`);
+}
+
+// Le CSS des tokens est copié une seule fois et lié par toutes les pages —
+// l'inliner dans chacune dupliquerait 40 Ko × 6.
+copyFileSync('dist/tokens.css', `${OUT}/tokens.css`);
+copyFileSync('dist/components.css', `${OUT}/components.css`);
+writeFileSync(`${OUT}/docs.css`, DOCS_CSS.trimStart());
+
+const PAGES = {
+  'index.html': pageIndex(),
+  'demarrer.html': pageStart(),
+  'primitives.html': pagePrimitives(),
+  'brand.html': pageBrand(),
+  'roles.html': pageRoles(),
+  'semantique.html': pageSemantic(),
+  'effets.html': pageEffects(),
+  'composants-formulaire.html': pageForm(),
+  'composants-affichage.html': pageDisplay(),
+  'composants-structure.html': pageStructure(),
+};
+
+for (const [file, html] of Object.entries(PAGES)) writeFileSync(`${OUT}/${file}`, html);
+
+console.log(`  ✔ ${OUT}/ — ${Object.keys(PAGES).length} pages + tokens.css + docs.css`);

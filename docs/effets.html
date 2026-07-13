@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3 · Effets &amp; mouvement — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  
+    <div class="nav-group">
+      <h5>Comprendre</h5>
+      <ul><li><a href="index.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Architecture</a></li><li><a href="demarrer.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Démarrer un projet</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Le système</h5>
+      <ul><li><a href="primitives.html" class="">
+            <span class="nav-num">1</span>
+            Primitives</a></li><li><a href="brand.html" class="">
+            <span class="nav-num">2</span>
+            Brand</a></li><li><a href="roles.html" class="">
+            <span class="nav-num">3</span>
+            Contrat de rôle</a></li><li><a href="semantique.html" class="">
+            <span class="nav-num">3</span>
+            Sémantique (reste)</a></li><li><a href="effets.html" class="on">
+            <span class="nav-num">3</span>
+            Effets & mouvement</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Composants</h5>
+      <ul><li><a href="composants-formulaire.html" class="">
+            <span class="nav-num">4</span>
+            Formulaire</a></li><li><a href="composants-affichage.html" class="">
+            <span class="nav-num">4</span>
+            Affichage</a></li><li><a href="composants-structure.html" class="">
+            <span class="nav-num">4</span>
+            Structure</a></li></ul>
+    </div>
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>3 · Effets & mouvement</h1>
+    <p class="lead">Ombres, voiles d'état neutres, durées et courbes. <strong>Trois familles qui n'existaient
+      pas</strong> — et dont l'absence cachait un bug.</p>
+    
+  <h2>Les voiles neutres — et le bug qu'ils corrigent</h2>
+  <p>Les voiles <code>role.X.tint</code> teintent à la couleur d'un rôle. Mais une ligne de tableau
+  survolée ne doit <em>pas</em> virer au violet, et un scrim de modale doit <em>assombrir</em>.
+  D'où des voiles <strong>blanc et noir absolus</strong>, indépendants de toute palette.</p>
+
+  <h3><code>color.alpha.black</code></h3>
+  <div class="cats"><div class="cat">
+          <i class="sw-alpha" style="background:rgba(0, 0, 0, 0.04)"></i>
+          <span>4%</span></div><div class="cat">
+          <i class="sw-alpha" style="background:rgba(0, 0, 0, 0.08)"></i>
+          <span>8%</span></div><div class="cat">
+          <i class="sw-alpha" style="background:rgba(0, 0, 0, 0.12)"></i>
+          <span>12%</span></div><div class="cat">
+          <i class="sw-alpha" style="background:rgba(0, 0, 0, 0.16)"></i>
+          <span>16%</span></div><div class="cat">
+          <i class="sw-alpha" style="background:rgba(0, 0, 0, 0.4)"></i>
+          <span>40%</span></div><div class="cat">
+          <i class="sw-alpha" style="background:rgba(0, 0, 0, 0.6)"></i>
+          <span>60%</span></div></div>
+  <h3><code>color.alpha.white</code></h3>
+  <div class="cats"><div class="cat">
+          <i class="sw-alpha" style="background:rgba(255, 255, 255, 0.04)"></i>
+          <span>4%</span></div><div class="cat">
+          <i class="sw-alpha" style="background:rgba(255, 255, 255, 0.08)"></i>
+          <span>8%</span></div><div class="cat">
+          <i class="sw-alpha" style="background:rgba(255, 255, 255, 0.12)"></i>
+          <span>12%</span></div><div class="cat">
+          <i class="sw-alpha" style="background:rgba(255, 255, 255, 0.16)"></i>
+          <span>16%</span></div></div>
+
+  <div class="callout callout-warn">
+    <strong>Le bug.</strong> <code>scrim</code> pointait sur <code>brand.neutral.alpha.10</code>,
+    c'est-à-dire un <em>slateBlue translucide</em>. Sous ce voile, la luminance de la page ne
+    passait que de <strong>0,96 à 0,86</strong> : une modale ne se serait jamais détachée. Il pointe
+    maintenant sur <code>alpha.black.60</code> → <strong>0,96 → 0,13</strong>.
+  </div>
+
+  <h3>Voiles d'état</h3>
+  <p>C'est le <strong>seul groupe qui s'inverse</strong> entre les modes : en clair on assombrit
+  (noir), en sombre on éclaircit (blanc). Bascule le thème pour le voir.</p>
+  <div class="roles"><div class="role-group"><div class="role-list"><div class="role">
+        <div class="role-chip sw-alpha" style="background:var(--color-state-hover)"></div>
+        <div class="role-name">state.hover</div>
+        <span class="role-desc">Voile de survol neutre (ligne de tableau, item de liste).</span>
+      </div><div class="role">
+        <div class="role-chip sw-alpha" style="background:var(--color-state-selected)"></div>
+        <div class="role-name">state.selected</div>
+        <span class="role-desc">Voile d’un élément sélectionné.</span>
+      </div><div class="role">
+        <div class="role-chip sw-alpha" style="background:var(--color-state-active)"></div>
+        <div class="role-name">state.active</div>
+        <span class="role-desc">Voile d’un élément pressé.</span>
+      </div></div></div></div>
+
+  <h2>Ombres</h2>
+  <div class="demo"><div class="demo-item">
+        <div class="shadow-box" style="box-shadow: var(--shadow-raised)"></div>
+        <span class="demo-label">shadow.raised</span>
+      </div><div class="demo-item">
+        <div class="shadow-box" style="box-shadow: var(--shadow-float)"></div>
+        <span class="demo-label">shadow.float</span>
+      </div><div class="demo-item">
+        <div class="shadow-box" style="box-shadow: var(--shadow-overlay)"></div>
+        <span class="demo-label">shadow.overlay</span>
+      </div></div>
+  <table class="tbl"><tbody><tr><td><code>shadow.raised</code></td><td>Légère élévation (carte au repos).</td></tr><tr><td><code>shadow.float</code></td><td>Élément flottant (carte au survol, dropdown).</td></tr><tr><td><code>shadow.overlay</code></td><td>Élément détaché de la page (modale, drawer).</td></tr></tbody></table>
+  <div class="callout">
+    <strong>Géométrie et couleur sont séparées.</strong> Le décalage, le flou et l'étalement viennent
+    des primitives (<code>elevation.*</code>) ; la <em>couleur</em> est choisie par le mode — sur fond
+    sombre, une ombre doit être bien plus opaque pour rester lisible
+    (<code>black.8</code> en clair, <code>black.40</code> en sombre pour <code>shadow.raised</code>).
+  </div>
+  <p class="note">Les ombres sont émises en valeurs <strong>résolues</strong>, pas en
+  <code>var()</code>. Style Dictionary réinjecte les <code>var()</code> dans une valeur courte par
+  recherche de chaîne : quand <code>offsetX</code> vaut <code>0</code> et que le
+  <code>spread</code> vaut <code>0</code> aussi, il intervertit les deux positions. Un spread non
+  nul se serait retrouvé dans l'offset horizontal.</p>
+
+  <h2>Mouvement</h2>
+  <table class="tbl">
+    <thead><tr><th>Token</th><th>Valeur</th><th>Aperçu</th><th>Usage</th></tr></thead>
+    <tbody><tr>
+        <td><code>motion.duration.hover</code></td>
+        <td class="mono">120ms</td>
+        <td><div class="motion-demo" style="animation-duration: var(--motion-duration-hover)"></div></td>
+        <td>Changement d'état au survol / focus.</td>
+      </tr><tr>
+        <td><code>motion.duration.expand</code></td>
+        <td class="mono">200ms</td>
+        <td><div class="motion-demo" style="animation-duration: var(--motion-duration-expand)"></div></td>
+        <td>Ouverture d'un accordéon, d'un menu.</td>
+      </tr><tr>
+        <td><code>motion.duration.modal</code></td>
+        <td class="mono">320ms</td>
+        <td><div class="motion-demo" style="animation-duration: var(--motion-duration-modal)"></div></td>
+        <td>Entrée d'une modale ou d'un drawer.</td>
+      </tr></tbody>
+  </table>
+  <h3>Courbes</h3>
+  <table class="tbl">
+    <thead><tr><th>Token</th><th>Valeur</th><th>Usage</th></tr></thead>
+    <tbody><tr><td><code>easing.standard</code></td>
+        <td class="mono">cubic-bezier(0.2, 0, 0, 1)</td>
+        <td>Défaut : accélère vite, décélère long. Pour les changements d'état.</td></tr><tr><td><code>easing.enter</code></td>
+        <td class="mono">cubic-bezier(0, 0, 0.2, 1)</td>
+        <td>Entrée : démarre à pleine vitesse, se pose en douceur.</td></tr><tr><td><code>easing.exit</code></td>
+        <td class="mono">cubic-bezier(0.4, 0, 1, 1)</td>
+        <td>Sortie : part doucement puis s'échappe.</td></tr><tr><td><code>easing.emphasized</code></td>
+        <td class="mono">cubic-bezier(0.2, 0, 0, 1)</td>
+        <td>Mouvements appuyés (modale, drawer).</td></tr></tbody>
+  </table>
+
+  <h2>Opacité</h2>
+  <table class="tbl">
+    <tbody>
+      <tr><td><code>opacity.disabled</code></td><td class="mono">0.4</td>
+      <td>Alternative aux couleurs `disabled` dédiées : atténue un composant entier d'un coup.</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Deux façons de traiter le désactivé coexistent : les couleurs dédiées
+  (<code>surface.disabled</code>, <code>text.disabled</code>, <code>border.disabled</code>) —
+  plus contrôlables — ou cette opacité globale, qui atténue un composant entier d'un coup.
+  Choisis-en <strong>une</strong> par composant, pas les deux.</p>
+    
+    <nav class="pager">
+      <a href="semantique.html" class="pg pg-prev"><span>← Précédent</span><b>Sémantique (reste)</b></a>
+      <a href="composants-formulaire.html" class="pg pg-next"><span>Suivant →</span><b>Formulaire</b></a>
+    </nav>
+  </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>

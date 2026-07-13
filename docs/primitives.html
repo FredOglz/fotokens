@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1 · Primitives — @fred/design-tokens</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="docs.css">
+<script>
+  // Avant le premier rendu, pour éviter un flash de thème clair.
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+</head>
+<body>
+<button class="burger" id="burger" aria-label="Menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html">@fred/design-tokens</a>
+  
+    <div class="nav-group">
+      <h5>Comprendre</h5>
+      <ul><li><a href="index.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Architecture</a></li><li><a href="demarrer.html" class="">
+            <span class="nav-num nav-num-off"></span>
+            Démarrer un projet</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Le système</h5>
+      <ul><li><a href="primitives.html" class="on">
+            <span class="nav-num">1</span>
+            Primitives</a></li><li><a href="brand.html" class="">
+            <span class="nav-num">2</span>
+            Brand</a></li><li><a href="roles.html" class="">
+            <span class="nav-num">3</span>
+            Contrat de rôle</a></li><li><a href="semantique.html" class="">
+            <span class="nav-num">3</span>
+            Sémantique (reste)</a></li><li><a href="effets.html" class="">
+            <span class="nav-num">3</span>
+            Effets & mouvement</a></li></ul>
+    </div>
+    <div class="nav-group">
+      <h5>Composants</h5>
+      <ul><li><a href="composants-formulaire.html" class="">
+            <span class="nav-num">4</span>
+            Formulaire</a></li><li><a href="composants-affichage.html" class="">
+            <span class="nav-num">4</span>
+            Affichage</a></li><li><a href="composants-structure.html" class="">
+            <span class="nav-num">4</span>
+            Structure</a></li></ul>
+    </div>
+  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+</aside>
+
+<main class="main">
+  <div class="page">
+    <h1>1 · Primitives</h1>
+    <p class="lead">Le catalogue brut. Aucune sémantique, aucune référence. <strong>Jamais modifié par projet.</strong></p>
+    
+  <div class="callout callout-warn">
+    <strong>Fichier généré.</strong> <code>tokens/primitives/color.json</code> est produit par
+    <code>npm run ramps:write</code> — ne l'édite pas à la main, il serait écrasé.
+  </div>
+
+  <h2>Les rampes de couleur</h2>
+  <p>Chaque palette est définie par une <em>teinte</em> + un <em>pic de chroma</em>. Ses 11 crans
+  sont calculés en <strong>OKLCH</strong> sur une <strong>courbe de luminosité commune à toutes
+  les palettes</strong>.</p>
+  <div class="ramps">
+    <div class="ramp ramp-head">
+      <div></div>
+      <div class="ramp-swatches"><span class="hd">25</span><span class="hd">50</span><span class="hd">100</span><span class="hd">200</span><span class="hd">300</span><span class="hd">400</span><span class="hd">500</span><span class="hd">600</span><span class="hd">700</span><span class="hd">800</span><span class="hd">900</span></div>
+      <div class="ramp-alphas"><span class="hd">α5</span><span class="hd">α10</span></div>
+    </div>
+    <div class="ramp">
+      <div class="ramp-name">gray</div>
+      <div class="ramp-swatches"><div class="sw" style="background:#f9fafc" title="gray.25 — #f9fafc — L*98%">
+        <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#f1f3f7" title="gray.50 — #f1f3f7 — L*96%">
+        <span class="sw-step" style="color:#000">50</span></div><div class="sw" style="background:#e4e8ef" title="gray.100 — #e4e8ef — L*93%">
+        <span class="sw-step" style="color:#000">100</span></div><div class="sw" style="background:#cfd4e0" title="gray.200 — #cfd4e0 — L*87%">
+        <span class="sw-step" style="color:#000">200</span></div><div class="sw" style="background:#b3bbcb" title="gray.300 — #b3bbcb — L*79%">
+        <span class="sw-step" style="color:#000">300</span></div><div class="sw" style="background:#99a2b5" title="gray.400 — #99a2b5 — L*71%">
+        <span class="sw-step" style="color:#000">400</span></div><div class="sw" style="background:#7e889c" title="gray.500 — #7e889c — L*63%">
+        <span class="sw-step" style="color:#000">500</span></div><div class="sw" style="background:#666f82" title="gray.600 — #666f82 — L*54%">
+        <span class="sw-step" style="color:#fff">600</span></div><div class="sw" style="background:#4d5566" title="gray.700 — #4d5566 — L*45%">
+        <span class="sw-step" style="color:#fff">700</span></div><div class="sw" style="background:#343b48" title="gray.800 — #343b48 — L*35%">
+        <span class="sw-step" style="color:#fff">800</span></div><div class="sw" style="background:#1d222c" title="gray.900 — #1d222c — L*25%">
+        <span class="sw-step" style="color:#fff">900</span></div></div>
+      <div class="ramp-alphas"><div class="sw sw-alpha" style="background:rgba(126, 136, 156, 0.05)" title="gray.alpha.5 — rgba(126, 136, 156, 0.05)">
+        <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(126, 136, 156, 0.1)" title="gray.alpha.10 — rgba(126, 136, 156, 0.1)">
+        <span class="sw-step">10%</span></div></div>
+    </div><div class="ramp">
+      <div class="ramp-name">blue</div>
+      <div class="ramp-swatches"><div class="sw" style="background:#f8faff" title="blue.25 — #f8faff — L*99%">
+        <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#eef4ff" title="blue.50 — #eef4ff — L*97%">
+        <span class="sw-step" style="color:#000">50</span></div><div class="sw" style="background:#dde8ff" title="blue.100 — #dde8ff — L*93%">
+        <span class="sw-step" style="color:#000">100</span></div><div class="sw" style="background:#bfd5ff" title="blue.200 — #bfd5ff — L*87%">
+        <span class="sw-step" style="color:#000">200</span></div><div class="sw" style="background:#98baff" title="blue.300 — #98baff — L*79%">
+        <span class="sw-step" style="color:#000">300</span></div><div class="sw" style="background:#719eff" title="blue.400 — #719eff — L*71%">
+        <span class="sw-step" style="color:#000">400</span></div><div class="sw" style="background:#467eff" title="blue.500 — #467eff — L*63%">
+        <span class="sw-step" style="color:#000">500</span></div><div class="sw" style="background:#2b60e8" title="blue.600 — #2b60e8 — L*54%">
+        <span class="sw-step" style="color:#fff">600</span></div><div class="sw" style="background:#1846bf" title="blue.700 — #1846bf — L*45%">
+        <span class="sw-step" style="color:#fff">700</span></div><div class="sw" style="background:#082c90" title="blue.800 — #082c90 — L*35%">
+        <span class="sw-step" style="color:#fff">800</span></div><div class="sw" style="background:#001362" title="blue.900 — #001362 — L*25%">
+        <span class="sw-step" style="color:#fff">900</span></div></div>
+      <div class="ramp-alphas"><div class="sw sw-alpha" style="background:rgba(70, 126, 255, 0.05)" title="blue.alpha.5 — rgba(70, 126, 255, 0.05)">
+        <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(70, 126, 255, 0.1)" title="blue.alpha.10 — rgba(70, 126, 255, 0.1)">
+        <span class="sw-step">10%</span></div></div>
+    </div><div class="ramp">
+      <div class="ramp-name">red</div>
+      <div class="ramp-swatches"><div class="sw" style="background:#fff8f7" title="red.25 — #fff8f7 — L*98%">
+        <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#ffefed" title="red.50 — #ffefed — L*96%">
+        <span class="sw-step" style="color:#000">50</span></div><div class="sw" style="background:#ffe0db" title="red.100 — #ffe0db — L*93%">
+        <span class="sw-step" style="color:#000">100</span></div><div class="sw" style="background:#ffc3bc" title="red.200 — #ffc3bc — L*87%">
+        <span class="sw-step" style="color:#000">200</span></div><div class="sw" style="background:#ff9b90" title="red.300 — #ff9b90 — L*79%">
+        <span class="sw-step" style="color:#000">300</span></div><div class="sw" style="background:#ff6b60" title="red.400 — #ff6b60 — L*71%">
+        <span class="sw-step" style="color:#000">400</span></div><div class="sw" style="background:#ed3b37" title="red.500 — #ed3b37 — L*62%">
+        <span class="sw-step" style="color:#000">500</span></div><div class="sw" style="background:#cd161d" title="red.600 — #cd161d — L*54%">
+        <span class="sw-step" style="color:#fff">600</span></div><div class="sw" style="background:#a3000f" title="red.700 — #a3000f — L*45%">
+        <span class="sw-step" style="color:#fff">700</span></div><div class="sw" style="background:#730007" title="red.800 — #730007 — L*35%">
+        <span class="sw-step" style="color:#fff">800</span></div><div class="sw" style="background:#470003" title="red.900 — #470003 — L*25%">
+        <span class="sw-step" style="color:#fff">900</span></div></div>
+      <div class="ramp-alphas"><div class="sw sw-alpha" style="background:rgba(237, 59, 55, 0.05)" title="red.alpha.5 — rgba(237, 59, 55, 0.05)">
+        <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(237, 59, 55, 0.1)" title="red.alpha.10 — rgba(237, 59, 55, 0.1)">
+        <span class="sw-step">10%</span></div></div>
+    </div><div class="ramp">
+      <div class="ramp-name">green</div>
+      <div class="ramp-swatches"><div class="sw" style="background:#f2fef3" title="green.25 — #f2fef3 — L*99%">
+        <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#e4fbe7" title="green.50 — #e4fbe7 — L*97%">
+        <span class="sw-step" style="color:#000">50</span></div><div class="sw" style="background:#ccf4d3" title="green.100 — #ccf4d3 — L*93%">
+        <span class="sw-step" style="color:#000">100</span></div><div class="sw" style="background:#a1e8b0" title="green.200 — #a1e8b0 — L*87%">
+        <span class="sw-step" style="color:#000">200</span></div><div class="sw" style="background:#6fd488" title="green.300 — #6fd488 — L*79%">
+        <span class="sw-step" style="color:#000">300</span></div><div class="sw" style="background:#33bf62" title="green.400 — #33bf62 — L*71%">
+        <span class="sw-step" style="color:#000">400</span></div><div class="sw" style="background:#00a34a" title="green.500 — #00a34a — L*63%">
+        <span class="sw-step" style="color:#000">500</span></div><div class="sw" style="background:#00853c" title="green.600 — #00853c — L*54%">
+        <span class="sw-step" style="color:#fff">600</span></div><div class="sw" style="background:#00672d" title="green.700 — #00672d — L*45%">
+        <span class="sw-step" style="color:#fff">700</span></div><div class="sw" style="background:#00481d" title="green.800 — #00481d — L*35%">
+        <span class="sw-step" style="color:#fff">800</span></div><div class="sw" style="background:#002a0e" title="green.900 — #002a0e — L*25%">
+        <span class="sw-step" style="color:#fff">900</span></div></div>
+      <div class="ramp-alphas"><div class="sw sw-alpha" style="background:rgba(0, 163, 74, 0.05)" title="green.alpha.5 — rgba(0, 163, 74, 0.05)">
+        <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(0, 163, 74, 0.1)" title="green.alpha.10 — rgba(0, 163, 74, 0.1)">
+        <span class="sw-step">10%</span></div></div>
+    </div><div class="ramp">
+      <div class="ramp-name">orange</div>
+      <div class="ramp-swatches"><div class="sw" style="background:#fff8f6" title="orange.25 — #fff8f6 — L*98%">
+        <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#fff0ea" title="orange.50 — #fff0ea — L*97%">
+        <span class="sw-step" style="color:#000">50</span></div><div class="sw" style="background:#ffe0d5" title="orange.100 — #ffe0d5 — L*93%">
+        <span class="sw-step" style="color:#000">100</span></div><div class="sw" style="background:#ffc5b0" title="orange.200 — #ffc5b0 — L*87%">
+        <span class="sw-step" style="color:#000">200</span></div><div class="sw" style="background:#ff9e7a" title="orange.300 — #ff9e7a — L*79%">
+        <span class="sw-step" style="color:#000">300</span></div><div class="sw" style="background:#fa743e" title="orange.400 — #fa743e — L*71%">
+        <span class="sw-step" style="color:#000">400</span></div><div class="sw" style="background:#e25200" title="orange.500 — #e25200 — L*63%">
+        <span class="sw-step" style="color:#000">500</span></div><div class="sw" style="background:#ba4200" title="orange.600 — #ba4200 — L*54%">
+        <span class="sw-step" style="color:#fff">600</span></div><div class="sw" style="background:#913200" title="orange.700 — #913200 — L*45%">
+        <span class="sw-step" style="color:#fff">700</span></div><div class="sw" style="background:#662000" title="orange.800 — #662000 — L*35%">
+        <span class="sw-step" style="color:#fff">800</span></div><div class="sw" style="background:#3e1000" title="orange.900 — #3e1000 — L*25%">
+        <span class="sw-step" style="color:#fff">900</span></div></div>
+      <div class="ramp-alphas"><div class="sw sw-alpha" style="background:rgba(226, 82, 0, 0.05)" title="orange.alpha.5 — rgba(226, 82, 0, 0.05)">
+        <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(226, 82, 0, 0.1)" title="orange.alpha.10 — rgba(226, 82, 0, 0.1)">
+        <span class="sw-step">10%</span></div></div>
+    </div><div class="ramp">
+      <div class="ramp-name">turquoise</div>
+      <div class="ramp-swatches"><div class="sw" style="background:#effefb" title="turquoise.25 — #effefb — L*99%">
+        <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#dffaf4" title="turquoise.50 — #dffaf4 — L*96%">
+        <span class="sw-step" style="color:#000">50</span></div><div class="sw" style="background:#c3f4ea" title="turquoise.100 — #c3f4ea — L*93%">
+        <span class="sw-step" style="color:#000">100</span></div><div class="sw" style="background:#90e8d7" title="turquoise.200 — #90e8d7 — L*87%">
+        <span class="sw-step" style="color:#000">200</span></div><div class="sw" style="background:#4bd4bf" title="turquoise.300 — #4bd4bf — L*79%">
+        <span class="sw-step" style="color:#000">300</span></div><div class="sw" style="background:#00bba6" title="turquoise.400 — #00bba6 — L*71%">
+        <span class="sw-step" style="color:#000">400</span></div><div class="sw" style="background:#009d8b" title="turquoise.500 — #009d8b — L*62%">
+        <span class="sw-step" style="color:#000">500</span></div><div class="sw" style="background:#008172" title="turquoise.600 — #008172 — L*54%">
+        <span class="sw-step" style="color:#fff">600</span></div><div class="sw" style="background:#006458" title="turquoise.700 — #006458 — L*45%">
+        <span class="sw-step" style="color:#fff">700</span></div><div class="sw" style="background:#00453c" title="turquoise.800 — #00453c — L*35%">
+        <span class="sw-step" style="color:#fff">800</span></div><div class="sw" style="background:#002823" title="turquoise.900 — #002823 — L*25%">
+        <span class="sw-step" style="color:#fff">900</span></div></div>
+      <div class="ramp-alphas"><div class="sw sw-alpha" style="background:rgba(0, 157, 139, 0.05)" title="turquoise.alpha.5 — rgba(0, 157, 139, 0.05)">
+        <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(0, 157, 139, 0.1)" title="turquoise.alpha.10 — rgba(0, 157, 139, 0.1)">
+        <span class="sw-step">10%</span></div></div>
+    </div><div class="ramp">
+      <div class="ramp-name">slateBlue</div>
+      <div class="ramp-swatches"><div class="sw" style="background:#f6fbff" title="slateBlue.25 — #f6fbff — L*99%">
+        <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#edf4fd" title="slateBlue.50 — #edf4fd — L*96%">
+        <span class="sw-step" style="color:#000">50</span></div><div class="sw" style="background:#dceaf8" title="slateBlue.100 — #dceaf8 — L*93%">
+        <span class="sw-step" style="color:#000">100</span></div><div class="sw" style="background:#c0d7ef" title="slateBlue.200 — #c0d7ef — L*87%">
+        <span class="sw-step" style="color:#000">200</span></div><div class="sw" style="background:#9fbede" title="slateBlue.300 — #9fbede — L*79%">
+        <span class="sw-step" style="color:#000">300</span></div><div class="sw" style="background:#80a5cc" title="slateBlue.400 — #80a5cc — L*71%">
+        <span class="sw-step" style="color:#000">400</span></div><div class="sw" style="background:#648bb4" title="slateBlue.500 — #648bb4 — L*62%">
+        <span class="sw-step" style="color:#000">500</span></div><div class="sw" style="background:#4c7299" title="slateBlue.600 — #4c7299 — L*54%">
+        <span class="sw-step" style="color:#fff">600</span></div><div class="sw" style="background:#37587a" title="slateBlue.700 — #37587a — L*45%">
+        <span class="sw-step" style="color:#fff">700</span></div><div class="sw" style="background:#213c58" title="slateBlue.800 — #213c58 — L*35%">
+        <span class="sw-step" style="color:#fff">800</span></div><div class="sw" style="background:#0e2338" title="slateBlue.900 — #0e2338 — L*25%">
+        <span class="sw-step" style="color:#fff">900</span></div></div>
+      <div class="ramp-alphas"><div class="sw sw-alpha" style="background:rgba(100, 139, 180, 0.05)" title="slateBlue.alpha.5 — rgba(100, 139, 180, 0.05)">
+        <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(100, 139, 180, 0.1)" title="slateBlue.alpha.10 — rgba(100, 139, 180, 0.1)">
+        <span class="sw-step">10%</span></div></div>
+    </div><div class="ramp">
+      <div class="ramp-name">violet</div>
+      <div class="ramp-swatches"><div class="sw" style="background:#fbf9ff" title="violet.25 — #fbf9ff — L*99%">
+        <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#f6f0ff" title="violet.50 — #f6f0ff — L*96%">
+        <span class="sw-step" style="color:#000">50</span></div><div class="sw" style="background:#eee2ff" title="violet.100 — #eee2ff — L*93%">
+        <span class="sw-step" style="color:#000">100</span></div><div class="sw" style="background:#dfc8ff" title="violet.200 — #dfc8ff — L*87%">
+        <span class="sw-step" style="color:#000">200</span></div><div class="sw" style="background:#cda5ff" title="violet.300 — #cda5ff — L*79%">
+        <span class="sw-step" style="color:#000">300</span></div><div class="sw" style="background:#bc7eff" title="violet.400 — #bc7eff — L*71%">
+        <span class="sw-step" style="color:#000">400</span></div><div class="sw" style="background:#aa4cff" title="violet.500 — #aa4cff — L*62%">
+        <span class="sw-step" style="color:#000">500</span></div><div class="sw" style="background:#9500ee" title="violet.600 — #9500ee — L*54%">
+        <span class="sw-step" style="color:#fff">600</span></div><div class="sw" style="background:#7400bb" title="violet.700 — #7400bb — L*45%">
+        <span class="sw-step" style="color:#fff">700</span></div><div class="sw" style="background:#510085" title="violet.800 — #510085 — L*35%">
+        <span class="sw-step" style="color:#fff">800</span></div><div class="sw" style="background:#300052" title="violet.900 — #300052 — L*25%">
+        <span class="sw-step" style="color:#fff">900</span></div></div>
+      <div class="ramp-alphas"><div class="sw sw-alpha" style="background:rgba(170, 76, 255, 0.05)" title="violet.alpha.5 — rgba(170, 76, 255, 0.05)">
+        <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(170, 76, 255, 0.1)" title="violet.alpha.10 — rgba(170, 76, 255, 0.1)">
+        <span class="sw-step">10%</span></div></div>
+    </div>
+  </div>
+  <p class="note">Survole un aplat pour son hex et sa luminosité perçue (L*).</p>
+
+  <div class="callout callout-key">
+    <strong>Pourquoi une courbe commune.</strong> Des rampes dessinées à la main dérivent : le cran
+    500 valait 55 % de luminosité en <code>gray</code> et 89 % en <code>turquoise</code> (un néon).
+    Un bouton primaire en turquoise donnait alors un contraste de <strong>1,85:1 — illisible</strong>.
+    Comme les rôles sont interchangeables, un rôle sémantique ne peut tenir sa promesse de contraste
+    que si toutes les palettes partagent la même courbe. Après régénération : <strong>4,60:1</strong>.
+  </div>
+  <p class="note"><strong>OKLCH et pas HSL</strong> : la luminosité HSL n'est pas perceptuelle — un
+  jaune et un bleu à <code>L=50 %</code> n'ont rien à voir à l'œil. OKLCH, si.</p>
+
+  <h2>Les voiles alpha</h2>
+  <p>Chaque teinte expose un voile translucide à <strong>5 %</strong> et <strong>10 %</strong>
+  (colonnes α ci-dessus, sur damier), calculé sur son cran 500. Ils servent aux fonds d'états :
+  survol et état actif d'un bouton <em>outlined</em> ou <em>ghost</em>, ligne de tableau sélectionnée.</p>
+  <div class="callout">
+    <strong>L'alpha vit DANS la palette</strong>, pas dans un groupe <code>color.alpha.*</code>
+    séparé. Le rôle <code>brand.primary</code> alias la palette <em>entière</em> : changer la tonique
+    emporte donc l'alpha avec elle. Un groupe séparé obligerait à swapper deux fois — et un oubli
+    donnerait un bouton violet au survol turquoise.
+  </div>
+  <p class="note">Un voile se compose sur le fond qui est dessous : il s'adapte tout seul au thème
+  sombre. Les tokens alpha sont donc <strong>identiques en light et dark</strong>.</p>
+
+  <h2>Les échelles de taille</h2>
+  <h3><code>size.spacing</code></h3>
+        <p class="note">Échelle d'espacement brute. Sert aux paddings et aux gaps.</p>
+        <table class="tbl"><tbody><tr><td><code>size.spacing.0</code></td><td class="mono">0</td></tr><tr><td><code>size.spacing.1</code></td><td class="mono">2px</td></tr><tr><td><code>size.spacing.2</code></td><td class="mono">4px</td></tr><tr><td><code>size.spacing.3</code></td><td class="mono">8px</td></tr><tr><td><code>size.spacing.4</code></td><td class="mono">12px</td></tr><tr><td><code>size.spacing.5</code></td><td class="mono">16px</td></tr><tr><td><code>size.spacing.6</code></td><td class="mono">20px</td></tr><tr><td><code>size.spacing.7</code></td><td class="mono">24px</td></tr><tr><td><code>size.spacing.8</code></td><td class="mono">32px</td></tr><tr><td><code>size.spacing.9</code></td><td class="mono">40px</td></tr><tr><td><code>size.spacing.10</code></td><td class="mono">48px</td></tr><tr><td><code>size.spacing.11</code></td><td class="mono">64px</td></tr></tbody></table><h3><code>size.radius</code></h3>
+        <p class="note">Échelle d'arrondi brute.</p>
+        <table class="tbl"><tbody><tr><td><code>size.radius.none</code></td><td class="mono">0</td></tr><tr><td><code>size.radius.sm</code></td><td class="mono">4px</td></tr><tr><td><code>size.radius.md</code></td><td class="mono">8px</td></tr><tr><td><code>size.radius.lg</code></td><td class="mono">16px</td></tr><tr><td><code>size.radius.xl</code></td><td class="mono">24px</td></tr><tr><td><code>size.radius.full</code></td><td class="mono">9999px</td></tr></tbody></table><h3><code>size.border</code></h3>
+        <p class="note">Échelle d'épaisseur de bordure brute.</p>
+        <table class="tbl"><tbody><tr><td><code>size.border.none</code></td><td class="mono">0</td></tr><tr><td><code>size.border.sm</code></td><td class="mono">1px</td></tr><tr><td><code>size.border.md</code></td><td class="mono">2px</td></tr><tr><td><code>size.border.lg</code></td><td class="mono">4px</td></tr></tbody></table><h3><code>size.breakpoint</code></h3>
+        <p class="note">Points de rupture. Une media query CSS ne peut pas lire une custom property : la valeur est inlinée par le build.</p>
+        <table class="tbl"><tbody><tr><td><code>size.breakpoint.xs</code></td><td class="mono">480px</td></tr><tr><td><code>size.breakpoint.sm</code></td><td class="mono">640px</td></tr><tr><td><code>size.breakpoint.md</code></td><td class="mono">768px</td></tr><tr><td><code>size.breakpoint.lg</code></td><td class="mono">1024px</td></tr><tr><td><code>size.breakpoint.xl</code></td><td class="mono">1280px</td></tr></tbody></table>
+    
+    <nav class="pager">
+      <a href="demarrer.html" class="pg pg-prev"><span>← Précédent</span><b>Démarrer un projet</b></a>
+      <a href="brand.html" class="pg pg-next"><span>Suivant →</span><b>Brand</b></a>
+    </nav>
+  </div>
+</main>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+  });
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Surligne dans le sous-menu la section actuellement à l'écran.
+  const anchors = [...document.querySelectorAll('[data-anchor]')];
+  if (anchors.length) {
+    const byId = new Map(anchors.map((a) => [a.dataset.anchor, a]));
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id);
+        anchors.forEach((a) => a.classList.remove('here'));
+        // La première section visible dans l'ordre du document gagne.
+        const first = anchors.find((a) => seen.has(a.dataset.anchor));
+        if (first) first.classList.add('here');
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
+</body>
+</html>

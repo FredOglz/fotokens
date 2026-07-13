@@ -75,6 +75,21 @@ const buildAlphas = (ramp) => {
   );
 };
 
+/**
+ * Voiles blanc et noir — ABSOLUS, indépendants de toute palette.
+ *
+ * Ils vivent dans un groupe `color.alpha.*` séparé, contrairement aux voiles de
+ * palette (qui vivent DANS la palette pour suivre un swap de rôle `brand`). La
+ * distinction est délibérée : un voile de survol neutre, un scrim de modale ou
+ * une ombre portée ne doivent PAS changer de teinte quand on rebrande. Ils
+ * n'appartiennent à aucune palette, donc un groupe à part est le bon endroit.
+ *
+ * Ils sont aussi ce qui permet à un rôle de s'inverser entre les modes : en
+ * clair un survol neutre assombrit (noir), en sombre il éclaircit (blanc).
+ */
+const WHITE_ALPHAS = [4, 8, 12, 16];
+const BLACK_ALPHAS = [4, 8, 12, 16, 40, 60];
+
 /** Réécrit le JSON à la main : `JSON.stringify` casse la mise en forme compacte. */
 function serialise(palettes) {
   const names = Object.keys(palettes);
@@ -84,6 +99,23 @@ function serialise(palettes) {
     '  "color": {',
     '    "$type": "color",',
     '    "transparent": { "$value": "rgba(0, 0, 0, 0)", "$description": "Absence de couleur — fond des variantes outlined/ghost." },',
+    '    "white": { "$value": "#ffffff" },',
+    '    "black": { "$value": "#000000" },',
+    '    "alpha": {',
+    '      "$description": "Voiles neutres absolus, indépendants des palettes : survol neutre, scrim, ombres. Ne changent pas au rebranding.",',
+    '      "white": {',
+    ...WHITE_ALPHAS.map(
+      (a, i) =>
+        `        ${`"${a}":`.padEnd(6)}{ "$value": "rgba(255, 255, 255, ${a / 100})" }${i < WHITE_ALPHAS.length - 1 ? ',' : ''}`,
+    ),
+    '      },',
+    '      "black": {',
+    ...BLACK_ALPHAS.map(
+      (a, i) =>
+        `        ${`"${a}":`.padEnd(6)}{ "$value": "rgba(0, 0, 0, ${a / 100})" }${i < BLACK_ALPHAS.length - 1 ? ',' : ''}`,
+    ),
+    '      }',
+    '    },',
   ];
   names.forEach((name, i) => {
     lines.push(`    "${name}": {`);

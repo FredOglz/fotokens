@@ -1,0 +1,38 @@
+{
+  "color": {
+    "tooltip": {
+      "default": {
+        "background": {
+          "$value": "{color.surface.inverse}"
+        },
+        "text": {
+          "$value": "{color.text.inverse}"
+        }
+      }
+    },
+    "$type": "color"
+  },
+  "space": {
+    "tooltip": {
+      "paddingX": {
+        "$value": "{space.sm}"
+      },
+      "paddingY": {
+        "$value": "{space.xs}"
+      }
+    },
+    "$type": "dimension"
+  },
+  "fontSize": {
+    "tooltip": {
+      "$value": "{fontSize.small}"
+    },
+    "$type": "dimension"
+  },
+  "radius": {
+    "tooltip": {
+      "$value": "{radius.sm}"
+    },
+    "$type": "dimension"
+  }
+}

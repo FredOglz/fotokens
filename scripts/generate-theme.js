@@ -73,9 +73,16 @@ const SEMANTIC = {
     disabled: { light: 'NEUTRAL:100', dark: 'NEUTRAL:800', desc: 'Fond d’un composant désactivé.' },
     transparent: { light: 'TRANSPARENT', dark: 'TRANSPARENT', desc: 'Fond absent (variantes outlined/ghost).' },
   },
+  /**
+   * Six niveaux de texte. L'échelle à quatre niveaux d'avant était trop plate :
+   * une hiérarchie réelle a besoin d'un cran AU-DESSUS du corps de texte (titres)
+   * et d'un cran EN DESSOUS du texte atténué (séparateurs, échafaudage).
+   */
   text: {
-    body:     { light: 'NEUTRAL:900', dark: 'NEUTRAL:25',  desc: 'Texte de lecture.' },
-    muted:    { light: 'NEUTRAL:600', dark: 'NEUTRAL:300', desc: 'Texte secondaire, moins appuyé.' },
+    strong:   { light: 'NEUTRAL:900', dark: 'NEUTRAL:25',  desc: 'Titres et libellés d’interface appuyés. Le contraste maximal.' },
+    body:     { light: 'NEUTRAL:800', dark: 'NEUTRAL:100', desc: 'Texte de lecture.' },
+    muted:    { light: 'NEUTRAL:600', dark: 'NEUTRAL:300', desc: 'Texte secondaire (légende, description).' },
+    faint:    { light: 'NEUTRAL:400', dark: 'NEUTRAL:500', desc: '⚠ NE PASSE PAS AA — décoratif uniquement (séparateurs, échafaudage). Jamais pour du texte à lire.' },
     disabled: { light: 'NEUTRAL:300', dark: 'NEUTRAL:600', desc: 'Texte d’un composant désactivé.' },
     inverse:  { light: 'NEUTRAL:25',  dark: 'NEUTRAL:900', desc: 'Texte posé sur `surface.inverse`.' },
   },
@@ -86,6 +93,17 @@ const SEMANTIC = {
     disabled: { light: 'NEUTRAL:200', dark: 'NEUTRAL:700', desc: 'Bordure d’un composant désactivé.' },
     transparent: { light: 'TRANSPARENT', dark: 'TRANSPARENT', desc: 'Bordure absente.' },
   },
+  /**
+   * Voiles d'état NEUTRES — et c'est le seul groupe qui s'INVERSE entre les modes :
+   * en clair on assombrit (noir translucide), en sombre on éclaircit (blanc).
+   * À ne pas confondre avec `role.X.tint`, qui teinte à la couleur du rôle.
+   * Ici, aucune teinte : une ligne de tableau survolée ne doit pas virer au bleu.
+   */
+  state: {
+    hover:    { light: 'BLACK:4',  dark: 'WHITE:4',  desc: 'Voile de survol neutre (ligne de tableau, item de liste).' },
+    selected: { light: 'BLACK:8',  dark: 'WHITE:8',  desc: 'Voile d’un élément sélectionné.' },
+    active:   { light: 'BLACK:12', dark: 'WHITE:12', desc: 'Voile d’un élément pressé.' },
+  },
 };
 
 /** Anneau de focus — absent du fichier Kazaar, et c'est bloquant pour l'accessibilité. */
@@ -93,8 +111,23 @@ const FOCUS = {
   ring: { light: 'PRIMARY:500', dark: 'PRIMARY:400', desc: 'Anneau de focus clavier. Doit rester visible sur tous les fonds.' },
 };
 
-/** Voile des modales / drawers. */
-const SCRIM = { light: 'NEUTRAL:ALPHA:10', dark: 'NEUTRAL:ALPHA:10', desc: 'Voile assombrissant sous une modale ou un drawer.' };
+/**
+ * Voile des modales / drawers. DOIT être noir : il pointait auparavant sur un
+ * neutre teinté (slateBlue à 10 %), qui ne faisait passer la luminance de la page
+ * que de 0,96 à 0,86 — la modale ne se détachait pas.
+ */
+const SCRIM = { light: 'BLACK:60', dark: 'BLACK:60', desc: 'Voile assombrissant sous une modale ou un drawer.' };
+
+/**
+ * Ombres portées. La GÉOMÉTRIE vient des primitives (elevation.*), la COULEUR est
+ * choisie ici car elle dépend du mode : sur fond sombre, une ombre doit être bien
+ * plus opaque pour rester lisible.
+ */
+const SHADOWS = {
+  raised:  { geometry: 'raised',  light: 'BLACK:8',  dark: 'BLACK:40', desc: 'Légère élévation (carte au repos).' },
+  float:   { geometry: 'float',   light: 'BLACK:16', dark: 'BLACK:60', desc: 'Élément flottant (carte au survol, dropdown).' },
+  overlay: { geometry: 'overlay', light: 'BLACK:40', dark: 'BLACK:60', desc: 'Élément détaché de la page (modale, drawer).' },
+};
 
 /* ------------------------------------------------------------------ *
  * 4. COMPOSANTS — la variante décide QUELS slots du rôle elle consomme.
@@ -139,9 +172,11 @@ const INPUT_STATES = {
  * Résolution des raccourcis de mapping.
  * ------------------------------------------------------------------ */
 
-/** `600` | `NEUTRAL:25` | `ALPHA:5` | `TRANSPARENT` | `PRIMARY:500` → référence complète. */
-function refFor(spec, role, mode) {
+/** `600` | `NEUTRAL:25` | `ALPHA:5` | `WHITE:4` | `BLACK:60` | `TRANSPARENT` | `PRIMARY:500` */
+function refFor(spec, role) {
   if (spec === 'TRANSPARENT') return '{color.transparent}';
+  if (spec.startsWith('WHITE:')) return `{color.alpha.white.${spec.split(':')[1]}}`;
+  if (spec.startsWith('BLACK:')) return `{color.alpha.black.${spec.split(':')[1]}}`;
   if (spec.startsWith('NEUTRAL:ALPHA:')) return `{color.brand.neutral.alpha.${spec.split(':')[2]}}`;
   if (spec.startsWith('NEUTRAL:')) return `{color.brand.neutral.${spec.split(':')[1]}}`;
   if (spec.startsWith('PRIMARY:')) return `{color.brand.primary.${spec.split(':')[1]}}`;
@@ -179,7 +214,7 @@ function buildTheme(mode) {
   for (const roleName of Object.keys(BRAND)) {
     role[roleName] = {};
     for (const [slot, def] of Object.entries(ROLE_SLOTS)) {
-      role[roleName][slot] = token(refFor(def[mode], roleName, mode), def.desc);
+      role[roleName][slot] = token(refFor(def[mode], roleName), def.desc);
     }
   }
 
@@ -187,14 +222,14 @@ function buildTheme(mode) {
   for (const [group, entries] of Object.entries(SEMANTIC)) {
     out[group] = {};
     for (const [name, def] of Object.entries(entries)) {
-      out[group][name] = token(refFor(def[mode], 'neutral', mode), def.desc);
+      out[group][name] = token(refFor(def[mode], 'neutral'), def.desc);
     }
   }
   out.focus = {};
   for (const [name, def] of Object.entries(FOCUS)) {
-    out.focus[name] = token(refFor(def[mode], 'primary', mode), def.desc);
+    out.focus[name] = token(refFor(def[mode], 'primary'), def.desc);
   }
-  out.scrim = token(refFor(SCRIM[mode], 'neutral', mode), SCRIM.desc);
+  out.scrim = token(refFor(SCRIM[mode], 'neutral'), SCRIM.desc);
 
   out.categorical = {};
   CATEGORICAL.forEach((_, i) => {
@@ -205,7 +240,22 @@ function buildTheme(mode) {
     };
   });
 
-  return { color: { $type: 'color', ...out } };
+  // Ombres : géométrie depuis les primitives, couleur selon le mode.
+  const shadow = { $type: 'shadow' };
+  for (const [name, def] of Object.entries(SHADOWS)) {
+    shadow[name] = {
+      $value: {
+        offsetX: '0',
+        offsetY: `{elevation.${def.geometry}.offsetY}`,
+        blur: `{elevation.${def.geometry}.blur}`,
+        spread: `{elevation.${def.geometry}.spread}`,
+        color: refFor(def[mode], 'neutral'),
+      },
+      $description: def.desc,
+    };
+  }
+
+  return { color: { $type: 'color', ...out }, shadow };
 }
 
 function buildButton() {
@@ -283,7 +333,5 @@ const write = (path, data) => {
 };
 
 write('tokens/brand/default.json', buildBrand());
-write('tokens/themes/color/light.json', buildTheme('light'));
-write('tokens/themes/color/dark.json', buildTheme('dark'));
-write('tokens/components/button.json', buildButton());
-write('tokens/components/input.json', buildInput());
+write('tokens/themes/mode/light.json', buildTheme('light'));
+write('tokens/themes/mode/dark.json', buildTheme('dark'));

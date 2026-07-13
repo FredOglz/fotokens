@@ -1,0 +1,71 @@
+{
+  "color": {
+    "card": {
+      "default": {
+        "background": {
+          "$value": "{color.surface.raised}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        }
+      },
+      "hover": {
+        "background": {
+          "$value": "{color.surface.raised}"
+        },
+        "border": {
+          "$value": "{color.border.strong}"
+        }
+      },
+      "selected": {
+        "background": {
+          "$value": "{color.surface.raised}"
+        },
+        "border": {
+          "$value": "{color.role.primary.main}"
+        }
+      }
+    },
+    "$type": "color"
+  },
+  "shadow": {
+    "card": {
+      "default": {
+        "$value": "{shadow.raised}"
+      },
+      "hover": {
+        "$value": "{shadow.float}"
+      },
+      "selected": {
+        "$value": "{shadow.raised}"
+      }
+    },
+    "$type": "shadow"
+  },
+  "space": {
+    "card": {
+      "paddingX": {
+        "$value": "{space.lg}"
+      },
+      "paddingY": {
+        "$value": "{space.lg}"
+      },
+      "gap": {
+        "$value": "{space.md}"
+      }
+    },
+    "$type": "dimension"
+  },
+  "radius": {
+    "card": {
+      "$value": "{radius.lg}"
+    },
+    "$type": "dimension"
+  },
+  "borderWidth": {
+    "card": {
+      "$value": "{borderWidth.default}"
+    },
+    "$type": "dimension"
+  }
+}
