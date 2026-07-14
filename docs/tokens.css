@@ -341,11 +341,12 @@
   --size-font-xs: 12px;
   --size-font-sm: 14px;
   --size-font-md: 16px;
-  --size-font-lg: 20px;
-  --size-font-xl: 24px;
-  --size-font-2xl: 32px;
-  --size-font-3xl: 40px;
-  --size-font-4xl: 48px;
+  --size-font-lg: 18px;
+  --size-font-xl: 20px;
+  --size-font-2xl: 24px;
+  --size-font-3xl: 32px;
+  --size-font-4xl: 40px;
+  --size-font-5xl: 48px;
   --size-radius-none: 0;
   --size-radius-sm: 4px;
   --size-radius-md: 8px;
@@ -370,9 +371,12 @@
   --size-breakpoint-md: 768px;
   --size-breakpoint-lg: 1024px;
   --size-breakpoint-xl: 1280px;
-  --font-family-sans: Inter, system-ui, -apple-system, sans-serif;
-  --font-family-serif: Georgia, 'Times New Roman', serif;
-  --font-family-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  --font-stack-inter: Inter, system-ui, -apple-system, sans-serif;
+  --font-stack-geist: Geist, system-ui, -apple-system, sans-serif;
+  --font-stack-system-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-stack-georgia: Georgia, 'Times New Roman', serif;
+  --font-stack-jetbrains-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  --font-stack-system-mono: ui-monospace, 'SF Mono', Menlo, monospace;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -380,18 +384,77 @@
   --font-line-height-tight: 1.2;
   --font-line-height-normal: 1.5;
   --font-line-height-relaxed: 1.75;
+  --font-letter-spacing-tight: -0.02em; /** Grands titres (h1, h2) : à 32px et plus, l'espacement par défaut paraît lâche. */
+  --font-letter-spacing-snug: -0.01em; /** Titres intermédiaires. */
+  --font-letter-spacing-normal: 0; /** Texte de lecture : on ne touche pas au crénage dessiné par le fontier. */
+  --font-letter-spacing-wide: 0.02em; /** Petit texte à aérer légèrement. */
+  --font-letter-spacing-caps: 0.08em; /** Texte en capitales (overline) : les capitales ont besoin d'air pour rester lisibles. */
+  --font-brand-sans: var(--font-stack-inter); /** Famille « sans » — jouée par la pile « inter ». */
+  --font-brand-serif: var(--font-stack-georgia); /** Famille « serif » — jouée par la pile « georgia ». */
+  --font-brand-mono: var(--font-stack-jetbrains-mono); /** Famille « mono » — jouée par la pile « jetbrainsMono ». */
   --shadow-raised: 0 1px 2px 0 rgba(0, 0, 0, 0.08); /** Légère élévation (carte au repos). */
   --shadow-float: 0 12px 32px -8px rgba(0, 0, 0, 0.16); /** Élément flottant (carte au survol, dropdown). */
   --shadow-overlay: 0 16px 48px -12px rgba(0, 0, 0, 0.4); /** Élément détaché de la page (modale, drawer). */
-  --typography-body-family: var(--font-family-sans); /** Police du texte de lecture. */
+  --typography-h1-family: var(--font-brand-sans);
+  --typography-h1-size: var(--font-size-h1);
+  --typography-h1-weight: var(--font-weight-bold);
+  --typography-h1-line-height: var(--font-line-height-tight);
+  --typography-h1-letter-spacing: var(--font-letter-spacing-tight);
+  --typography-h1-text-case: none;
+  --typography-h2-family: var(--font-brand-sans);
+  --typography-h2-size: var(--font-size-h2);
+  --typography-h2-weight: var(--font-weight-bold);
+  --typography-h2-line-height: var(--font-line-height-tight);
+  --typography-h2-letter-spacing: var(--font-letter-spacing-tight);
+  --typography-h2-text-case: none;
+  --typography-h3-family: var(--font-brand-sans);
+  --typography-h3-size: var(--font-size-h3);
+  --typography-h3-weight: var(--font-weight-semibold);
+  --typography-h3-line-height: var(--font-line-height-tight);
+  --typography-h3-letter-spacing: var(--font-letter-spacing-snug);
+  --typography-h3-text-case: none;
+  --typography-lead-family: var(--font-brand-sans);
+  --typography-lead-size: var(--font-size-lead);
+  --typography-lead-weight: var(--font-weight-regular);
+  --typography-lead-line-height: var(--font-line-height-normal);
+  --typography-lead-letter-spacing: var(--font-letter-spacing-normal);
+  --typography-lead-text-case: none;
+  --typography-body-family: var(--font-brand-sans);
+  --typography-body-size: var(--font-size-body);
   --typography-body-weight: var(--font-weight-regular);
   --typography-body-line-height: var(--font-line-height-normal);
-  --typography-heading-family: var(--font-family-sans); /** Police des titres. */
-  --typography-heading-weight: var(--font-weight-bold);
-  --typography-heading-line-height: var(--font-line-height-tight);
-  --typography-code-family: var(--font-family-mono); /** Police du code et des valeurs techniques. */
+  --typography-body-letter-spacing: var(--font-letter-spacing-normal);
+  --typography-body-text-case: none;
+  --typography-small-family: var(--font-brand-sans);
+  --typography-small-size: var(--font-size-small);
+  --typography-small-weight: var(--font-weight-regular);
+  --typography-small-line-height: var(--font-line-height-normal);
+  --typography-small-letter-spacing: var(--font-letter-spacing-normal);
+  --typography-small-text-case: none;
+  --typography-label-family: var(--font-brand-sans);
+  --typography-label-size: var(--font-size-small);
+  --typography-label-weight: var(--font-weight-medium);
+  --typography-label-line-height: var(--font-line-height-tight);
+  --typography-label-letter-spacing: var(--font-letter-spacing-normal);
+  --typography-label-text-case: none;
+  --typography-caption-family: var(--font-brand-sans);
+  --typography-caption-size: var(--font-size-caption);
+  --typography-caption-weight: var(--font-weight-regular);
+  --typography-caption-line-height: var(--font-line-height-normal);
+  --typography-caption-letter-spacing: var(--font-letter-spacing-wide);
+  --typography-caption-text-case: none;
+  --typography-overline-family: var(--font-brand-sans);
+  --typography-overline-size: var(--font-size-caption);
+  --typography-overline-weight: var(--font-weight-semibold);
+  --typography-overline-line-height: var(--font-line-height-normal);
+  --typography-overline-letter-spacing: var(--font-letter-spacing-caps);
+  --typography-overline-text-case: uppercase;
+  --typography-code-family: var(--font-brand-mono);
+  --typography-code-size: var(--font-size-small);
   --typography-code-weight: var(--font-weight-regular);
   --typography-code-line-height: var(--font-line-height-normal);
+  --typography-code-letter-spacing: var(--font-letter-spacing-normal);
+  --typography-code-text-case: none;
   --motion-duration-hover: var(--duration-fast); /** Changement d'état au survol / focus. */
   --motion-duration-expand: var(--duration-base); /** Ouverture d'un accordéon, d'un menu. */
   --motion-duration-modal: var(--duration-slow); /** Entrée d'une modale ou d'un drawer. */
@@ -410,12 +473,13 @@
   --border-width-default: var(--size-border-sm);
   --border-width-strong: var(--size-border-md);
   --border-width-focus: var(--size-border-md);
+  --font-size-caption: var(--size-font-xs);
   --font-size-small: var(--size-font-sm);
   --font-size-body: var(--size-font-md);
-  --font-size-lead: var(--size-font-lg);
-  --font-size-h3: var(--size-font-xl);
-  --font-size-h2: var(--size-font-2xl);
-  --font-size-h1: var(--size-font-4xl);
+  --font-size-lead: var(--size-font-xl);
+  --font-size-h3: var(--size-font-2xl);
+  --font-size-h2: var(--size-font-3xl);
+  --font-size-h1: var(--size-font-5xl);
   --control-height-xs: var(--size-control-xs);
   --control-height-sm: var(--size-control-sm);
   --control-height-md: var(--size-control-md);
@@ -502,11 +566,10 @@
     --space-lg: var(--size-spacing-5);
     --space-xl: var(--size-spacing-7);
     --radius-lg: var(--size-radius-md);
-    --font-size-small: var(--size-font-xs);
-    --font-size-lead: var(--size-font-md);
-    --font-size-h3: var(--size-font-lg);
-    --font-size-h2: var(--size-font-xl);
-    --font-size-h1: var(--size-font-2xl);
+    --font-size-lead: var(--size-font-lg);
+    --font-size-h3: var(--size-font-xl);
+    --font-size-h2: var(--size-font-2xl);
+    --font-size-h1: var(--size-font-3xl);
     --control-height-xs: var(--size-control-sm);
     --control-height-sm: var(--size-control-md);
     --control-height-md: var(--size-control-xl);

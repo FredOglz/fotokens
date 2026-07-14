@@ -46,23 +46,27 @@
   },
   "fontSize": {
     "$type": "dimension",
-    "small": {
+    "$description": "Seul le HAUT de l'échelle se comprime. Un titre à 48px sur un écran de 375px dévore la largeur et se casse en quatre lignes : il descend à 32px. Le texte de lecture, lui, ne descend JAMAIS sous sa valeur desktop — un téléphone se tient à bout de bras, le corps a besoin d'au moins autant de taille, pas de moins. C'est la même logique que `controlHeight`, qui GRANDIT sur mobile.",
+    "caption": {
       "$value": "{size.font.xs}"
+    },
+    "small": {
+      "$value": "{size.font.sm}"
     },
     "body": {
       "$value": "{size.font.md}"
     },
     "lead": {
-      "$value": "{size.font.md}"
-    },
-    "h3": {
       "$value": "{size.font.lg}"
     },
-    "h2": {
+    "h3": {
       "$value": "{size.font.xl}"
     },
-    "h1": {
+    "h2": {
       "$value": "{size.font.2xl}"
+    },
+    "h1": {
+      "$value": "{size.font.3xl}"
     }
   },
   "controlHeight": {

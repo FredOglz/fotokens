@@ -250,6 +250,12 @@
     },
     "$type": "dimension"
   },
+  "fontSize": {
+    "alert": {
+      "$value": "{fontSize.body}"
+    },
+    "$type": "dimension"
+  },
   "radius": {
     "alert": {
       "$value": "{radius.md}"
@@ -269,5 +275,28 @@
       }
     },
     "$type": "dimension"
+  },
+  "typography": {
+    "alert": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{typography.body.family}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.body.weight}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{typography.body.lineHeight}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{typography.body.letterSpacing}"
+      },
+      "textCase": {
+        "$value": "{typography.body.textCase}"
+      }
+    }
   }
 }

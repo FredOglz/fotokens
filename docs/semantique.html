@@ -58,7 +58,7 @@
     <h1>3 · Sémantique (le reste)</h1>
     <p class="lead">Au-delà du contrat de rôle : les fonds, le texte, les bordures, le focus, les tailles et la typo.</p>
     
-  <h2>Couleur</h2>
+  <h2 id="couleur">Couleur</h2>
   <p><code>surface</code> est le <strong>seul</strong> groupe qui parle de fonds.</p>
   <div class="roles"><div class="role-group"><h4>surface</h4><div class="role-list"><div class="role">
             <div class="role-chip " style="background:var(--color-surface-base)"></div>
@@ -146,7 +146,7 @@
     </div></div>
   </div>
 
-  <h2>Tailles — desktop vs mobile</h2>
+  <h2 id="tailles">Tailles — desktop vs mobile</h2>
   <p class="note">Seules les lignes <span class="tag">≠</span> sont réémises dans la media query du
   CSS généré. Les autres sont identiques : aucune ligne inutile.</p>
   <table class="tbl">
@@ -175,13 +175,15 @@
             <td><code>borderWidth.strong</code></td><td class="mono">2px</td>
             <td class="mono">2px</td></tr><tr class="">
             <td><code>borderWidth.focus</code></td><td class="mono">2px</td>
-            <td class="mono">2px</td></tr><tr class="changed">
+            <td class="mono">2px</td></tr><tr class="">
+            <td><code>fontSize.caption</code></td><td class="mono">12px</td>
+            <td class="mono">12px</td></tr><tr class="">
             <td><code>fontSize.small</code></td><td class="mono">14px</td>
-            <td class="mono">12px <span class="tag">≠</span></td></tr><tr class="">
+            <td class="mono">14px</td></tr><tr class="">
             <td><code>fontSize.body</code></td><td class="mono">16px</td>
             <td class="mono">16px</td></tr><tr class="changed">
             <td><code>fontSize.lead</code></td><td class="mono">20px</td>
-            <td class="mono">16px <span class="tag">≠</span></td></tr><tr class="changed">
+            <td class="mono">18px <span class="tag">≠</span></td></tr><tr class="changed">
             <td><code>fontSize.h3</code></td><td class="mono">24px</td>
             <td class="mono">20px <span class="tag">≠</span></td></tr><tr class="changed">
             <td><code>fontSize.h2</code></td><td class="mono">32px</td>
@@ -196,17 +198,52 @@
     vérité.
   </div>
 
-  <h2>Typographie</h2>
+  <h2 id="typographie">Typographie</h2>
+  <p>Chaque rôle porte <strong>6 slots</strong> — famille, taille, graisse, interligne, crénage, casse —
+    et se suffit donc à lui-même : <code>font: var(--typography-h1-*)</code> et rien d'autre. La
+    <strong>taille</strong> est une référence à <code>fontSize.*</code> (ci-dessus), pas une valeur :
+    le rôle hérite de la bascule mobile sans la connaître.</p>
   <table class="tbl">
-    <thead><tr><th>Rôle</th><th>Aperçu</th><th>Graisse / interligne</th></tr></thead>
-    <tbody><tr><td><code>typography.body</code></td>
-        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-weight:400">Le vif renard brun saute</td>
-        <td class="mono">400 / 1.5</td></tr><tr><td><code>typography.heading</code></td>
-        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-weight:700">Le vif renard brun saute</td>
-        <td class="mono">700 / 1.2</td></tr><tr><td><code>typography.code</code></td>
-        <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-weight:400">Le vif renard brun saute</td>
-        <td class="mono">400 / 1.5</td></tr></tbody>
+    <thead><tr><th>Rôle</th><th>Aperçu</th><th>Taille · graisse · interligne · crénage</th></tr></thead>
+    <tbody><tr>
+        <td><code>typography.h1</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:48px;font-weight:700;line-height:1.2;letter-spacing:-0.02em;text-transform:none">Le vif renard brun saute</td>
+        <td class="mono">48px · 700 · 1.2 · -0.02em</td></tr><tr>
+        <td><code>typography.h2</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:32px;font-weight:700;line-height:1.2;letter-spacing:-0.02em;text-transform:none">Le vif renard brun saute</td>
+        <td class="mono">32px · 700 · 1.2 · -0.02em</td></tr><tr>
+        <td><code>typography.h3</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:24px;font-weight:600;line-height:1.2;letter-spacing:-0.01em;text-transform:none">Le vif renard brun saute</td>
+        <td class="mono">24px · 600 · 1.2 · -0.01em</td></tr><tr>
+        <td><code>typography.lead</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:20px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
+        <td class="mono">20px · 400 · 1.5 · 0</td></tr><tr>
+        <td><code>typography.body</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:16px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
+        <td class="mono">16px · 400 · 1.5 · 0</td></tr><tr>
+        <td><code>typography.small</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:14px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
+        <td class="mono">14px · 400 · 1.5 · 0</td></tr><tr>
+        <td><code>typography.label</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:14px;font-weight:500;line-height:1.2;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
+        <td class="mono">14px · 500 · 1.2 · 0</td></tr><tr>
+        <td><code>typography.caption</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:12px;font-weight:400;line-height:1.5;letter-spacing:0.02em;text-transform:none">Le vif renard brun saute</td>
+        <td class="mono">12px · 400 · 1.5 · 0.02em</td></tr><tr>
+        <td><code>typography.overline</code></td>
+        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:12px;font-weight:600;line-height:1.5;letter-spacing:0.08em;text-transform:uppercase">Le vif renard brun saute</td>
+        <td class="mono">12px · 600 · 1.5 · 0.08em</td></tr><tr>
+        <td><code>typography.code</code></td>
+        <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-size:14px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
+        <td class="mono">14px · 400 · 1.5 · 0</td></tr></tbody>
   </table>
+  <div class="callout">
+    <strong>La police est dans le brand, pas dans la primitive.</strong> Un rôle pointe sur
+    <code>font.brand.sans|serif|mono</code>, qui désigne une pile du catalogue
+    <code>font.stack.*</code>. Changer la police de tout le système, c'est donc une ligne —
+    <code>BRAND_FONT</code> dans <code>scripts/generate-theme.js</code> — exactement comme changer
+    la couleur d'un rôle.
+  </div>
     
     <nav class="pager">
       <a href="roles.html" class="pg pg-prev"><span>← Précédent</span><b>Contrat de rôle</b></a>

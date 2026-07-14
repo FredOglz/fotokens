@@ -42,15 +42,15 @@ Primitives  →  Brand (sélection)  →  Sémantique (par mode)  →  Composant
 
 | Couche | Dossier | Rôle | Peut référencer |
 | --- | --- | --- | --- |
-| **1. Primitives** | `tokens/primitives/` | Le catalogue brut : 8 palettes, échelles de taille, familles de police, durées. Aucune sémantique. | Rien — que des valeurs brutes. |
-| **2. Brand** | `tokens/brand/` | **La sélection du projet.** Quelle palette joue quel rôle : `primary → violet`, `neutral → slateBlue`… | Un **primitive**. |
-| **3. Sémantique** | `tokens/themes/` | Le **contrat de rôle**, plus `surface`/`text`/`border`/`state`/`focus`/`shadow`. Décliné par **mode** (clair/sombre, desktop/mobile). | La couche **brand**. |
+| **1. Primitives** | `tokens/primitives/` | Le catalogue brut : 8 palettes, échelles de taille, **piles de polices**, durées. Aucune sémantique. | Rien — que des valeurs brutes. |
+| **2. Brand** | `tokens/brand/` | **La sélection du projet.** Quelle palette joue quel rôle (`primary → violet`), **quelle pile de polices joue quel rôle** (`sans → inter`). | Un **primitive**. |
+| **3. Sémantique** | `tokens/themes/` | Le **contrat de rôle** (couleur *et* typo), plus `surface`/`text`/`border`/`state`/`focus`/`shadow`. Décliné par **mode** (clair/sombre, desktop/mobile). | La couche **brand**. |
 | **4. Composant** | `tokens/components/` | 17 composants. | La couche **sémantique**. |
 
 ### Les 3 règles de layering
 
 > - Un token de **composant** référence un rôle **sémantique**, jamais une couche plus basse.
-> - Un rôle **sémantique** de couleur référence la couche **brand**, jamais un primitive.
+> - Un rôle **sémantique** — couleur **comme typo** — référence la couche **brand**, jamais un primitive.
 > - Un token **brand** référence un **primitive**, jamais une valeur brute.
 
 Elles sont mécaniquement vérifiables : un `grep` suffit à prouver qu'aucun
@@ -107,6 +107,54 @@ plus**. Un composant qui sait afficher `primary` sait afficher les cinq autres.
 
 ---
 
+## Le contrat de rôle typographique
+
+Même principe que la couleur : **10 rôles × 6 slots**, générés depuis la table
+`ROLES` de `scripts/generate-typography.js`.
+
+| | |
+| --- | --- |
+| **Rôles** | `h1` `h2` `h3` · `lead` `body` `small` · `label` `caption` `overline` · `code` |
+| **Slots** | `family` `size` `weight` `lineHeight` `letterSpacing` `textCase` |
+
+> **Un rôle porte sa taille — et se suffit donc à lui-même.**
+
+C'est la règle qui fait toute la différence. Un rôle qui ne donnait que la famille,
+la graisse et l'interligne obligeait à aller chercher la taille ailleurs : il était
+*insuffisant*, donc **contourné**. C'est ce qui s'était produit — les 17 composants
+référençaient `{fontSize.*}` et n'avaient ni police ni graisse, et un `<button>`
+stylé avec ses seuls tokens sortait dans la police du navigateur.
+
+Mais les tailles doivent rester dans `themes/size/` : elles sont la **seule**
+dimension de la typo qui change entre desktop et mobile. Les deux exigences se
+concilient parce que le rôle référence la taille au lieu de la copier :
+
+```css
+--typography-h1-size: var(--font-size-h1);        /* le rôle pointe sur le thème size */
+
+@media (max-width: 768px) {
+  --font-size-h1: 32px;                            /* le thème size bascule…          */
+}                                                  /* …et le rôle suit, sans le savoir */
+```
+
+Un composant qui pointe sur le rôle en hérite à son tour. **Personne ne connaît la
+media query, et tout le monde la respecte.**
+
+### Ce qui se comprime sur mobile — et ce qui ne se comprime pas
+
+Seul le **haut** de l'échelle. Un titre de 48px sur un écran de 375px dévore la
+largeur et se casse en quatre lignes : il descend à 32px. Le texte de lecture, lui,
+ne descend **jamais** sous sa valeur desktop — un téléphone se tient à bout de bras,
+le corps a besoin d'au moins autant de taille, pas de moins. C'est la même logique
+que `controlHeight`, qui *grandit* sur mobile (cible tactile de 44px, WCAG 2.5.5).
+
+| | `caption` | `small` | `body` | `lead` | `h3` | `h2` | `h1` |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| desktop | 12 | 14 | 16 | 20 | 24 | 32 | 48 |
+| mobile | 12 | 14 | 16 | **18** | **20** | **24** | **32** |
+
+---
+
 ## Démarrer un projet
 
 ```bash
@@ -131,6 +179,20 @@ Rien d'autre ne bouge : ni le contrat de rôle, ni les composants. Tous les bout
 liens et états actifs de l'app suivent. **N'importe quelle palette peut jouer
 n'importe quel rôle** — elles exposent toutes les mêmes 11 crans sur la même courbe
 de luminosité, donc un swap ne casse ni le build, ni les contrastes.
+
+**La police se change de la même façon**, dans la table `BRAND_FONT` juste en dessous :
+
+```js
+const BRAND_FONT = {
+  sans:  'geist',        // ← était 'inter'
+  serif: 'georgia',
+  mono:  'jetbrainsMono',
+};
+```
+
+Les valeurs sont des clés du catalogue `font.stack.*` (`primitives/typography.json`).
+Les 10 rôles typo et les 12 composants textuels suivent — **aucun d'eux ne mentionne
+jamais un nom de police**.
 
 ### Consommer les tokens
 
@@ -254,23 +316,24 @@ tokens/
   primitives/            # le catalogue — jamais modifié par projet
     color.json           # ⚙️ 8 palettes × 11 crans + voiles alpha
     size.json            # spacing, font, radius, border, control, glyph, breakpoint
-    typography.json      # familles, graisses, interlignes
+    typography.json      # catalogue de piles de polices, graisses, interlignes, crénage
     effect.json          # durées, courbes, opacités, géométries d'ombre
   brand/
-    default.json         # ⚙️ quelle palette joue quel rôle
+    default.json         # ⚙️ quelle palette — et quelle police — joue quel rôle
   themes/
     mode/                # ⚙️ tout ce qui dépend du clair/sombre : couleurs ET ombres
       light.json
       dark.json
-    size/                # desktop.json / mobile.json
-    typography/
+    size/                # desktop.json / mobile.json — les tailles de texte vivent ICI
+    typography/          # ⚙️ 10 rôles × 6 slots
     effect/
   components/            # ⚙️ les 17 composants
 config/
   build.js               # build multi-modes, sortie scindée
 scripts/
   generate-ramps.js      # ⭐ les rampes OKLCH
-  generate-theme.js      # ⭐ brand + contrat de rôle
+  generate-theme.js      # ⭐ brand (couleur + police) + contrat de rôle couleur
+  generate-typography.js # ⭐ contrat de rôle typo
   generate-components.js # ⭐ les 17 composants
   build-docs.js          # la doc visuelle
   oklch.js               # conversions sRGB ↔ OKLCH
@@ -283,7 +346,8 @@ dist/                    # ⚙️ gitignoré
 | Commande | Effet |
 | --- | --- |
 | `npm run build` | Génère `dist/` et `docs/` |
-| `npm run theme` | Régénère brand + rôles depuis les tables, puis build |
+| `npm run theme` | Régénère brand + rôles de couleur depuis les tables, puis build |
+| `npm run typography` | Régénère les 10 rôles typo depuis la table, puis build |
 | `npm run components` | Régénère les 17 composants, puis build |
 | `npm run ramps` | Aperçu des rampes (n'écrit rien) |
 | `npm run ramps:write` | Régénère `tokens/primitives/color.json` |

@@ -102,5 +102,28 @@
       "$value": "{borderWidth.default}"
     },
     "$type": "dimension"
+  },
+  "typography": {
+    "textarea": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{typography.body.family}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.body.weight}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{typography.body.lineHeight}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{typography.body.letterSpacing}"
+      },
+      "textCase": {
+        "$value": "{typography.body.textCase}"
+      }
+    }
   }
 }

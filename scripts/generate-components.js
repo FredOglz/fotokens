@@ -286,13 +286,55 @@ const SIZED = {
 const UNSIZED = {
   textarea: { paddingX: '{space.sm}', paddingY: '{space.sm}', fontSize: '{fontSize.body}', radius: '{radius.sm}', borderWidth: '{borderWidth.default}' },
   card:     { paddingX: '{space.lg}', paddingY: '{space.lg}', gap: '{space.md}', radius: '{radius.lg}', borderWidth: '{borderWidth.default}' },
-  alert:    { paddingX: '{space.md}', paddingY: '{space.md}', gap: '{space.sm}', radius: '{radius.md}', borderWidth: '{borderWidth.default}', icon: '{glyphSize.md}' },
+  alert:    { paddingX: '{space.md}', paddingY: '{space.md}', gap: '{space.sm}', fontSize: '{fontSize.body}', radius: '{radius.md}', borderWidth: '{borderWidth.default}', icon: '{glyphSize.md}' },
   tooltip:  { paddingX: '{space.sm}', paddingY: '{space.xs}', fontSize: '{fontSize.small}', radius: '{radius.sm}' },
   modal:    { paddingX: '{space.xl}', paddingY: '{space.xl}', gap: '{space.lg}', radius: '{radius.lg}', borderWidth: '{borderWidth.default}' },
-  menu:     { paddingX: '{space.xs}', paddingY: '{space.xs}', radius: '{radius.md}', borderWidth: '{borderWidth.default}' },
+  menu:     { paddingX: '{space.xs}', paddingY: '{space.xs}', fontSize: '{fontSize.body}', radius: '{radius.md}', borderWidth: '{borderWidth.default}' },
   tabs:     { paddingX: '{space.md}', paddingY: '{space.sm}', gap: '{space.xs}', fontSize: '{fontSize.body}', borderWidth: '{borderWidth.strong}' },
   table:    { paddingX: '{space.md}', paddingY: '{space.sm}', fontSize: '{fontSize.small}', borderWidth: '{borderWidth.default}' },
   link:     { fontSize: '{fontSize.body}' },
+};
+
+/* ================================================================== *
+ * TYPOGRAPHIE — quel composant parle avec quel rôle typo.
+ *
+ * Sans cette table, un composant n'avait AUCUNE typo : il ne portait qu'un
+ * `fontSize`, hérité du thème size. Un `<button>` stylé avec ses seuls tokens
+ * sortait donc dans la police du navigateur, en graisse normale. Le rôle typo
+ * existait, mais rien ne pointait dessus.
+ *
+ * On ne reprend PAS la taille du rôle ici : les composants dimensionnés ont
+ * leurs propres tailles par variante (`fontSize.button.sm|md|lg`, table SIZED),
+ * et elles priment. Le rôle fournit les 5 autres slots — famille, graisse,
+ * interligne, crénage, casse.
+ * ================================================================== */
+
+const TYPO_SLOTS = {
+  family:        'fontFamily',
+  weight:        'fontWeight',
+  lineHeight:    'number',
+  letterSpacing: 'dimension',
+  textCase:      null, // hors vocabulaire DTCG — voir generate-typography.js
+};
+
+const TEXT = {
+  // Texte d'interface : court, une seule ligne, jamais de lecture suivie.
+  button: 'label',
+  tabs:   'label',
+  tag:    'label',
+  badge:  'label',
+
+  // Texte saisi ou lu : c'est de la lecture, donc l'interligne du corps.
+  input:    'body',
+  select:   'body',
+  textarea: 'body',
+  link:     'body',
+  alert:    'body',
+  menu:     'body',
+
+  // Texte dense ou secondaire.
+  table:   'small',
+  tooltip: 'small',
 };
 
 /* ================================================================== *
@@ -367,6 +409,35 @@ function buildComponent(name) {
     for (const [size, dims] of Object.entries(SIZED[name])) emitDims(dims, [size]);
   }
   if (UNSIZED[name]) emitDims(UNSIZED[name], []);
+
+  // ---- typographie ----
+  // Le composant pointe sur un RÔLE sémantique, jamais sur une primitive :
+  // `{typography.label.family}`, pas `{font.brand.sans}`. Changer la police du
+  // système reste donc une seule ligne dans le brand.
+  const role = TEXT[name];
+  if (role) {
+    for (const [slot, $type] of Object.entries(TYPO_SLOTS)) {
+      const value = `{typography.${role}.${slot}}`;
+      put(out, ['typography', name, slot], $type ? { $type, $value: value } : tok(value));
+    }
+  }
+
+  // Un composant qui porte du texte doit porter une TAILLE et un RÔLE, ou aucun
+  // des deux. L'un sans l'autre, c'est un token incomplet — donc un token qu'on
+  // ira contourner :
+  //   - taille sans rôle  → le composant sort dans la police du navigateur
+  //                         (c'est le bug qui a motivé toute cette refonte) ;
+  //   - rôle sans taille  → sa taille n'est nulle part, chacun l'invente.
+  // Les conteneurs (card, modal) et les glyphes (checkbox, radio, switch) n'ont
+  // ni l'un ni l'autre : ils ne possèdent pas leur texte, ils COMPOSENT les rôles
+  // globaux. C'est légitime — d'où l'équivalence, et non l'obligation.
+  if (Boolean(out.fontSize) !== Boolean(out.typography)) {
+    const has = out.fontSize ? 'une taille mais aucun rôle typo' : 'un rôle typo mais aucune taille';
+    throw new Error(
+      `Composant « ${name} » : ${has}. Soit il porte les deux (ajouter \`fontSize\` à sa table ` +
+        `de dimensions, et une entrée dans TEXT), soit aucun des deux.`,
+    );
+  }
 
   // Types DTCG par groupe de tête.
   const TYPES = { color: 'color', shadow: 'shadow', size: 'dimension', space: 'dimension', radius: 'dimension', fontSize: 'dimension', borderWidth: 'dimension' };

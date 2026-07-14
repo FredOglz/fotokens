@@ -137,7 +137,18 @@ const FLAT_NAV = NAV.flatMap((g) => g.items);
  * titres (avec leur ancre) et à construire le sous-menu — même source, donc le
  * menu ne peut pas dériver du contenu.
  */
-const section = (id, label, html) => ({ id, label, html });
+/**
+ * Une section de doc. Si l'id est un composant, sa TABLE DE CONSOMMATION est
+ * ajoutée automatiquement — on ne peut pas documenter un composant en oubliant
+ * ses tokens. C'était le cas : `tokenTable()` n'était appelée que pour `button`
+ * et `input`, et les 15 autres composants n'exposaient aucun token.
+ * (`tokenTable` est défini plus bas — la fonction n'est appelée qu'au rendu.)
+ */
+const section = (id, label, html) => ({
+  id,
+  label,
+  html: COMP[id] ? `${html}${tokenTable(id)}` : html,
+});
 const renderSections = (secs) =>
   secs.map((s) => `<h2 id="${s.id}">${s.label}</h2>${s.html}`).join('\n');
 
@@ -434,7 +445,7 @@ const pagePrimitives = () => {
     <code>npm run ramps:write</code> — ne l'édite pas à la main, il serait écrasé.
   </div>
 
-  <h2>Les rampes de couleur</h2>
+  <h2 id="rampes">Les rampes de couleur</h2>
   <p>Chaque palette est définie par une <em>teinte</em> + un <em>pic de chroma</em>. Ses 11 crans
   sont calculés en <strong>OKLCH</strong> sur une <strong>courbe de luminosité commune à toutes
   les palettes</strong>.</p>
@@ -471,7 +482,7 @@ const pagePrimitives = () => {
   <p class="note">Un voile se compose sur le fond qui est dessous : il s'adapte tout seul au thème
   sombre. Les tokens alpha sont donc <strong>identiques en light et dark</strong>.</p>
 
-  <h2>Les échelles de taille</h2>
+  <h2 id="echelles">Les échelles de taille</h2>
   ${sizeGroups}`,
   });
 };
@@ -623,14 +634,24 @@ const pageSemantic = () => {
     )
     .join('');
 
+  // L'aperçu applique les 6 slots du rôle, et RIEN d'autre. Si le spécimen ne
+  // ressemble pas à ce qu'il doit être, c'est que le rôle est incomplet.
   const typoRows = Object.keys(typography)
+    .filter((k) => !k.startsWith('$'))
     .map((role) => {
-      const family = resolve(`typography.${role}.family`);
-      const weight = resolve(`typography.${role}.weight`);
-      const lh = resolve(`typography.${role}.lineHeight`);
-      return `<tr><td><code>typography.${role}</code></td>
-        <td style="font-family:${family};font-weight:${weight}">Le vif renard brun saute</td>
-        <td class="mono">${weight} / ${lh}</td></tr>`;
+      const v = (slot) => resolve(`typography.${role}.${slot}`);
+      const specimen = [
+        `font-family:${v('family')}`,
+        `font-size:${v('size')}`,
+        `font-weight:${v('weight')}`,
+        `line-height:${v('lineHeight')}`,
+        `letter-spacing:${v('letterSpacing')}`,
+        `text-transform:${v('textCase')}`,
+      ].join(';');
+      return `<tr>
+        <td><code>typography.${role}</code></td>
+        <td style="${specimen}">Le vif renard brun saute</td>
+        <td class="mono">${v('size')} · ${v('weight')} · ${v('lineHeight')} · ${v('letterSpacing')}</td></tr>`;
     })
     .join('');
 
@@ -639,7 +660,7 @@ const pageSemantic = () => {
     title: '3 · Sémantique (le reste)',
     lead: 'Au-delà du contrat de rôle : les fonds, le texte, les bordures, le focus, les tailles et la typo.',
     body: `
-  <h2>Couleur</h2>
+  <h2 id="couleur">Couleur</h2>
   <p><code>surface</code> est le <strong>seul</strong> groupe qui parle de fonds.</p>
   <div class="roles">${groups}</div>
 
@@ -655,7 +676,7 @@ const pageSemantic = () => {
     </div></div>
   </div>
 
-  <h2>Tailles — desktop vs mobile</h2>
+  <h2 id="tailles">Tailles — desktop vs mobile</h2>
   <p class="note">Seules les lignes <span class="tag">≠</span> sont réémises dans la media query du
   CSS généré. Les autres sont identiques : aucune ligne inutile.</p>
   <table class="tbl">
@@ -669,11 +690,22 @@ const pageSemantic = () => {
     vérité.
   </div>
 
-  <h2>Typographie</h2>
+  <h2 id="typographie">Typographie</h2>
+  <p>Chaque rôle porte <strong>6 slots</strong> — famille, taille, graisse, interligne, crénage, casse —
+    et se suffit donc à lui-même : <code>font: var(--typography-h1-*)</code> et rien d'autre. La
+    <strong>taille</strong> est une référence à <code>fontSize.*</code> (ci-dessus), pas une valeur :
+    le rôle hérite de la bascule mobile sans la connaître.</p>
   <table class="tbl">
-    <thead><tr><th>Rôle</th><th>Aperçu</th><th>Graisse / interligne</th></tr></thead>
+    <thead><tr><th>Rôle</th><th>Aperçu</th><th>Taille · graisse · interligne · crénage</th></tr></thead>
     <tbody>${typoRows}</tbody>
-  </table>`,
+  </table>
+  <div class="callout">
+    <strong>La police est dans le brand, pas dans la primitive.</strong> Un rôle pointe sur
+    <code>font.brand.sans|serif|mono</code>, qui désigne une pile du catalogue
+    <code>font.stack.*</code>. Changer la police de tout le système, c'est donc une ligne —
+    <code>BRAND_FONT</code> dans <code>scripts/generate-theme.js</code> — exactement comme changer
+    la couleur d'un rôle.
+  </div>`,
   });
 };
 
@@ -763,7 +795,7 @@ const pageEffects = () => {
   (noir), en sombre on éclaircit (blanc). Bascule le thème pour le voir.</p>
   <div class="roles"><div class="role-group"><div class="role-list">${stateSwatches}</div></div></div>
 
-  <h2>Ombres</h2>
+  <h2 id="ombres">Ombres</h2>
   <div class="demo">${shadowDemo}</div>
   <table class="tbl"><tbody>${shadowDocs}</tbody></table>
   <div class="callout">
@@ -778,7 +810,7 @@ const pageEffects = () => {
   <code>spread</code> vaut <code>0</code> aussi, il intervertit les deux positions. Un spread non
   nul se serait retrouvé dans l'offset horizontal.</p>
 
-  <h2>Mouvement</h2>
+  <h2 id="mouvement">Mouvement</h2>
   <table class="tbl">
     <thead><tr><th>Token</th><th>Valeur</th><th>Aperçu</th><th>Usage</th></tr></thead>
     <tbody>${durations}</tbody>
@@ -789,7 +821,7 @@ const pageEffects = () => {
     <tbody>${easings}</tbody>
   </table>
 
-  <h2>Opacité</h2>
+  <h2 id="opacite">Opacité</h2>
   <table class="tbl">
     <tbody>
       <tr><td><code>opacity.disabled</code></td><td class="mono">${resolve('opacity.disabled')}</td>
@@ -814,22 +846,103 @@ const isRoleAware = (name) => {
   return c[v] && ROLES.every((r) => r in c[v]);
 };
 
-/** Toutes les var() CSS d'un composant, groupées par famille de type. */
+/* ---------- « ça se trouve où ? » : router un token vers sa page ---------- *
+ *
+ * Un token de composant ne dit rien tout seul — `--typography-button-family` ne
+ * devient intéressant que quand on voit qu'il pointe sur `typography.label`, qui
+ * est documenté ailleurs. La doc doit donc faire le lien, littéralement.
+ * L'ordre compte : les motifs les plus spécifiques d'abord.
+ */
+const TOKEN_PAGES = [
+  [/^color\.role\./,                                    'roles.html',                'Contrat de rôle'],
+  [/^color\.brand\.|^font\.brand\./,                    'brand.html',                'Brand'],
+  [/^color\.(surface|text|border|state|categorical)\.|^(focus|scrim)\b/, 'semantique.html#couleur',     'Sémantique · couleur'],
+  [/^typography\./,                                     'semantique.html#typographie', 'Sémantique · typo'],
+  [/^(fontSize|space|radius|borderWidth|controlHeight|glyphSize)\./, 'semantique.html#tailles',  'Sémantique · tailles'],
+  [/^shadow\./,                                         'effets.html#ombres',        'Effets · ombres'],
+  [/^(duration|easing)\./,                              'effets.html#mouvement',     'Effets · mouvement'],
+  [/^opacity\./,                                        'effets.html#opacite',       'Effets · opacité'],
+  [/^size\./,                                           'primitives.html#echelles',  'Primitives'],
+  [/^(color|font)\./,                                   'primitives.html#rampes',    'Primitives'],
+];
+
+const pageFor = (path) => TOKEN_PAGES.find(([re]) => re.test(path))?.slice(1) ?? [null, null];
+
+/** Le GROUPE d'une référence — ce qui est utile à lire, pas le chemin entier.
+ *  `typography.label.family` → `typography.label` (le rôle compte)
+ *  `color.role.primary.main` → `color.role`       (le rôle est un paramètre) */
+const refGroup = (ref) => {
+  const s = ref.split('.');
+  return (s[0] === 'color' || s[0] === 'typography') && s.length > 2 ? `${s[0]}.${s[1]}` : s[0];
+};
+
+const refLink = (ref, label = ref) => {
+  const [href, page] = pageFor(ref);
+  return href
+    ? `<a href="${href}" title="Défini dans « ${page} »"><code>${esc(label)}</code></a>`
+    : `<code>${esc(label)}</code>`;
+};
+
+/**
+ * La table de consommation d'un composant : TOUS ses tokens, et pour chacun le
+ * token SÉMANTIQUE qu'il consomme — avec le lien vers la page qui le définit.
+ *
+ * Rien n'est tronqué ni replié. Un token de composant ne veut rien dire seul :
+ * `--typography-button-family` ne devient lisible qu'une fois qu'on voit qu'il
+ * consomme `--typography-label-family`, et qu'on peut aller lire ce rôle.
+ * Masquer la colonne de droite, c'était masquer la seule chose intéressante.
+ *
+ * Les grosses familles (la couleur d'un bouton : 216 tokens) défilent dans leur
+ * propre cadre — tout est là, la page reste navigable.
+ */
 function tokenTable(name) {
-  const rows = [];
-  for (const [group, node] of Object.entries(COMP[name])) {
-    for (const [path] of flatten({ [group]: node })) rows.push(path);
-  }
   const byGroup = {};
-  for (const p of rows) (byGroup[p.split('.')[0]] ??= []).push(p);
-  const body = Object.entries(byGroup)
-    .map(
-      ([g, paths]) =>
-        `<tr><td><code>${g}</code></td><td class="mono">${paths.length}</td>
-         <td class="mono tiny">${esc(cssVar(paths[0]))}${paths.length > 1 ? ` … <span class="note">(+${paths.length - 1})</span>` : ''}</td></tr>`,
-    )
+  for (const [group, node] of Object.entries(COMP[name])) {
+    for (const [path, value] of flatten({ [group]: node })) (byGroup[group] ??= []).push([path, value]);
+  }
+
+  const refOf = (value) => /^\{(.+)\}$/.exec(String(value))?.[1] ?? null;
+  const total = Object.values(byGroup).reduce((n, e) => n + e.length, 0);
+
+  const blocks = Object.entries(byGroup)
+    .map(([group, entries]) => {
+      // Vers quelle(s) couche(s) cette famille pointe-t-elle ?
+      const targets = [...new Set(entries.map(([, v]) => refOf(v)).filter(Boolean).map(refGroup))];
+
+      const rows = entries
+        .map(([path, value]) => {
+          const ref = refOf(value);
+          const [href, page] = ref ? pageFor(ref) : [null, null];
+          // La colonne du milieu montre la VARIABLE sémantique — celle qu'on lit
+          // dans le CSS — et pointe sur la page qui la documente.
+          const semantic = ref
+            ? href
+              ? `<a href="${href}" title="${esc(ref)} — défini dans « ${page} »"><code>${esc(cssVar(ref))}</code></a>`
+              : `<code>${esc(cssVar(ref))}</code>`
+            : `<span class="note">valeur directe</span>`;
+          return `<tr>
+            <td class="mono tiny">${esc(cssVar(path))}</td>
+            <td class="tiny">${semantic}</td>
+            <td class="mono tiny note">${esc(String(resolve(path) ?? '—'))}</td></tr>`;
+        })
+        .join('');
+
+      return `<div class="tok">
+        <div class="tok-head">
+          <code>${group}</code>
+          <span class="note">${entries.length} token${entries.length > 1 ? 's' : ''}</span>
+          <span class="tok-to">consomme ${targets.map((t) => refLink(t)).join(' ')}</span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody>${rows}</tbody></table></div>
+      </div>`;
+    })
     .join('');
-  return `<table class="tbl"><thead><tr><th>Famille</th><th>Tokens</th><th>Exemple de variable</th></tr></thead><tbody>${body}</tbody></table>`;
+
+  return `<p class="note">Les <strong>${total} tokens</strong> de <code>${name}</code>, et le token
+    sémantique que chacun consomme. <strong>Aucun ne nomme jamais une palette ni une police</strong> —
+    suivre un lien mène à la page où ce rôle est défini.</p>${blocks}`;
 }
 
 const btnStyle = (name, variant, role, state, size = 'md') => `
@@ -840,8 +953,10 @@ const btnStyle = (name, variant, role, state, size = 'md') => `
   padding: 0 var(${cssVar(`space.${name}.${size}.paddingX`)});
   height: var(${cssVar(`size.${name}.${size}.height`)});
   font-size: var(${cssVar(`font-size.${name}.${size}`)});
-  font-family: var(--typography-body-family);
-  font-weight: var(--typography-heading-weight);`;
+  font-family: var(${cssVar(`typography.${name}.family`)});
+  font-weight: var(${cssVar(`typography.${name}.weight`)});
+  line-height: var(${cssVar(`typography.${name}.lineHeight`)});
+  letter-spacing: var(${cssVar(`typography.${name}.letterSpacing`)});`;
 
 /** Grille rôles × états pour un composant role-aware. */
 function roleGrid(name, variant, states, render) {
@@ -881,7 +996,8 @@ const pageForm = () => {
     padding: 0 var(${cssVar(`space.${comp}.${sz}.paddingX`)});
     height: var(${cssVar(`size.${comp}.${sz}.height`)});
     font-size: var(${cssVar(`font-size.${comp}.${sz}`)});
-    font-family: var(--typography-body-family);`;
+    font-family: var(${cssVar(`typography.${comp}.family`)});
+    line-height: var(${cssVar(`typography.${comp}.lineHeight`)});`;
 
   const inputs = Object.keys(COMP.input.color.input)
     .filter((k) => !k.startsWith('$'))
@@ -903,7 +1019,8 @@ const pageForm = () => {
           border-radius: var(--radius-textarea);
           padding: var(--space-textarea-padding-y) var(--space-textarea-padding-x);
           font-size: var(--font-size-textarea);
-          font-family: var(--typography-body-family);">Saisie multiligne</div>
+          font-family: var(--typography-textarea-family);
+          line-height: var(--typography-textarea-line-height);">Saisie multiligne</div>
         <span class="demo-label">${st}</span></div>`,
     )
     .join('');
@@ -952,9 +1069,8 @@ const pageForm = () => {
         augmente au lieu de diminuer : une cible tactile doit faire au moins 44px (WCAG 2.5.5). Un
         bouton <code>md</code> passe de <strong>40px</strong> en desktop à <strong>52px</strong> sous
         <code>${sizes.breakpoint.md.$value}</code>.
-      </div>
-      ${tokenTable('button')}`),
-    section('input', 'Input', `<div class="demo">${inputs}</div>${tokenTable('input')}`),
+      </div>`),
+    section('input', 'Input', `<div class="demo">${inputs}</div>`),
     section('textarea', 'Textarea', `<div class="demo">${textareas}</div>`),
     section('select', 'Select', `<div class="demo">${selects}</div>`),
     section('checkbox', 'Checkbox', boxes('checkbox')),
@@ -1189,8 +1305,11 @@ body {
   color: var(--color-text-body); text-decoration: none; font-size: var(--font-size-small);
 }
 .nav-group h5 {
-  margin: 0 0 var(--space-sm); font-size: 0.6875rem; text-transform: uppercase;
-  letter-spacing: .08em; color: var(--color-text-muted); font-weight: 600;
+  margin: 0 0 var(--space-sm); color: var(--color-text-muted);
+  font-family: var(--typography-overline-family); font-size: var(--typography-overline-size);
+  font-weight: var(--typography-overline-weight); line-height: var(--typography-overline-line-height);
+  letter-spacing: var(--typography-overline-letter-spacing);
+  text-transform: var(--typography-overline-text-case);
 }
 .nav-group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .nav-group a {
@@ -1233,9 +1352,20 @@ body {
 /* --- Contenu --- */
 .main { margin-left: 260px; }
 .page { max-width: 900px; padding: var(--space-xl); }
-h1, h2, h3, h4 {
-  font-family: var(--typography-heading-family); font-weight: var(--typography-heading-weight);
-  line-height: var(--typography-heading-line-height);
+/* La doc se sert de ses propres rôles : chaque niveau de titre prend le sien,
+   crénage compris. C'est le seul test honnête d'un rôle — s'il ne suffit pas à
+   styler l'élément, c'est qu'il est incomplet. */
+h1 {
+  font-family: var(--typography-h1-family); font-weight: var(--typography-h1-weight);
+  line-height: var(--typography-h1-line-height); letter-spacing: var(--typography-h1-letter-spacing);
+}
+h2 {
+  font-family: var(--typography-h2-family); font-weight: var(--typography-h2-weight);
+  line-height: var(--typography-h2-line-height); letter-spacing: var(--typography-h2-letter-spacing);
+}
+h3, h4 {
+  font-family: var(--typography-h3-family); font-weight: var(--typography-h3-weight);
+  line-height: var(--typography-h3-line-height); letter-spacing: var(--typography-h3-letter-spacing);
 }
 h1 { font-size: var(--font-size-h1); margin: 0 0 var(--space-sm); }
 h2 {
@@ -1324,7 +1454,13 @@ pre .c { color: var(--color-text-muted); }
 .cat span { font-size: .6875rem; font-family: var(--typography-code-family); color: var(--color-text-muted); }
 
 .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-lg); }
-.role-group h4 { color: var(--color-text-muted); text-transform: uppercase; font-size: .6875rem; letter-spacing: .06em; }
+.role-group h4 {
+  color: var(--color-text-muted);
+  font-family: var(--typography-overline-family); font-size: var(--typography-overline-size);
+  font-weight: var(--typography-overline-weight); line-height: var(--typography-overline-line-height);
+  letter-spacing: var(--typography-overline-letter-spacing);
+  text-transform: var(--typography-overline-text-case);
+}
 .role-list { display: grid; gap: var(--space-sm); }
 .role { display: grid; grid-template-columns: 28px 1fr; column-gap: var(--space-sm); align-items: start; }
 .role-chip { grid-row: 1 / 3; width: 28px; height: 28px; border-radius: var(--radius-sm); border: var(--border-width-default) solid var(--color-border-default); }
@@ -1335,6 +1471,17 @@ pre .c { color: var(--color-text-muted); }
 .tbl th { text-align: left; padding: var(--space-xs) var(--space-sm); border-bottom: var(--border-width-strong) solid var(--color-border-default); color: var(--color-text-muted); font-weight: 600; font-size: .6875rem; font-family: var(--typography-code-family); }
 .tbl td { padding: var(--space-xs) var(--space-sm); border-bottom: var(--border-width-default) solid var(--color-border-divider); vertical-align: top; }
 .tbl tr.changed { background: var(--color-role-primary-tint); }
+
+/* Table de consommation d'un composant : tout est visible, rien n'est replié.
+   Les grosses familles défilent dans leur cadre plutôt que d'inonder la page. */
+.tok { border: var(--border-width-default) solid var(--color-border-divider); border-radius: var(--radius-sm); margin-bottom: var(--space-sm); }
+.tok-head { display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; padding: var(--space-xs) var(--space-sm); background: var(--color-surface-raised); border-bottom: var(--border-width-default) solid var(--color-border-divider); border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+.tok-to { margin-left: auto; font-size: .6875rem; color: var(--color-text-muted); }
+.tok-body { max-height: 360px; overflow: auto; }
+.tok-body .tbl { margin: 0; }
+.tok-body thead th { position: sticky; top: 0; background: var(--color-surface-base); z-index: 1; }
+.tok-body .tbl td { border-bottom: none; padding-top: 2px; padding-bottom: 2px; }
+.tok-body tr:hover { background: var(--color-role-primary-tint); }
 .tbl .rh { color: var(--color-text-body); font-size: var(--font-size-small); white-space: nowrap; border-bottom: var(--border-width-default) solid var(--color-border-divider); }
 .tag { display: inline-block; background: var(--color-role-primary-main); color: var(--color-role-primary-on); border-radius: var(--radius-sm); padding: 0 .35em; font-size: .6875rem; }
 .contract td { padding: 3px; }
@@ -1369,7 +1516,13 @@ pre .c { color: var(--color-text-muted); }
 .chain-step { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); background: var(--color-surface-raised); border-left: 4px solid var(--color-border-strong); }
 .chain-step code { background: none; padding: 0; }
 .chain-step + .chain-step { margin-left: var(--space-lg); }
-.chain-layer { font-size: .625rem; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-muted); min-width: 72px; }
+.chain-layer {
+  min-width: 72px; color: var(--color-text-muted);
+  font-family: var(--typography-overline-family); font-size: var(--typography-overline-size);
+  font-weight: var(--typography-overline-weight);
+  letter-spacing: var(--typography-overline-letter-spacing);
+  text-transform: var(--typography-overline-text-case);
+}
 .chain-component { border-left-color: var(--color-role-primary-main); }
 .chain-semantic  { border-left-color: var(--color-role-info-main); }
 .chain-brand     { border-left-color: var(--color-role-warning-main); }

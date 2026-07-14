@@ -30,6 +30,24 @@ const BRAND = {
   info: 'blue',
 };
 
+/**
+ * Quelle PILE DE POLICES joue quel rôle. Exactement le même geste que `BRAND`
+ * ci-dessus : la couche brand ne fait que DÉSIGNER, elle n'invente aucune valeur.
+ *
+ * C'est ce qui rend la typo rebrandable en une ligne, comme la couleur. Avant,
+ * « Inter » était écrit en dur dans les primitives : changer de police obligeait
+ * à toucher la couche primitive, c'est-à-dire à réécrire le catalogue au lieu de
+ * choisir dedans. Les rôles typo (`typography.*`) pointent tous ici, jamais sur
+ * `font.stack.*` — c'est la règle de layering qui rend le rebranding possible.
+ *
+ * Les valeurs sont des clés de `font.stack` (voir primitives/typography.json).
+ */
+const BRAND_FONT = {
+  sans:  'inter',
+  serif: 'georgia',
+  mono:  'jetbrainsMono',
+};
+
 /** Couleurs catégorielles (graphiques, avatars, tags) : des teintes distinguables. */
 const CATEGORICAL = ['violet', 'blue', 'green', 'orange', 'red', 'turquoise'];
 
@@ -130,45 +148,6 @@ const SHADOWS = {
 };
 
 /* ------------------------------------------------------------------ *
- * 4. COMPOSANTS — la variante décide QUELS slots du rôle elle consomme.
- *
- * C'est la seule connaissance propre au composant : « au survol, un bouton
- * outlined prend le voile `tint`, pas le fond `subtle` ». Le rôle, lui, reste
- * un paramètre — d'où la génération pour les 6 rôles.
- *
- * Valeur = un slot du rôle courant, ou `{...}` = référence absolue.
- * ------------------------------------------------------------------ */
-
-const BUTTON_VARIANTS = {
-  filled: {
-    default:  { background: 'main',       text: 'on',   border: 'main' },
-    hover:    { background: 'hover',      text: 'on',   border: 'hover' },
-    active:   { background: 'active',     text: 'on',   border: 'active' },
-    disabled: { background: '{color.surface.disabled}', text: '{color.text.disabled}', border: '{color.border.disabled}' },
-  },
-  outlined: {
-    default:  { background: '{color.surface.transparent}', text: 'text', border: 'border' },
-    hover:    { background: 'tint',       text: 'text', border: 'main' },
-    active:   { background: 'tintStrong', text: 'text', border: 'main' },
-    disabled: { background: '{color.surface.transparent}', text: '{color.text.disabled}', border: '{color.border.disabled}' },
-  },
-  ghost: {
-    default:  { background: '{color.surface.transparent}', text: 'text', border: '{color.border.transparent}' },
-    hover:    { background: 'tint',       text: 'text', border: '{color.border.transparent}' },
-    active:   { background: 'tintStrong', text: 'text', border: '{color.border.transparent}' },
-    disabled: { background: '{color.surface.transparent}', text: '{color.text.disabled}', border: '{color.border.transparent}' },
-  },
-};
-
-const INPUT_STATES = {
-  default:  { background: '{color.surface.base}',     text: '{color.text.body}',     border: '{color.border.default}' },
-  hover:    { background: '{color.surface.base}',     text: '{color.text.body}',     border: '{color.border.strong}' },
-  focus:    { background: '{color.surface.base}',     text: '{color.text.body}',     border: '{color.role.primary.main}' },
-  disabled: { background: '{color.surface.disabled}', text: '{color.text.disabled}', border: '{color.border.disabled}' },
-  error:    { background: '{color.surface.base}',     text: '{color.text.body}',     border: '{color.role.danger.main}' },
-};
-
-/* ------------------------------------------------------------------ *
  * Résolution des raccourcis de mapping.
  * ------------------------------------------------------------------ */
 
@@ -206,7 +185,15 @@ function buildBrand() {
       tint: token(`{color.${palette}.alpha.10}`),
     };
   });
-  return { color: { $type: 'color', brand } };
+
+  // Les familles : même structure que la couleur — `font.brand.*` fait écho à
+  // `color.brand.*`. Un projet qui se rebrande touche ces deux blocs, et rien d'autre.
+  const font = { $type: 'fontFamily' };
+  for (const [slot, stack] of Object.entries(BRAND_FONT)) {
+    font[slot] = token(`{font.stack.${stack}}`, `Famille « ${slot} » — jouée par la pile « ${stack} ».`);
+  }
+
+  return { color: { $type: 'color', brand }, font: { brand: font } };
 }
 
 function buildTheme(mode) {
@@ -256,74 +243,6 @@ function buildTheme(mode) {
   }
 
   return { color: { $type: 'color', ...out }, shadow };
-}
-
-function buildButton() {
-  const button = {};
-  for (const [variant, states] of Object.entries(BUTTON_VARIANTS)) {
-    button[variant] = {};
-    for (const roleName of Object.keys(BRAND)) {
-      button[variant][roleName] = {};
-      for (const [state, props] of Object.entries(states)) {
-        button[variant][roleName][state] = {};
-        for (const [prop, spec] of Object.entries(props)) {
-          const value = spec.startsWith('{') ? spec : `{color.role.${roleName}.${spec}}`;
-          button[variant][roleName][state][prop] = token(value);
-        }
-      }
-    }
-  }
-
-  return {
-    color: { $type: 'color', button },
-    space: {
-      $type: 'dimension',
-      button: {
-        paddingX: token('{space.md}'),
-        paddingY: token('{space.sm}'),
-        gap: token('{space.xs}'),
-      },
-    },
-    radius: { $type: 'dimension', button: token('{radius.md}') },
-    borderWidth: { $type: 'dimension', button: token('{borderWidth.default}') },
-    fontSize: { $type: 'dimension', button: token('{fontSize.body}') },
-    typography: {
-      button: {
-        family: { $type: 'fontFamily', $value: '{typography.body.family}' },
-        weight: { $type: 'fontWeight', $value: '{typography.heading.weight}' },
-        lineHeight: { $type: 'number', $value: '{typography.body.lineHeight}' },
-      },
-    },
-  };
-}
-
-function buildInput() {
-  const input = {};
-  for (const [state, props] of Object.entries(INPUT_STATES)) {
-    input[state] = {};
-    for (const [prop, spec] of Object.entries(props)) input[state][prop] = token(spec);
-  }
-
-  return {
-    color: { $type: 'color', input },
-    space: {
-      $type: 'dimension',
-      input: { paddingX: token('{space.sm}'), paddingY: token('{space.sm}') },
-    },
-    radius: { $type: 'dimension', input: token('{radius.sm}') },
-    borderWidth: {
-      $type: 'dimension',
-      input: { default: token('{borderWidth.default}'), focus: token('{borderWidth.focus}') },
-    },
-    fontSize: { $type: 'dimension', input: token('{fontSize.body}') },
-    typography: {
-      input: {
-        family: { $type: 'fontFamily', $value: '{typography.body.family}' },
-        weight: { $type: 'fontWeight', $value: '{typography.body.weight}' },
-        lineHeight: { $type: 'number', $value: '{typography.body.lineHeight}' },
-      },
-    },
-  };
 }
 
 const write = (path, data) => {

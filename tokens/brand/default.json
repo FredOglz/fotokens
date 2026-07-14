@@ -318,5 +318,22 @@
         "$description": "Teintes distinguables pour graphiques, avatars et tags."
       }
     }
+  },
+  "font": {
+    "brand": {
+      "$type": "fontFamily",
+      "sans": {
+        "$value": "{font.stack.inter}",
+        "$description": "Famille « sans » — jouée par la pile « inter »."
+      },
+      "serif": {
+        "$value": "{font.stack.georgia}",
+        "$description": "Famille « serif » — jouée par la pile « georgia »."
+      },
+      "mono": {
+        "$value": "{font.stack.jetbrainsMono}",
+        "$description": "Famille « mono » — jouée par la pile « jetbrainsMono »."
+      }
+    }
   }
 }

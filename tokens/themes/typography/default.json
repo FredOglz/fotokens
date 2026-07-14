@@ -1,19 +1,264 @@
 {
   "typography": {
-    "body": {
-      "family":     { "$type": "fontFamily", "$value": "{font.family.sans}", "$description": "Police du texte de lecture." },
-      "weight":     { "$type": "fontWeight", "$value": "{font.weight.regular}" },
-      "lineHeight": { "$type": "number",     "$value": "{font.lineHeight.normal}" }
+    "h1": {
+      "$description": "Titre de page. Un seul par écran.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.sans}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.h1}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.bold}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.tight}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.tight}"
+      },
+      "textCase": {
+        "$value": "none"
+      }
     },
-    "heading": {
-      "family":     { "$type": "fontFamily", "$value": "{font.family.sans}", "$description": "Police des titres." },
-      "weight":     { "$type": "fontWeight", "$value": "{font.weight.bold}" },
-      "lineHeight": { "$type": "number",     "$value": "{font.lineHeight.tight}" }
+    "h2": {
+      "$description": "Titre de section.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.sans}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.h2}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.bold}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.tight}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.tight}"
+      },
+      "textCase": {
+        "$value": "none"
+      }
+    },
+    "h3": {
+      "$description": "Sous-titre, titre de carte.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.sans}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.h3}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.semibold}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.tight}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.snug}"
+      },
+      "textCase": {
+        "$value": "none"
+      }
+    },
+    "lead": {
+      "$description": "Chapô — le paragraphe d’introduction qui suit un titre.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.sans}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.lead}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.regular}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.normal}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.normal}"
+      },
+      "textCase": {
+        "$value": "none"
+      }
+    },
+    "body": {
+      "$description": "Texte de lecture. Le rôle par défaut.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.sans}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.body}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.regular}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.normal}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.normal}"
+      },
+      "textCase": {
+        "$value": "none"
+      }
+    },
+    "small": {
+      "$description": "Texte secondaire : mentions, aide contextuelle, cellules de tableau.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.sans}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.small}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.regular}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.normal}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.normal}"
+      },
+      "textCase": {
+        "$value": "none"
+      }
+    },
+    "label": {
+      "$description": "Texte d’interface : bouton, onglet, étiquette de champ. Interligne serré (jamais plus d’une ligne) et graisse medium, pour tenir sans crier.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.sans}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.small}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.medium}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.tight}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.normal}"
+      },
+      "textCase": {
+        "$value": "none"
+      }
+    },
+    "caption": {
+      "$description": "Légende sous une image, note de bas de tableau. Au plancher de 12px, donc légèrement aéré pour rester lisible.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.sans}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.caption}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.regular}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.normal}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.wide}"
+      },
+      "textCase": {
+        "$value": "none"
+      }
+    },
+    "overline": {
+      "$description": "Surtitre en capitales, au-dessus d’un titre. Capitalisé PAR LE TOKEN — le rôle se suffit à lui-même.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.sans}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.caption}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.semibold}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.normal}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.caps}"
+      },
+      "textCase": {
+        "$value": "uppercase"
+      }
     },
     "code": {
-      "family":     { "$type": "fontFamily", "$value": "{font.family.mono}", "$description": "Police du code et des valeurs techniques." },
-      "weight":     { "$type": "fontWeight", "$value": "{font.weight.regular}" },
-      "lineHeight": { "$type": "number",     "$value": "{font.lineHeight.normal}" }
+      "$description": "Code et valeurs techniques. Le seul rôle en chasse fixe.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.brand.mono}"
+      },
+      "size": {
+        "$type": "dimension",
+        "$value": "{fontSize.small}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{font.weight.regular}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{font.lineHeight.normal}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{font.letterSpacing.normal}"
+      },
+      "textCase": {
+        "$value": "none"
+      }
     }
   }
 }

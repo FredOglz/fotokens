@@ -1,10 +1,14 @@
 {
   "font": {
-    "family": {
+    "stack": {
       "$type": "fontFamily",
-      "sans":  { "$value": "Inter, system-ui, -apple-system, sans-serif" },
-      "serif": { "$value": "Georgia, 'Times New Roman', serif" },
-      "mono":  { "$value": "'JetBrains Mono', ui-monospace, 'SF Mono', monospace" }
+      "$description": "Catalogue de piles de polices. AUCUNE n'est choisie ici : c'est la couche brand (`font.brand.*`) qui désigne celle qui joue le rôle sans / serif / mono. Ajouter une pile ici ne change rien tant que le brand ne la sélectionne pas.",
+      "inter":         { "$value": "Inter, system-ui, -apple-system, sans-serif" },
+      "geist":         { "$value": "Geist, system-ui, -apple-system, sans-serif" },
+      "systemSans":    { "$value": "system-ui, -apple-system, 'Segoe UI', sans-serif" },
+      "georgia":       { "$value": "Georgia, 'Times New Roman', serif" },
+      "jetbrainsMono": { "$value": "'JetBrains Mono', ui-monospace, 'SF Mono', monospace" },
+      "systemMono":    { "$value": "ui-monospace, 'SF Mono', Menlo, monospace" }
     },
     "weight": {
       "$type": "fontWeight",
@@ -15,9 +19,19 @@
     },
     "lineHeight": {
       "$type": "number",
+      "$description": "Sans unité : l'interligne se multiplie par le corps du texte, il suit donc la bascule mobile tout seul.",
       "tight":   { "$value": "1.2" },
       "normal":  { "$value": "1.5" },
       "relaxed": { "$value": "1.75" }
+    },
+    "letterSpacing": {
+      "$type": "dimension",
+      "$description": "En `em`, jamais en px : l'approche doit être PROPORTIONNELLE au corps, sinon un titre passé de 48px à 32px en mobile garderait un crénage calculé pour 48px. Le principe est optique — plus le texte est gros, plus on resserre ; plus il est petit ou capitalisé, plus on aère.",
+      "tight":  { "$value": "-0.02em", "$description": "Grands titres (h1, h2) : à 32px et plus, l'espacement par défaut paraît lâche." },
+      "snug":   { "$value": "-0.01em", "$description": "Titres intermédiaires." },
+      "normal": { "$value": "0",       "$description": "Texte de lecture : on ne touche pas au crénage dessiné par le fontier." },
+      "wide":   { "$value": "0.02em",  "$description": "Petit texte à aérer légèrement." },
+      "caps":   { "$value": "0.08em",  "$description": "Texte en capitales (overline) : les capitales ont besoin d'air pour rester lisibles." }
     }
   }
 }

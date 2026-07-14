@@ -14,6 +14,7 @@
     "build": "node config/build.js && node scripts/build-docs.js",
     "theme": "node scripts/generate-theme.js && npm run build",
     "components": "node scripts/generate-components.js && npm run build",
+    "typography": "node scripts/generate-typography.js && npm run build",
     "ramps": "node scripts/generate-ramps.js",
     "ramps:write": "node scripts/generate-ramps.js --write",
     "docs": "node scripts/build-docs.js",

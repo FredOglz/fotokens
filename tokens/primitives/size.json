@@ -17,15 +17,16 @@
       "11": { "$value": "64px" }
     },
     "font": {
-      "$description": "Échelle de corps de texte brute.",
+      "$description": "Échelle de corps de texte brute. Pas de ratio strict : un ratio typographique (1.25) produit des 25.6px, illisibles sur une grille de 4px. L'échelle est donc composée de valeurs rondes, resserrées en bas (12→14→16→18→20, là où l'œil distingue 2px) et de plus en plus écartées en haut (32→40→48, là où il faut un saut franc pour lire une hiérarchie). 12px est le PLANCHER : rien en dessous.",
       "xs":  { "$value": "12px" },
       "sm":  { "$value": "14px" },
       "md":  { "$value": "16px" },
-      "lg":  { "$value": "20px" },
-      "xl":  { "$value": "24px" },
-      "2xl": { "$value": "32px" },
-      "3xl": { "$value": "40px" },
-      "4xl": { "$value": "48px" }
+      "lg":  { "$value": "18px" },
+      "xl":  { "$value": "20px" },
+      "2xl": { "$value": "24px" },
+      "3xl": { "$value": "32px" },
+      "4xl": { "$value": "40px" },
+      "5xl": { "$value": "48px" }
     },
     "radius": {
       "$description": "Échelle d'arrondi brute.",

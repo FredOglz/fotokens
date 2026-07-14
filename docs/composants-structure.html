@@ -88,7 +88,120 @@
         border-bottom: var(--border-width-tabs) solid var(--color-tabs-disabled-indicator);
         padding: var(--space-tabs-padding-y) var(--space-tabs-padding-x);
         font-size: var(--font-size-tabs);
-      ">disabled</div></div>
+      ">disabled</div></div><p class="note">Les <strong>22 tokens</strong> de <code>tabs</code>, et le token
+    sémantique que chacun consomme. <strong>Aucun ne nomme jamais une palette ni une police</strong> —
+    suivre un lien mène à la page où ce rôle est défini.</p><div class="tok">
+        <div class="tok-head">
+          <code>color</code>
+          <span class="note">12 tokens</span>
+          <span class="tok-to">consomme <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.surface</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.text</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.border</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.state</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.role</code></a></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--color-tabs-default-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-tabs-default-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.muted — défini dans « Sémantique · couleur »"><code>--color-text-muted</code></a></td>
+            <td class="mono tiny note">#4c7299</td></tr><tr>
+            <td class="mono tiny">--color-tabs-default-indicator</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.transparent — défini dans « Sémantique · couleur »"><code>--color-border-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-tabs-hover-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.state.hover — défini dans « Sémantique · couleur »"><code>--color-state-hover</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0.04)</td></tr><tr>
+            <td class="mono tiny">--color-tabs-hover-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.body — défini dans « Sémantique · couleur »"><code>--color-text-body</code></a></td>
+            <td class="mono tiny note">#213c58</td></tr><tr>
+            <td class="mono tiny">--color-tabs-hover-indicator</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.transparent — défini dans « Sémantique · couleur »"><code>--color-border-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-tabs-selected-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-tabs-selected-text</td>
+            <td class="tiny"><a href="roles.html" title="color.role.primary.text — défini dans « Contrat de rôle »"><code>--color-role-primary-text</code></a></td>
+            <td class="mono tiny note">#7400bb</td></tr><tr>
+            <td class="mono tiny">--color-tabs-selected-indicator</td>
+            <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
+            <td class="mono tiny note">#9500ee</td></tr><tr>
+            <td class="mono tiny">--color-tabs-disabled-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-tabs-disabled-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
+            <td class="mono tiny note">#9fbede</td></tr><tr>
+            <td class="mono tiny">--color-tabs-disabled-indicator</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.transparent — défini dans « Sémantique · couleur »"><code>--color-border-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>space</code>
+          <span class="note">3 tokens</span>
+          <span class="tok-to">consomme <code>space</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--space-tabs-padding-x</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.md — défini dans « Sémantique · tailles »"><code>--space-md</code></a></td>
+            <td class="mono tiny note">16px</td></tr><tr>
+            <td class="mono tiny">--space-tabs-padding-y</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.sm — défini dans « Sémantique · tailles »"><code>--space-sm</code></a></td>
+            <td class="mono tiny note">8px</td></tr><tr>
+            <td class="mono tiny">--space-tabs-gap</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.xs — défini dans « Sémantique · tailles »"><code>--space-xs</code></a></td>
+            <td class="mono tiny note">4px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>fontSize</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>fontSize</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--font-size-tabs</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="fontSize.body — défini dans « Sémantique · tailles »"><code>--font-size-body</code></a></td>
+            <td class="mono tiny note">16px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>borderWidth</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>borderWidth</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--border-width-tabs</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="borderWidth.strong — défini dans « Sémantique · tailles »"><code>--border-width-strong</code></a></td>
+            <td class="mono tiny note">2px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>typography</code>
+          <span class="note">5 tokens</span>
+          <span class="tok-to">consomme <a href="semantique.html#typographie" title="Défini dans « Sémantique · typo »"><code>typography.label</code></a></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--typography-tabs-family</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.label.family — défini dans « Sémantique · typo »"><code>--typography-label-family</code></a></td>
+            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny">--typography-tabs-weight</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.label.weight — défini dans « Sémantique · typo »"><code>--typography-label-weight</code></a></td>
+            <td class="mono tiny note">500</td></tr><tr>
+            <td class="mono tiny">--typography-tabs-line-height</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.label.lineHeight — défini dans « Sémantique · typo »"><code>--typography-label-line-height</code></a></td>
+            <td class="mono tiny note">1.2</td></tr><tr>
+            <td class="mono tiny">--typography-tabs-letter-spacing</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.label.letterSpacing — défini dans « Sémantique · typo »"><code>--typography-label-letter-spacing</code></a></td>
+            <td class="mono tiny note">0</td></tr><tr>
+            <td class="mono tiny">--typography-tabs-text-case</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.label.textCase — défini dans « Sémantique · typo »"><code>--typography-label-text-case</code></a></td>
+            <td class="mono tiny note">none</td></tr></tbody></table></div>
+      </div>
 <h2 id="menu">Menu</h2><div class="menu-demo" style="
         background: var(--color-menu-default-background);
         border: var(--border-width-menu) solid var(--color-menu-default-border);
@@ -110,7 +223,141 @@
       ">selected</div><div class="menu-item" style="
         background: var(--color-menu-item-disabled-background);
         color: var(--color-menu-item-disabled-text);
-      ">disabled</div></div>
+      ">disabled</div></div><p class="note">Les <strong>23 tokens</strong> de <code>menu</code>, et le token
+    sémantique que chacun consomme. <strong>Aucun ne nomme jamais une palette ni une police</strong> —
+    suivre un lien mène à la page où ce rôle est défini.</p><div class="tok">
+        <div class="tok-head">
+          <code>color</code>
+          <span class="note">12 tokens</span>
+          <span class="tok-to">consomme <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.surface</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.border</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.text</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.state</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.role</code></a></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--color-menu-default-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.overlay — défini dans « Sémantique · couleur »"><code>--color-surface-overlay</code></a></td>
+            <td class="mono tiny note">#f6fbff</td></tr><tr>
+            <td class="mono tiny">--color-menu-default-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.default — défini dans « Sémantique · couleur »"><code>--color-border-default</code></a></td>
+            <td class="mono tiny note">#c0d7ef</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-default-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-default-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.body — défini dans « Sémantique · couleur »"><code>--color-text-body</code></a></td>
+            <td class="mono tiny note">#213c58</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-hover-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.state.hover — défini dans « Sémantique · couleur »"><code>--color-state-hover</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0.04)</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-hover-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.body — défini dans « Sémantique · couleur »"><code>--color-text-body</code></a></td>
+            <td class="mono tiny note">#213c58</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-active-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.state.active — défini dans « Sémantique · couleur »"><code>--color-state-active</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0.12)</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-active-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.body — défini dans « Sémantique · couleur »"><code>--color-text-body</code></a></td>
+            <td class="mono tiny note">#213c58</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-selected-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.state.selected — défini dans « Sémantique · couleur »"><code>--color-state-selected</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0.08)</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-selected-text</td>
+            <td class="tiny"><a href="roles.html" title="color.role.primary.text — défini dans « Contrat de rôle »"><code>--color-role-primary-text</code></a></td>
+            <td class="mono tiny note">#7400bb</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-disabled-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-menu-item-disabled-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
+            <td class="mono tiny note">#9fbede</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>shadow</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>shadow</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--shadow-menu-default</td>
+            <td class="tiny"><a href="effets.html#ombres" title="shadow.float — défini dans « Effets · ombres »"><code>--shadow-float</code></a></td>
+            <td class="mono tiny note">[object Object]</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>space</code>
+          <span class="note">2 tokens</span>
+          <span class="tok-to">consomme <code>space</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--space-menu-padding-x</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.xs — défini dans « Sémantique · tailles »"><code>--space-xs</code></a></td>
+            <td class="mono tiny note">4px</td></tr><tr>
+            <td class="mono tiny">--space-menu-padding-y</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.xs — défini dans « Sémantique · tailles »"><code>--space-xs</code></a></td>
+            <td class="mono tiny note">4px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>fontSize</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>fontSize</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--font-size-menu</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="fontSize.body — défini dans « Sémantique · tailles »"><code>--font-size-body</code></a></td>
+            <td class="mono tiny note">16px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>radius</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>radius</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--radius-menu</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="radius.md — défini dans « Sémantique · tailles »"><code>--radius-md</code></a></td>
+            <td class="mono tiny note">8px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>borderWidth</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>borderWidth</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--border-width-menu</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="borderWidth.default — défini dans « Sémantique · tailles »"><code>--border-width-default</code></a></td>
+            <td class="mono tiny note">1px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>typography</code>
+          <span class="note">5 tokens</span>
+          <span class="tok-to">consomme <a href="semantique.html#typographie" title="Défini dans « Sémantique · typo »"><code>typography.body</code></a></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--typography-menu-family</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.body.family — défini dans « Sémantique · typo »"><code>--typography-body-family</code></a></td>
+            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny">--typography-menu-weight</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.body.weight — défini dans « Sémantique · typo »"><code>--typography-body-weight</code></a></td>
+            <td class="mono tiny note">400</td></tr><tr>
+            <td class="mono tiny">--typography-menu-line-height</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.body.lineHeight — défini dans « Sémantique · typo »"><code>--typography-body-line-height</code></a></td>
+            <td class="mono tiny note">1.5</td></tr><tr>
+            <td class="mono tiny">--typography-menu-letter-spacing</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.body.letterSpacing — défini dans « Sémantique · typo »"><code>--typography-body-letter-spacing</code></a></td>
+            <td class="mono tiny note">0</td></tr><tr>
+            <td class="mono tiny">--typography-menu-text-case</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.body.textCase — défini dans « Sémantique · typo »"><code>--typography-body-text-case</code></a></td>
+            <td class="mono tiny note">none</td></tr></tbody></table></div>
+      </div>
 <h2 id="table">Table</h2><table class="tbl table-demo">
         <thead><tr>
           <th style="background: var(--color-table-header-default-background); color: var(--color-table-header-default-text); border-bottom: var(--border-width-table) solid var(--color-table-header-default-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">État de la ligne</th>
@@ -129,7 +376,126 @@
         <td style="color: var(--color-table-row-disabled-text); border-bottom: var(--border-width-table) solid var(--color-table-row-disabled-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">disabled</td>
         <td style="color: var(--color-table-row-disabled-text); border-bottom: var(--border-width-table) solid var(--color-table-row-disabled-border); padding: var(--space-table-padding-y) var(--space-table-padding-x)">Valeur</td>
       </tr></tbody>
-      </table>
+      </table><p class="note">Les <strong>24 tokens</strong> de <code>table</code>, et le token
+    sémantique que chacun consomme. <strong>Aucun ne nomme jamais une palette ni une police</strong> —
+    suivre un lien mène à la page où ce rôle est défini.</p><div class="tok">
+        <div class="tok-head">
+          <code>color</code>
+          <span class="note">15 tokens</span>
+          <span class="tok-to">consomme <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.surface</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.text</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.border</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.state</code></a></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--color-table-header-default-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.raised — défini dans « Sémantique · couleur »"><code>--color-surface-raised</code></a></td>
+            <td class="mono tiny note">#edf4fd</td></tr><tr>
+            <td class="mono tiny">--color-table-header-default-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.muted — défini dans « Sémantique · couleur »"><code>--color-text-muted</code></a></td>
+            <td class="mono tiny note">#4c7299</td></tr><tr>
+            <td class="mono tiny">--color-table-header-default-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.default — défini dans « Sémantique · couleur »"><code>--color-border-default</code></a></td>
+            <td class="mono tiny note">#c0d7ef</td></tr><tr>
+            <td class="mono tiny">--color-table-row-default-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-table-row-default-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.body — défini dans « Sémantique · couleur »"><code>--color-text-body</code></a></td>
+            <td class="mono tiny note">#213c58</td></tr><tr>
+            <td class="mono tiny">--color-table-row-default-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.divider — défini dans « Sémantique · couleur »"><code>--color-border-divider</code></a></td>
+            <td class="mono tiny note">#dceaf8</td></tr><tr>
+            <td class="mono tiny">--color-table-row-hover-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.state.hover — défini dans « Sémantique · couleur »"><code>--color-state-hover</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0.04)</td></tr><tr>
+            <td class="mono tiny">--color-table-row-hover-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.body — défini dans « Sémantique · couleur »"><code>--color-text-body</code></a></td>
+            <td class="mono tiny note">#213c58</td></tr><tr>
+            <td class="mono tiny">--color-table-row-hover-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.divider — défini dans « Sémantique · couleur »"><code>--color-border-divider</code></a></td>
+            <td class="mono tiny note">#dceaf8</td></tr><tr>
+            <td class="mono tiny">--color-table-row-selected-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.state.selected — défini dans « Sémantique · couleur »"><code>--color-state-selected</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0.08)</td></tr><tr>
+            <td class="mono tiny">--color-table-row-selected-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.body — défini dans « Sémantique · couleur »"><code>--color-text-body</code></a></td>
+            <td class="mono tiny note">#213c58</td></tr><tr>
+            <td class="mono tiny">--color-table-row-selected-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.divider — défini dans « Sémantique · couleur »"><code>--color-border-divider</code></a></td>
+            <td class="mono tiny note">#dceaf8</td></tr><tr>
+            <td class="mono tiny">--color-table-row-disabled-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-table-row-disabled-text</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
+            <td class="mono tiny note">#9fbede</td></tr><tr>
+            <td class="mono tiny">--color-table-row-disabled-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.divider — défini dans « Sémantique · couleur »"><code>--color-border-divider</code></a></td>
+            <td class="mono tiny note">#dceaf8</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>space</code>
+          <span class="note">2 tokens</span>
+          <span class="tok-to">consomme <code>space</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--space-table-padding-x</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.md — défini dans « Sémantique · tailles »"><code>--space-md</code></a></td>
+            <td class="mono tiny note">16px</td></tr><tr>
+            <td class="mono tiny">--space-table-padding-y</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.sm — défini dans « Sémantique · tailles »"><code>--space-sm</code></a></td>
+            <td class="mono tiny note">8px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>fontSize</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>fontSize</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--font-size-table</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="fontSize.small — défini dans « Sémantique · tailles »"><code>--font-size-small</code></a></td>
+            <td class="mono tiny note">14px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>borderWidth</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>borderWidth</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--border-width-table</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="borderWidth.default — défini dans « Sémantique · tailles »"><code>--border-width-default</code></a></td>
+            <td class="mono tiny note">1px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>typography</code>
+          <span class="note">5 tokens</span>
+          <span class="tok-to">consomme <a href="semantique.html#typographie" title="Défini dans « Sémantique · typo »"><code>typography.small</code></a></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--typography-table-family</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.small.family — défini dans « Sémantique · typo »"><code>--typography-small-family</code></a></td>
+            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny">--typography-table-weight</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.small.weight — défini dans « Sémantique · typo »"><code>--typography-small-weight</code></a></td>
+            <td class="mono tiny note">400</td></tr><tr>
+            <td class="mono tiny">--typography-table-line-height</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.small.lineHeight — défini dans « Sémantique · typo »"><code>--typography-small-line-height</code></a></td>
+            <td class="mono tiny note">1.5</td></tr><tr>
+            <td class="mono tiny">--typography-table-letter-spacing</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.small.letterSpacing — défini dans « Sémantique · typo »"><code>--typography-small-letter-spacing</code></a></td>
+            <td class="mono tiny note">0</td></tr><tr>
+            <td class="mono tiny">--typography-table-text-case</td>
+            <td class="tiny"><a href="semantique.html#typographie" title="typography.small.textCase — défini dans « Sémantique · typo »"><code>--typography-small-text-case</code></a></td>
+            <td class="mono tiny note">none</td></tr></tbody></table></div>
+      </div>
 <h2 id="modal">Modal</h2><div class="modal-stage" style="background: var(--color-modal-default-scrim)">
         <div style="
           background: var(--color-modal-default-background);
@@ -143,6 +509,80 @@
         <strong>Le scrim était cassé.</strong> Il pointait sur un neutre <em>teinté</em> : la luminance
         de la page ne passait que de 0,96 à 0,86, la modale ne se détachait pas. Il pointe maintenant
         sur <code>alpha.black.60</code> → 0,96 → <strong>0,13</strong>.
+      </div><p class="note">Les <strong>9 tokens</strong> de <code>modal</code>, et le token
+    sémantique que chacun consomme. <strong>Aucun ne nomme jamais une palette ni une police</strong> —
+    suivre un lien mène à la page où ce rôle est défini.</p><div class="tok">
+        <div class="tok-head">
+          <code>color</code>
+          <span class="note">3 tokens</span>
+          <span class="tok-to">consomme <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.surface</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.border</code></a> <code>color</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--color-modal-default-background</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.overlay — défini dans « Sémantique · couleur »"><code>--color-surface-overlay</code></a></td>
+            <td class="mono tiny note">#f6fbff</td></tr><tr>
+            <td class="mono tiny">--color-modal-default-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.default — défini dans « Sémantique · couleur »"><code>--color-border-default</code></a></td>
+            <td class="mono tiny note">#c0d7ef</td></tr><tr>
+            <td class="mono tiny">--color-modal-default-scrim</td>
+            <td class="tiny"><a href="primitives.html#rampes" title="color.scrim — défini dans « Primitives »"><code>--color-scrim</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0.6)</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>shadow</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>shadow</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--shadow-modal-default</td>
+            <td class="tiny"><a href="effets.html#ombres" title="shadow.overlay — défini dans « Effets · ombres »"><code>--shadow-overlay</code></a></td>
+            <td class="mono tiny note">[object Object]</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>space</code>
+          <span class="note">3 tokens</span>
+          <span class="tok-to">consomme <code>space</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--space-modal-padding-x</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.xl — défini dans « Sémantique · tailles »"><code>--space-xl</code></a></td>
+            <td class="mono tiny note">32px</td></tr><tr>
+            <td class="mono tiny">--space-modal-padding-y</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.xl — défini dans « Sémantique · tailles »"><code>--space-xl</code></a></td>
+            <td class="mono tiny note">32px</td></tr><tr>
+            <td class="mono tiny">--space-modal-gap</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="space.lg — défini dans « Sémantique · tailles »"><code>--space-lg</code></a></td>
+            <td class="mono tiny note">24px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>radius</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>radius</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--radius-modal</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="radius.lg — défini dans « Sémantique · tailles »"><code>--radius-lg</code></a></td>
+            <td class="mono tiny note">16px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>borderWidth</code>
+          <span class="note">1 token</span>
+          <span class="tok-to">consomme <code>borderWidth</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--border-width-modal</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="borderWidth.default — défini dans « Sémantique · tailles »"><code>--border-width-default</code></a></td>
+            <td class="mono tiny note">1px</td></tr></tbody></table></div>
       </div>
     
     <nav class="pager">

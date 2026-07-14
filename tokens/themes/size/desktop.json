@@ -46,6 +46,10 @@
   },
   "fontSize": {
     "$type": "dimension",
+    "$description": "Les tailles vivent ICI, et non dans le thème typo, parce qu'elles sont la SEULE dimension de la typo qui change entre desktop et mobile. Un rôle typo pointe sur ces tokens : il hérite donc de la bascule sans rien savoir d'elle.",
+    "caption": {
+      "$value": "{size.font.xs}"
+    },
     "small": {
       "$value": "{size.font.sm}"
     },
@@ -53,16 +57,16 @@
       "$value": "{size.font.md}"
     },
     "lead": {
-      "$value": "{size.font.lg}"
-    },
-    "h3": {
       "$value": "{size.font.xl}"
     },
-    "h2": {
+    "h3": {
       "$value": "{size.font.2xl}"
     },
+    "h2": {
+      "$value": "{size.font.3xl}"
+    },
     "h1": {
-      "$value": "{size.font.4xl}"
+      "$value": "{size.font.5xl}"
     }
   },
   "controlHeight": {

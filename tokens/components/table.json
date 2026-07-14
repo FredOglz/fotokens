@@ -85,5 +85,28 @@
       "$value": "{borderWidth.default}"
     },
     "$type": "dimension"
+  },
+  "typography": {
+    "table": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{typography.small.family}"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.small.weight}"
+      },
+      "lineHeight": {
+        "$type": "number",
+        "$value": "{typography.small.lineHeight}"
+      },
+      "letterSpacing": {
+        "$type": "dimension",
+        "$value": "{typography.small.letterSpacing}"
+      },
+      "textCase": {
+        "$value": "{typography.small.textCase}"
+      }
+    }
   }
 }
