@@ -384,6 +384,10 @@
   --size-breakpoint-md: 768px;
   --size-breakpoint-lg: 1024px;
   --size-breakpoint-xl: 1280px;
+  --size-container-sm: 360px;
+  --size-container-md: 480px;
+  --size-container-lg: 640px;
+  --size-container-xl: 800px;
   --font-stack-inter: Inter, system-ui, -apple-system, sans-serif;
   --font-stack-geist: Geist, system-ui, -apple-system, sans-serif;
   --font-stack-system-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -507,6 +511,10 @@
   --track-height-sm: var(--size-glyph-md);
   --track-height-md: var(--size-glyph-lg);
   --track-height-lg: var(--size-control-sm);
+  --modal-width-sm: var(--size-container-sm);
+  --modal-width-md: var(--size-container-md);
+  --modal-width-lg: var(--size-container-lg);
+  --modal-width-xl: var(--size-container-xl);
 }
 
 [data-theme="dark"] {

@@ -66,6 +66,13 @@
       "md": { "$value": "768px" },
       "lg": { "$value": "1024px" },
       "xl": { "$value": "1280px" }
+    },
+    "container": {
+      "$description": "Largeurs de conteneur borné (modale, panneau, feuille). Le consommateur les combine avec un min(…, Nvw) pour rester responsive : le token donne la largeur MAXIMALE, pas une largeur figée.",
+      "sm": { "$value": "360px" },
+      "md": { "$value": "480px" },
+      "lg": { "$value": "640px" },
+      "xl": { "$value": "800px" }
     }
   }
 }

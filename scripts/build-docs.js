@@ -282,25 +282,29 @@ function layout({ id, title, lead, body, sections = [] }) {
 
     <section class="settings-section">
       <h3 class="settings-section-title">Couleurs</h3>
-      <div class="settings-group">
-        <span class="settings-label">Primary <em>— tonique</em></span>
-        ${swatchGrid('data-primary')}
-      </div>
-      <div class="settings-group">
-        <span class="settings-label">Neutre <em>— gris / slate</em></span>
-        ${swatchGrid('data-neutral')}
+      <div class="settings-cols">
+        <div class="settings-group">
+          <span class="settings-label">Primary <em>— tonique</em></span>
+          ${swatchGrid('data-primary')}
+        </div>
+        <div class="settings-group">
+          <span class="settings-label">Neutre <em>— gris / slate</em></span>
+          ${swatchGrid('data-neutral')}
+        </div>
       </div>
     </section>
 
     <section class="settings-section">
       <h3 class="settings-section-title">Typographie</h3>
-      <div class="settings-group">
-        <span class="settings-label">Titres</span>
-        ${fontGrid('data-font-heading')}
-      </div>
-      <div class="settings-group">
-        <span class="settings-label">Corps</span>
-        ${fontGrid('data-font-body')}
+      <div class="settings-cols">
+        <div class="settings-group">
+          <span class="settings-label">Titres</span>
+          ${fontGrid('data-font-heading')}
+        </div>
+        <div class="settings-group">
+          <span class="settings-label">Corps</span>
+          ${fontGrid('data-font-body')}
+        </div>
       </div>
     </section>
   </div>
@@ -562,7 +566,7 @@ const pagePrimitives = () => {
     </div>`;
   }).join('');
 
-  const sizeGroups = ['spacing', 'radius', 'border', 'breakpoint']
+  const sizeGroups = ['spacing', 'radius', 'border', 'container', 'breakpoint']
     .map((g) => {
       const items = Object.keys(sizes[g])
         .filter((k) => !k.startsWith('$'))
@@ -1559,7 +1563,7 @@ body {
 }
 .settings-btn:hover { border-color: var(--color-role-primary-main); color: var(--color-role-primary-text); }
 .settings-modal {
-  margin: auto; width: min(92vw, 400px); max-height: 86vh;
+  margin: auto; width: min(94vw, var(--modal-width-lg)); max-height: 86vh;
   padding: var(--space-lg) var(--space-xl) var(--space-xl);
   color: var(--color-text-body);
   background: var(--color-modal-default-background);
@@ -1585,6 +1589,9 @@ body {
 .settings-close:hover { color: var(--color-text-body); background: var(--color-state-hover); }
 .settings-body { overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-lg); }
 .settings-section { display: flex; flex-direction: column; gap: var(--space-sm); }
+/* Deux colonnes quand la modale est large (primary|neutre, titres|corps) ; une seule sur mobile. */
+.settings-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg) var(--space-xl); }
+@media (max-width: 560px) { .settings-cols { grid-template-columns: 1fr; } }
 .settings-section-title {
   margin: 0; color: var(--color-text-body); font-size: var(--font-size-small); font-weight: 600;
   font-family: var(--typography-label-family);

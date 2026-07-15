@@ -125,5 +125,21 @@
     "lg": {
       "$value": "{size.control.sm}"
     }
+  },
+  "modalWidth": {
+    "$type": "dimension",
+    "$description": "Largeur MAXIMALE d'une modale, à choisir selon son contenu (sm confirmation, lg réglages…). Le consommateur la combine avec un min(…, Nvw) pour rester responsive. Identique desktop/mobile : le clamp vw suffit à rétrécir sur petit écran.",
+    "sm": {
+      "$value": "{size.container.sm}"
+    },
+    "md": {
+      "$value": "{size.container.md}"
+    },
+    "lg": {
+      "$value": "{size.container.lg}"
+    },
+    "xl": {
+      "$value": "{size.container.xl}"
+    }
   }
 }

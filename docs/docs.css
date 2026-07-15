@@ -55,7 +55,7 @@ body {
 }
 .settings-btn:hover { border-color: var(--color-role-primary-main); color: var(--color-role-primary-text); }
 .settings-modal {
-  margin: auto; width: min(92vw, 400px); max-height: 86vh;
+  margin: auto; width: min(94vw, var(--modal-width-lg)); max-height: 86vh;
   padding: var(--space-lg) var(--space-xl) var(--space-xl);
   color: var(--color-text-body);
   background: var(--color-modal-default-background);
@@ -81,6 +81,9 @@ body {
 .settings-close:hover { color: var(--color-text-body); background: var(--color-state-hover); }
 .settings-body { overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-lg); }
 .settings-section { display: flex; flex-direction: column; gap: var(--space-sm); }
+/* Deux colonnes quand la modale est large (primary|neutre, titres|corps) ; une seule sur mobile. */
+.settings-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg) var(--space-xl); }
+@media (max-width: 560px) { .settings-cols { grid-template-columns: 1fr; } }
 .settings-section-title {
   margin: 0; color: var(--color-text-body); font-size: var(--font-size-small); font-weight: 600;
   font-family: var(--typography-label-family);
