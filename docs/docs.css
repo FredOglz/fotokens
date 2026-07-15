@@ -55,16 +55,20 @@ body {
 }
 .settings-btn:hover { border-color: var(--color-role-primary-main); color: var(--color-role-primary-text); }
 .settings-modal {
-  margin: auto; width: min(92vw, 380px); max-height: 86vh; overflow-y: auto;
-  padding: var(--space-modal-padding-y) var(--space-modal-padding-x);
+  margin: auto; width: min(92vw, 400px); max-height: 86vh;
+  padding: var(--space-lg) var(--space-xl) var(--space-xl);
   color: var(--color-text-body);
   background: var(--color-modal-default-background);
   border: var(--border-width-modal) solid var(--color-modal-default-border);
   border-radius: var(--radius-modal); box-shadow: var(--shadow-modal-default);
 }
 .settings-modal::backdrop { background: var(--color-modal-default-scrim); }
-.settings-modal[open] { display: flex; flex-direction: column; gap: var(--space-modal-gap); }
-.settings-modal-head { display: flex; align-items: center; justify-content: space-between; }
+/* En-tête figé, corps défilant : la modale peut grandir sans pousser le titre hors champ. */
+.settings-modal[open] { display: flex; flex-direction: column; gap: var(--space-md); overflow: hidden; }
+.settings-modal-head {
+  flex: none; display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: var(--space-sm); border-bottom: var(--border-width-default) solid var(--color-border-divider);
+}
 .settings-modal-title {
   font-family: var(--typography-h3-family); font-size: var(--typography-h3-size);
   font-weight: var(--typography-h3-weight);
@@ -75,13 +79,20 @@ body {
   border-radius: var(--radius-sm);
 }
 .settings-close:hover { color: var(--color-text-body); background: var(--color-state-hover); }
-.settings-group { display: flex; flex-direction: column; gap: var(--space-sm); }
+.settings-body { overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-lg); }
+.settings-section { display: flex; flex-direction: column; gap: var(--space-sm); }
+.settings-section-title {
+  margin: 0; color: var(--color-text-body); font-size: var(--font-size-small); font-weight: 600;
+  font-family: var(--typography-label-family);
+}
+.settings-group { display: flex; flex-direction: column; gap: var(--space-xs); }
 .settings-label {
   color: var(--color-text-muted);
   font-family: var(--typography-overline-family); font-size: var(--typography-overline-size);
   font-weight: var(--typography-overline-weight); letter-spacing: var(--typography-overline-letter-spacing);
   text-transform: var(--typography-overline-text-case);
 }
+.settings-label em { font-style: normal; text-transform: none; letter-spacing: 0; opacity: .75; }
 .seg { display: flex; gap: 2px; }
 .seg button {
   flex: 1; cursor: pointer; padding: var(--space-xs) var(--space-sm);

@@ -8,19 +8,19 @@
 <link rel="stylesheet" href="components.css">
 <link rel="stylesheet" href="docs.css">
 <script>
-  // Avant le premier rendu, pour éviter un flash (thème ET couleur « primary »).
+  // Avant le premier rendu, pour éviter un flash (thème, couleurs ET polices).
   (function () {
     var root = document.documentElement;
     if (localStorage.getItem('theme') === 'dark') root.setAttribute('data-theme', 'dark');
-    // Remappe toute la chaîne primary en surchargeant les vars brand.primary.* :
-    // le rôle et les composants suivent, ils pointent déjà dessus.
+    // Remappe un rôle de couleur brand en surchargeant ses vars --color-brand-<role>-* :
+    // le rôle sémantique et les composants suivent, ils pointent déjà dessus.
     var STEPS = ["25","50","100","200","300","400","500","600","700","800","900"], ALPHAS = ["5","10"];
-    window.__setPrimary = function (css) {
-      STEPS.forEach(function (s) { root.style.setProperty('--color-brand-primary-' + s, 'var(--color-' + css + '-' + s + ')'); });
-      ALPHAS.forEach(function (a) { root.style.setProperty('--color-brand-primary-alpha-' + a, 'var(--color-' + css + '-alpha-' + a + ')'); });
+    window.__setBrandColor = function (role, css) {
+      STEPS.forEach(function (s) { root.style.setProperty('--color-brand-' + role + '-' + s, 'var(--color-' + css + '-' + s + ')'); });
+      ALPHAS.forEach(function (a) { root.style.setProperty('--color-brand-' + role + '-alpha-' + a, 'var(--color-' + css + '-alpha-' + a + ')'); });
     };
-    var p = localStorage.getItem('primary');
-    if (p) window.__setPrimary(p);
+    var cp = localStorage.getItem('primary'); if (cp) window.__setBrandColor('primary', cp);
+    var cn = localStorage.getItem('neutral'); if (cn) window.__setBrandColor('neutral', cn);
     // Polices : on surcharge --font-brand-heading (titres) et --font-brand-body (corps),
     // les rôles typo suivent. Le code garde --font-brand-mono, non touché.
     window.__setHeading = function (css) { root.style.setProperty('--font-brand-heading', 'var(--font-stack-' + css + ')'); };
@@ -68,30 +68,41 @@
     <span class="settings-modal-title" id="settingsTitle">Réglages</span>
     <button type="button" class="settings-close" id="settingsClose" aria-label="Fermer">✕</button>
   </div>
-  <div class="settings-group">
-    <span class="settings-label">Thème</span>
-    <div class="seg">
-      <button type="button" data-theme-choice="light">◐ Clair</button>
-      <button type="button" data-theme-choice="dark">◑ Sombre</button>
-    </div>
-  </div>
-  <div class="settings-group">
-    <span class="settings-label">Couleur « primary »</span>
-    <div class="swatch-grid">
-      <button type="button" class="swatch-pick" data-palette="gray" title="gray"><span class="swatch-dot" style="background: var(--color-gray-500)"></span>gray</button><button type="button" class="swatch-pick" data-palette="blue" title="blue"><span class="swatch-dot" style="background: var(--color-blue-500)"></span>blue</button><button type="button" class="swatch-pick" data-palette="red" title="red"><span class="swatch-dot" style="background: var(--color-red-500)"></span>red</button><button type="button" class="swatch-pick" data-palette="green" title="green"><span class="swatch-dot" style="background: var(--color-green-500)"></span>green</button><button type="button" class="swatch-pick" data-palette="orange" title="orange"><span class="swatch-dot" style="background: var(--color-orange-500)"></span>orange</button><button type="button" class="swatch-pick" data-palette="turquoise" title="turquoise"><span class="swatch-dot" style="background: var(--color-turquoise-500)"></span>turquoise</button><button type="button" class="swatch-pick" data-palette="slate-blue" title="slateBlue"><span class="swatch-dot" style="background: var(--color-slate-blue-500)"></span>slateBlue</button><button type="button" class="swatch-pick" data-palette="slate-violet" title="slateViolet"><span class="swatch-dot" style="background: var(--color-slate-violet-500)"></span>slateViolet</button><button type="button" class="swatch-pick" data-palette="violet" title="violet"><span class="swatch-dot" style="background: var(--color-violet-500)"></span>violet</button>
-    </div>
-  </div>
-  <div class="settings-group">
-    <span class="settings-label">Police des titres</span>
-    <div class="font-grid">
-      <button type="button" class="font-pick" data-font-heading="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-heading="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-heading="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-heading="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-heading="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-heading="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
-    </div>
-  </div>
-  <div class="settings-group">
-    <span class="settings-label">Police du corps</span>
-    <div class="font-grid">
-      <button type="button" class="font-pick" data-font-body="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-body="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-body="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-body="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-body="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-body="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
-    </div>
+  <div class="settings-body">
+    <section class="settings-section">
+      <h3 class="settings-section-title">Apparence</h3>
+      <div class="settings-group">
+        <span class="settings-label">Thème</span>
+        <div class="seg">
+          <button type="button" data-theme-choice="light">◐ Clair</button>
+          <button type="button" data-theme-choice="dark">◑ Sombre</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h3 class="settings-section-title">Couleurs</h3>
+      <div class="settings-group">
+        <span class="settings-label">Primary <em>— tonique</em></span>
+        <div class="swatch-grid"><button type="button" class="swatch-pick" data-primary="gray" title="gray"><span class="swatch-dot" style="background: var(--color-gray-500)"></span>gray</button><button type="button" class="swatch-pick" data-primary="blue" title="blue"><span class="swatch-dot" style="background: var(--color-blue-500)"></span>blue</button><button type="button" class="swatch-pick" data-primary="red" title="red"><span class="swatch-dot" style="background: var(--color-red-500)"></span>red</button><button type="button" class="swatch-pick" data-primary="green" title="green"><span class="swatch-dot" style="background: var(--color-green-500)"></span>green</button><button type="button" class="swatch-pick" data-primary="orange" title="orange"><span class="swatch-dot" style="background: var(--color-orange-500)"></span>orange</button><button type="button" class="swatch-pick" data-primary="turquoise" title="turquoise"><span class="swatch-dot" style="background: var(--color-turquoise-500)"></span>turquoise</button><button type="button" class="swatch-pick" data-primary="slate-blue" title="slateBlue"><span class="swatch-dot" style="background: var(--color-slate-blue-500)"></span>slateBlue</button><button type="button" class="swatch-pick" data-primary="slate-violet" title="slateViolet"><span class="swatch-dot" style="background: var(--color-slate-violet-500)"></span>slateViolet</button><button type="button" class="swatch-pick" data-primary="violet" title="violet"><span class="swatch-dot" style="background: var(--color-violet-500)"></span>violet</button></div>
+      </div>
+      <div class="settings-group">
+        <span class="settings-label">Neutre <em>— gris / slate</em></span>
+        <div class="swatch-grid"><button type="button" class="swatch-pick" data-neutral="gray" title="gray"><span class="swatch-dot" style="background: var(--color-gray-500)"></span>gray</button><button type="button" class="swatch-pick" data-neutral="blue" title="blue"><span class="swatch-dot" style="background: var(--color-blue-500)"></span>blue</button><button type="button" class="swatch-pick" data-neutral="red" title="red"><span class="swatch-dot" style="background: var(--color-red-500)"></span>red</button><button type="button" class="swatch-pick" data-neutral="green" title="green"><span class="swatch-dot" style="background: var(--color-green-500)"></span>green</button><button type="button" class="swatch-pick" data-neutral="orange" title="orange"><span class="swatch-dot" style="background: var(--color-orange-500)"></span>orange</button><button type="button" class="swatch-pick" data-neutral="turquoise" title="turquoise"><span class="swatch-dot" style="background: var(--color-turquoise-500)"></span>turquoise</button><button type="button" class="swatch-pick" data-neutral="slate-blue" title="slateBlue"><span class="swatch-dot" style="background: var(--color-slate-blue-500)"></span>slateBlue</button><button type="button" class="swatch-pick" data-neutral="slate-violet" title="slateViolet"><span class="swatch-dot" style="background: var(--color-slate-violet-500)"></span>slateViolet</button><button type="button" class="swatch-pick" data-neutral="violet" title="violet"><span class="swatch-dot" style="background: var(--color-violet-500)"></span>violet</button></div>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h3 class="settings-section-title">Typographie</h3>
+      <div class="settings-group">
+        <span class="settings-label">Titres</span>
+        <div class="font-grid"><button type="button" class="font-pick" data-font-heading="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-heading="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-heading="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-heading="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-heading="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-heading="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button></div>
+      </div>
+      <div class="settings-group">
+        <span class="settings-label">Corps</span>
+        <div class="font-grid"><button type="button" class="font-pick" data-font-body="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-body="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-body="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-body="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-body="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-body="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button></div>
+      </div>
+    </section>
   </div>
 </dialog>
 
@@ -196,21 +207,9 @@
     }));
   syncTheme();
 
-  let currentPrimary = localStorage.getItem('primary') || 'violet';
-  const syncPrimary = () =>
-    document.querySelectorAll('.swatch-pick').forEach((b) =>
-      b.classList.toggle('active', b.dataset.palette === currentPrimary));
-  document.querySelectorAll('.swatch-pick').forEach((b) =>
-    b.addEventListener('click', () => {
-      currentPrimary = b.dataset.palette;
-      window.__setPrimary(currentPrimary);
-      localStorage.setItem('primary', currentPrimary);
-      syncPrimary();
-    }));
-  syncPrimary();
-
-  // Deux sélecteurs de police : titres (data-font-heading) et corps (data-font-body).
-  const wireFont = (attr, storeKey, def, apply) => {
+  // Un seul câblage pour les quatre sélecteurs (2 couleurs, 2 polices), ciblé par
+  // l'attribut data-* : mémorise le choix, l'applique, marque l'option active.
+  const wirePick = (attr, storeKey, def, apply) => {
     let current = localStorage.getItem(storeKey) || def;
     const picks = document.querySelectorAll('[' + attr + ']');
     const sync = () => picks.forEach((b) => b.classList.toggle('active', b.getAttribute(attr) === current));
@@ -223,8 +222,10 @@
       }));
     sync();
   };
-  wireFont('data-font-heading', 'fontHeading', 'inter', window.__setHeading);
-  wireFont('data-font-body', 'fontBody', 'jetbrains-mono', window.__setBody);
+  wirePick('data-primary', 'primary', 'violet', (c) => window.__setBrandColor('primary', c));
+  wirePick('data-neutral', 'neutral', 'slate-blue', (c) => window.__setBrandColor('neutral', c));
+  wirePick('data-font-heading', 'fontHeading', 'inter', window.__setHeading);
+  wirePick('data-font-body', 'fontBody', 'jetbrains-mono', window.__setBody);
 
   document.getElementById('burger').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('open');

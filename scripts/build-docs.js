@@ -94,15 +94,16 @@ const PALETTES = Object.entries(colors)
 const STEPS = Object.keys(colors[PALETTES[0]]).filter((k) => k !== 'alpha' && !k.startsWith('$'));
 const ALPHAS = Object.keys(colors[PALETTES[0]].alpha);
 
-// Réglages de la doc : le sélecteur de couleur « primary ». On expose chaque
+// Réglages de la doc : les sélecteurs de couleur de rôle brand. On expose chaque
 // palette primitive comme choix ; le nom CSS (kebab) sert à remapper les vars
-// `--color-brand-primary-*` à la volée. La primary par défaut est lue dans le
-// brand (le reste de la chaîne — rôle, composants — suit sans qu'on y touche).
+// `--color-brand-<role>-*` à la volée. Le défaut de chaque rôle est lu dans le
+// brand (le reste de la chaîne — rôle sémantique, composants — suit sans qu'on y touche).
 const kebab = (s) => s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-const PRIMARY_OPTIONS = PALETTES.map((name) => ({ name, css: kebab(name) }));
-const DEFAULT_PRIMARY = kebab(
-  /\{color\.([A-Za-z]+)\./.exec(read('tokens/brand/default.json').color.brand.primary['500'].$value)?.[1] ?? 'violet',
-);
+const PALETTE_OPTIONS = PALETTES.map((name) => ({ name, css: kebab(name) }));
+const brandColorOf = (role) =>
+  kebab(/\{color\.([A-Za-z]+)\./.exec(read('tokens/brand/default.json').color.brand[role]['500'].$value)?.[1] ?? role);
+const DEFAULT_PRIMARY = brandColorOf('primary');
+const DEFAULT_NEUTRAL = brandColorOf('neutral');
 
 // Même idée pour les polices : deux sélecteurs (titres / corps), chacun remappe
 // une var brand — `--font-brand-heading` ou `--font-brand-body` — vers une pile du
@@ -115,6 +116,14 @@ const FONT_OPTIONS = Object.keys(fonts.stack)
 const stackOf = (ref) => kebab(/\{font\.stack\.([A-Za-z]+)\}/.exec(String(ref))?.[1] ?? 'inter');
 const DEFAULT_HEADING = stackOf(fontBrand.heading.$value);
 const DEFAULT_BODY = stackOf(fontBrand.body.$value);
+
+// Une grille de choix par attribut data-* : le même helper sert aux deux couleurs
+// (primary, neutral) et aux deux polices (titres, corps). Le JS les câble tous via
+// le même `wirePick`, ciblé par l'attribut.
+const swatchGrid = (attr) =>
+  `<div class="swatch-grid">${PALETTE_OPTIONS.map((o) => `<button type="button" class="swatch-pick" ${attr}="${o.css}" title="${o.name}"><span class="swatch-dot" style="background: var(--color-${o.css}-500)"></span>${o.name}</button>`).join('')}</div>`;
+const fontGrid = (attr) =>
+  `<div class="font-grid">${FONT_OPTIONS.map((o) => `<button type="button" class="font-pick" ${attr}="${o.css}" style="font-family: var(--font-stack-${o.css})">${o.label}</button>`).join('')}</div>`;
 const ROLES = Object.keys(light.role);
 const SLOTS = Object.keys(light.role[ROLES[0]]);
 const CATEGORICAL = Object.keys(light.categorical);
@@ -221,19 +230,19 @@ function layout({ id, title, lead, body, sections = [] }) {
 <link rel="stylesheet" href="components.css">
 <link rel="stylesheet" href="docs.css">
 <script>
-  // Avant le premier rendu, pour éviter un flash (thème ET couleur « primary »).
+  // Avant le premier rendu, pour éviter un flash (thème, couleurs ET polices).
   (function () {
     var root = document.documentElement;
     if (localStorage.getItem('theme') === 'dark') root.setAttribute('data-theme', 'dark');
-    // Remappe toute la chaîne primary en surchargeant les vars brand.primary.* :
-    // le rôle et les composants suivent, ils pointent déjà dessus.
+    // Remappe un rôle de couleur brand en surchargeant ses vars --color-brand-<role>-* :
+    // le rôle sémantique et les composants suivent, ils pointent déjà dessus.
     var STEPS = ${JSON.stringify(STEPS)}, ALPHAS = ${JSON.stringify(ALPHAS)};
-    window.__setPrimary = function (css) {
-      STEPS.forEach(function (s) { root.style.setProperty('--color-brand-primary-' + s, 'var(--color-' + css + '-' + s + ')'); });
-      ALPHAS.forEach(function (a) { root.style.setProperty('--color-brand-primary-alpha-' + a, 'var(--color-' + css + '-alpha-' + a + ')'); });
+    window.__setBrandColor = function (role, css) {
+      STEPS.forEach(function (s) { root.style.setProperty('--color-brand-' + role + '-' + s, 'var(--color-' + css + '-' + s + ')'); });
+      ALPHAS.forEach(function (a) { root.style.setProperty('--color-brand-' + role + '-alpha-' + a, 'var(--color-' + css + '-alpha-' + a + ')'); });
     };
-    var p = localStorage.getItem('primary');
-    if (p) window.__setPrimary(p);
+    var cp = localStorage.getItem('primary'); if (cp) window.__setBrandColor('primary', cp);
+    var cn = localStorage.getItem('neutral'); if (cn) window.__setBrandColor('neutral', cn);
     // Polices : on surcharge --font-brand-heading (titres) et --font-brand-body (corps),
     // les rôles typo suivent. Le code garde --font-brand-mono, non touché.
     window.__setHeading = function (css) { root.style.setProperty('--font-brand-heading', 'var(--font-stack-' + css + ')'); };
@@ -259,30 +268,41 @@ function layout({ id, title, lead, body, sections = [] }) {
     <span class="settings-modal-title" id="settingsTitle">Réglages</span>
     <button type="button" class="settings-close" id="settingsClose" aria-label="Fermer">✕</button>
   </div>
-  <div class="settings-group">
-    <span class="settings-label">Thème</span>
-    <div class="seg">
-      <button type="button" data-theme-choice="light">◐ Clair</button>
-      <button type="button" data-theme-choice="dark">◑ Sombre</button>
-    </div>
-  </div>
-  <div class="settings-group">
-    <span class="settings-label">Couleur « primary »</span>
-    <div class="swatch-grid">
-      ${PRIMARY_OPTIONS.map((o) => `<button type="button" class="swatch-pick" data-palette="${o.css}" title="${o.name}"><span class="swatch-dot" style="background: var(--color-${o.css}-500)"></span>${o.name}</button>`).join('')}
-    </div>
-  </div>
-  <div class="settings-group">
-    <span class="settings-label">Police des titres</span>
-    <div class="font-grid">
-      ${FONT_OPTIONS.map((o) => `<button type="button" class="font-pick" data-font-heading="${o.css}" style="font-family: var(--font-stack-${o.css})">${o.label}</button>`).join('')}
-    </div>
-  </div>
-  <div class="settings-group">
-    <span class="settings-label">Police du corps</span>
-    <div class="font-grid">
-      ${FONT_OPTIONS.map((o) => `<button type="button" class="font-pick" data-font-body="${o.css}" style="font-family: var(--font-stack-${o.css})">${o.label}</button>`).join('')}
-    </div>
+  <div class="settings-body">
+    <section class="settings-section">
+      <h3 class="settings-section-title">Apparence</h3>
+      <div class="settings-group">
+        <span class="settings-label">Thème</span>
+        <div class="seg">
+          <button type="button" data-theme-choice="light">◐ Clair</button>
+          <button type="button" data-theme-choice="dark">◑ Sombre</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h3 class="settings-section-title">Couleurs</h3>
+      <div class="settings-group">
+        <span class="settings-label">Primary <em>— tonique</em></span>
+        ${swatchGrid('data-primary')}
+      </div>
+      <div class="settings-group">
+        <span class="settings-label">Neutre <em>— gris / slate</em></span>
+        ${swatchGrid('data-neutral')}
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h3 class="settings-section-title">Typographie</h3>
+      <div class="settings-group">
+        <span class="settings-label">Titres</span>
+        ${fontGrid('data-font-heading')}
+      </div>
+      <div class="settings-group">
+        <span class="settings-label">Corps</span>
+        ${fontGrid('data-font-body')}
+      </div>
+    </section>
   </div>
 </dialog>
 
@@ -324,21 +344,9 @@ function layout({ id, title, lead, body, sections = [] }) {
     }));
   syncTheme();
 
-  let currentPrimary = localStorage.getItem('primary') || '${DEFAULT_PRIMARY}';
-  const syncPrimary = () =>
-    document.querySelectorAll('.swatch-pick').forEach((b) =>
-      b.classList.toggle('active', b.dataset.palette === currentPrimary));
-  document.querySelectorAll('.swatch-pick').forEach((b) =>
-    b.addEventListener('click', () => {
-      currentPrimary = b.dataset.palette;
-      window.__setPrimary(currentPrimary);
-      localStorage.setItem('primary', currentPrimary);
-      syncPrimary();
-    }));
-  syncPrimary();
-
-  // Deux sélecteurs de police : titres (data-font-heading) et corps (data-font-body).
-  const wireFont = (attr, storeKey, def, apply) => {
+  // Un seul câblage pour les quatre sélecteurs (2 couleurs, 2 polices), ciblé par
+  // l'attribut data-* : mémorise le choix, l'applique, marque l'option active.
+  const wirePick = (attr, storeKey, def, apply) => {
     let current = localStorage.getItem(storeKey) || def;
     const picks = document.querySelectorAll('[' + attr + ']');
     const sync = () => picks.forEach((b) => b.classList.toggle('active', b.getAttribute(attr) === current));
@@ -351,8 +359,10 @@ function layout({ id, title, lead, body, sections = [] }) {
       }));
     sync();
   };
-  wireFont('data-font-heading', 'fontHeading', '${DEFAULT_HEADING}', window.__setHeading);
-  wireFont('data-font-body', 'fontBody', '${DEFAULT_BODY}', window.__setBody);
+  wirePick('data-primary', 'primary', '${DEFAULT_PRIMARY}', (c) => window.__setBrandColor('primary', c));
+  wirePick('data-neutral', 'neutral', '${DEFAULT_NEUTRAL}', (c) => window.__setBrandColor('neutral', c));
+  wirePick('data-font-heading', 'fontHeading', '${DEFAULT_HEADING}', window.__setHeading);
+  wirePick('data-font-body', 'fontBody', '${DEFAULT_BODY}', window.__setBody);
 
   document.getElementById('burger').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('open');
@@ -1549,16 +1559,20 @@ body {
 }
 .settings-btn:hover { border-color: var(--color-role-primary-main); color: var(--color-role-primary-text); }
 .settings-modal {
-  margin: auto; width: min(92vw, 380px); max-height: 86vh; overflow-y: auto;
-  padding: var(--space-modal-padding-y) var(--space-modal-padding-x);
+  margin: auto; width: min(92vw, 400px); max-height: 86vh;
+  padding: var(--space-lg) var(--space-xl) var(--space-xl);
   color: var(--color-text-body);
   background: var(--color-modal-default-background);
   border: var(--border-width-modal) solid var(--color-modal-default-border);
   border-radius: var(--radius-modal); box-shadow: var(--shadow-modal-default);
 }
 .settings-modal::backdrop { background: var(--color-modal-default-scrim); }
-.settings-modal[open] { display: flex; flex-direction: column; gap: var(--space-modal-gap); }
-.settings-modal-head { display: flex; align-items: center; justify-content: space-between; }
+/* En-tête figé, corps défilant : la modale peut grandir sans pousser le titre hors champ. */
+.settings-modal[open] { display: flex; flex-direction: column; gap: var(--space-md); overflow: hidden; }
+.settings-modal-head {
+  flex: none; display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: var(--space-sm); border-bottom: var(--border-width-default) solid var(--color-border-divider);
+}
 .settings-modal-title {
   font-family: var(--typography-h3-family); font-size: var(--typography-h3-size);
   font-weight: var(--typography-h3-weight);
@@ -1569,13 +1583,20 @@ body {
   border-radius: var(--radius-sm);
 }
 .settings-close:hover { color: var(--color-text-body); background: var(--color-state-hover); }
-.settings-group { display: flex; flex-direction: column; gap: var(--space-sm); }
+.settings-body { overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-lg); }
+.settings-section { display: flex; flex-direction: column; gap: var(--space-sm); }
+.settings-section-title {
+  margin: 0; color: var(--color-text-body); font-size: var(--font-size-small); font-weight: 600;
+  font-family: var(--typography-label-family);
+}
+.settings-group { display: flex; flex-direction: column; gap: var(--space-xs); }
 .settings-label {
   color: var(--color-text-muted);
   font-family: var(--typography-overline-family); font-size: var(--typography-overline-size);
   font-weight: var(--typography-overline-weight); letter-spacing: var(--typography-overline-letter-spacing);
   text-transform: var(--typography-overline-text-case);
 }
+.settings-label em { font-style: normal; text-transform: none; letter-spacing: 0; opacity: .75; }
 .seg { display: flex; gap: 2px; }
 .seg button {
   flex: 1; cursor: pointer; padding: var(--space-xs) var(--space-sm);
