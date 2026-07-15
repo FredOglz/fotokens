@@ -1,480 +1,103 @@
 {
   "color": {
     "checkbox": {
-      "default": {
-        "primary": {
-          "unchecked": {
-            "background": {
-              "$value": "{color.surface.base}"
-            },
-            "border": {
-              "$value": "{color.border.strong}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "uncheckedHover": {
-            "background": {
-              "$value": "{color.role.primary.tint}"
-            },
-            "border": {
-              "$value": "{color.role.primary.main}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "checked": {
-            "background": {
-              "$value": "{color.role.primary.main}"
-            },
-            "border": {
-              "$value": "{color.role.primary.main}"
-            },
-            "mark": {
-              "$value": "{color.role.primary.on}"
-            }
-          },
-          "checkedHover": {
-            "background": {
-              "$value": "{color.role.primary.hover}"
-            },
-            "border": {
-              "$value": "{color.role.primary.hover}"
-            },
-            "mark": {
-              "$value": "{color.role.primary.on}"
-            }
-          },
-          "indeterminate": {
-            "background": {
-              "$value": "{color.role.primary.main}"
-            },
-            "border": {
-              "$value": "{color.role.primary.main}"
-            },
-            "mark": {
-              "$value": "{color.role.primary.on}"
-            }
-          },
-          "disabled": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "disabledChecked": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.text.disabled}"
-            }
-          }
+      "unchecked": {
+        "background": {
+          "$value": "{color.surface.base}"
         },
-        "neutral": {
-          "unchecked": {
-            "background": {
-              "$value": "{color.surface.base}"
-            },
-            "border": {
-              "$value": "{color.border.strong}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "uncheckedHover": {
-            "background": {
-              "$value": "{color.role.neutral.tint}"
-            },
-            "border": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "checked": {
-            "background": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "border": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "mark": {
-              "$value": "{color.role.neutral.on}"
-            }
-          },
-          "checkedHover": {
-            "background": {
-              "$value": "{color.role.neutral.hover}"
-            },
-            "border": {
-              "$value": "{color.role.neutral.hover}"
-            },
-            "mark": {
-              "$value": "{color.role.neutral.on}"
-            }
-          },
-          "indeterminate": {
-            "background": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "border": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "mark": {
-              "$value": "{color.role.neutral.on}"
-            }
-          },
-          "disabled": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "disabledChecked": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.text.disabled}"
-            }
-          }
+        "border": {
+          "$value": "{color.border.strong}"
         },
-        "success": {
-          "unchecked": {
-            "background": {
-              "$value": "{color.surface.base}"
-            },
-            "border": {
-              "$value": "{color.border.strong}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "uncheckedHover": {
-            "background": {
-              "$value": "{color.role.success.tint}"
-            },
-            "border": {
-              "$value": "{color.role.success.main}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "checked": {
-            "background": {
-              "$value": "{color.role.success.main}"
-            },
-            "border": {
-              "$value": "{color.role.success.main}"
-            },
-            "mark": {
-              "$value": "{color.role.success.on}"
-            }
-          },
-          "checkedHover": {
-            "background": {
-              "$value": "{color.role.success.hover}"
-            },
-            "border": {
-              "$value": "{color.role.success.hover}"
-            },
-            "mark": {
-              "$value": "{color.role.success.on}"
-            }
-          },
-          "indeterminate": {
-            "background": {
-              "$value": "{color.role.success.main}"
-            },
-            "border": {
-              "$value": "{color.role.success.main}"
-            },
-            "mark": {
-              "$value": "{color.role.success.on}"
-            }
-          },
-          "disabled": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "disabledChecked": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.text.disabled}"
-            }
-          }
+        "mark": {
+          "$value": "{color.surface.transparent}"
+        }
+      },
+      "uncheckedHover": {
+        "background": {
+          "$value": "{color.role.primary.tint}"
         },
-        "warning": {
-          "unchecked": {
-            "background": {
-              "$value": "{color.surface.base}"
-            },
-            "border": {
-              "$value": "{color.border.strong}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "uncheckedHover": {
-            "background": {
-              "$value": "{color.role.warning.tint}"
-            },
-            "border": {
-              "$value": "{color.role.warning.main}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "checked": {
-            "background": {
-              "$value": "{color.role.warning.main}"
-            },
-            "border": {
-              "$value": "{color.role.warning.main}"
-            },
-            "mark": {
-              "$value": "{color.role.warning.on}"
-            }
-          },
-          "checkedHover": {
-            "background": {
-              "$value": "{color.role.warning.hover}"
-            },
-            "border": {
-              "$value": "{color.role.warning.hover}"
-            },
-            "mark": {
-              "$value": "{color.role.warning.on}"
-            }
-          },
-          "indeterminate": {
-            "background": {
-              "$value": "{color.role.warning.main}"
-            },
-            "border": {
-              "$value": "{color.role.warning.main}"
-            },
-            "mark": {
-              "$value": "{color.role.warning.on}"
-            }
-          },
-          "disabled": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "disabledChecked": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.text.disabled}"
-            }
-          }
+        "border": {
+          "$value": "{color.role.primary.main}"
         },
-        "danger": {
-          "unchecked": {
-            "background": {
-              "$value": "{color.surface.base}"
-            },
-            "border": {
-              "$value": "{color.border.strong}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "uncheckedHover": {
-            "background": {
-              "$value": "{color.role.danger.tint}"
-            },
-            "border": {
-              "$value": "{color.role.danger.main}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "checked": {
-            "background": {
-              "$value": "{color.role.danger.main}"
-            },
-            "border": {
-              "$value": "{color.role.danger.main}"
-            },
-            "mark": {
-              "$value": "{color.role.danger.on}"
-            }
-          },
-          "checkedHover": {
-            "background": {
-              "$value": "{color.role.danger.hover}"
-            },
-            "border": {
-              "$value": "{color.role.danger.hover}"
-            },
-            "mark": {
-              "$value": "{color.role.danger.on}"
-            }
-          },
-          "indeterminate": {
-            "background": {
-              "$value": "{color.role.danger.main}"
-            },
-            "border": {
-              "$value": "{color.role.danger.main}"
-            },
-            "mark": {
-              "$value": "{color.role.danger.on}"
-            }
-          },
-          "disabled": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "disabledChecked": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.text.disabled}"
-            }
-          }
+        "mark": {
+          "$value": "{color.surface.transparent}"
+        }
+      },
+      "checked": {
+        "background": {
+          "$value": "{color.role.primary.main}"
         },
-        "info": {
-          "unchecked": {
-            "background": {
-              "$value": "{color.surface.base}"
-            },
-            "border": {
-              "$value": "{color.border.strong}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "uncheckedHover": {
-            "background": {
-              "$value": "{color.role.info.tint}"
-            },
-            "border": {
-              "$value": "{color.role.info.main}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "checked": {
-            "background": {
-              "$value": "{color.role.info.main}"
-            },
-            "border": {
-              "$value": "{color.role.info.main}"
-            },
-            "mark": {
-              "$value": "{color.role.info.on}"
-            }
-          },
-          "checkedHover": {
-            "background": {
-              "$value": "{color.role.info.hover}"
-            },
-            "border": {
-              "$value": "{color.role.info.hover}"
-            },
-            "mark": {
-              "$value": "{color.role.info.on}"
-            }
-          },
-          "indeterminate": {
-            "background": {
-              "$value": "{color.role.info.main}"
-            },
-            "border": {
-              "$value": "{color.role.info.main}"
-            },
-            "mark": {
-              "$value": "{color.role.info.on}"
-            }
-          },
-          "disabled": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.surface.transparent}"
-            }
-          },
-          "disabledChecked": {
-            "background": {
-              "$value": "{color.surface.disabled}"
-            },
-            "border": {
-              "$value": "{color.border.disabled}"
-            },
-            "mark": {
-              "$value": "{color.text.disabled}"
-            }
-          }
+        "border": {
+          "$value": "{color.role.primary.main}"
+        },
+        "mark": {
+          "$value": "{color.role.primary.on}"
+        }
+      },
+      "checkedHover": {
+        "background": {
+          "$value": "{color.role.primary.hover}"
+        },
+        "border": {
+          "$value": "{color.role.primary.hover}"
+        },
+        "mark": {
+          "$value": "{color.role.primary.on}"
+        }
+      },
+      "indeterminate": {
+        "background": {
+          "$value": "{color.role.primary.main}"
+        },
+        "border": {
+          "$value": "{color.role.primary.main}"
+        },
+        "mark": {
+          "$value": "{color.role.primary.on}"
+        }
+      },
+      "error": {
+        "background": {
+          "$value": "{color.surface.base}"
+        },
+        "border": {
+          "$value": "{color.role.danger.main}"
+        },
+        "mark": {
+          "$value": "{color.surface.transparent}"
+        }
+      },
+      "errorHover": {
+        "background": {
+          "$value": "{color.role.danger.tint}"
+        },
+        "border": {
+          "$value": "{color.role.danger.main}"
+        },
+        "mark": {
+          "$value": "{color.surface.transparent}"
+        }
+      },
+      "disabled": {
+        "background": {
+          "$value": "{color.surface.disabled}"
+        },
+        "border": {
+          "$value": "{color.border.disabled}"
+        },
+        "mark": {
+          "$value": "{color.surface.transparent}"
+        }
+      },
+      "disabledChecked": {
+        "background": {
+          "$value": "{color.surface.disabled}"
+        },
+        "border": {
+          "$value": "{color.border.disabled}"
+        },
+        "mark": {
+          "$value": "{color.text.disabled}"
         }
       }
     },

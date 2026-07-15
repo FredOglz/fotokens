@@ -58,39 +58,39 @@ const SLOTS = {
 const ROLES = {
   h1: {
     desc: 'Titre de page. Un seul par écran.',
-    family: 'sans', size: 'h1', weight: 'bold', lineHeight: 'tight', letterSpacing: 'tight', textCase: 'none',
+    family: 'heading', size: 'h1', weight: 'bold', lineHeight: 'tight', letterSpacing: 'tight', textCase: 'none',
   },
   h2: {
     desc: 'Titre de section.',
-    family: 'sans', size: 'h2', weight: 'bold', lineHeight: 'tight', letterSpacing: 'tight', textCase: 'none',
+    family: 'heading', size: 'h2', weight: 'bold', lineHeight: 'tight', letterSpacing: 'tight', textCase: 'none',
   },
   h3: {
     desc: 'Sous-titre, titre de carte.',
-    family: 'sans', size: 'h3', weight: 'semibold', lineHeight: 'tight', letterSpacing: 'snug', textCase: 'none',
+    family: 'heading', size: 'h3', weight: 'semibold', lineHeight: 'tight', letterSpacing: 'snug', textCase: 'none',
   },
   lead: {
     desc: 'Chapô — le paragraphe d’introduction qui suit un titre.',
-    family: 'sans', size: 'lead', weight: 'regular', lineHeight: 'normal', letterSpacing: 'normal', textCase: 'none',
+    family: 'body', size: 'lead', weight: 'regular', lineHeight: 'normal', letterSpacing: 'normal', textCase: 'none',
   },
   body: {
     desc: 'Texte de lecture. Le rôle par défaut.',
-    family: 'sans', size: 'body', weight: 'regular', lineHeight: 'normal', letterSpacing: 'normal', textCase: 'none',
+    family: 'body', size: 'body', weight: 'regular', lineHeight: 'normal', letterSpacing: 'normal', textCase: 'none',
   },
   small: {
     desc: 'Texte secondaire : mentions, aide contextuelle, cellules de tableau.',
-    family: 'sans', size: 'small', weight: 'regular', lineHeight: 'normal', letterSpacing: 'normal', textCase: 'none',
+    family: 'body', size: 'small', weight: 'regular', lineHeight: 'normal', letterSpacing: 'normal', textCase: 'none',
   },
   label: {
     desc: 'Texte d’interface : bouton, onglet, étiquette de champ. Interligne serré (jamais plus d’une ligne) et graisse medium, pour tenir sans crier.',
-    family: 'sans', size: 'small', weight: 'medium', lineHeight: 'tight', letterSpacing: 'normal', textCase: 'none',
+    family: 'body', size: 'small', weight: 'medium', lineHeight: 'tight', letterSpacing: 'normal', textCase: 'none',
   },
   caption: {
     desc: 'Légende sous une image, note de bas de tableau. Au plancher de 12px, donc légèrement aéré pour rester lisible.',
-    family: 'sans', size: 'caption', weight: 'regular', lineHeight: 'normal', letterSpacing: 'wide', textCase: 'none',
+    family: 'body', size: 'caption', weight: 'regular', lineHeight: 'normal', letterSpacing: 'wide', textCase: 'none',
   },
   overline: {
     desc: 'Surtitre en capitales, au-dessus d’un titre. Capitalisé PAR LE TOKEN — le rôle se suffit à lui-même.',
-    family: 'sans', size: 'caption', weight: 'semibold', lineHeight: 'normal', letterSpacing: 'caps', textCase: 'uppercase',
+    family: 'body', size: 'caption', weight: 'semibold', lineHeight: 'normal', letterSpacing: 'caps', textCase: 'uppercase',
   },
   code: {
     desc: 'Code et valeurs techniques. Le seul rôle en chasse fixe.',

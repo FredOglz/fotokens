@@ -112,6 +112,19 @@
   --color-slate-blue-900: #0e2338;
   --color-slate-blue-alpha-5: rgba(100, 139, 180, 0.05);
   --color-slate-blue-alpha-10: rgba(100, 139, 180, 0.1);
+  --color-slate-violet-25: #faf9ff;
+  --color-slate-violet-50: #f3f2fd;
+  --color-slate-violet-100: #e7e5f8;
+  --color-slate-violet-200: #d4d0ef;
+  --color-slate-violet-300: #bab4de;
+  --color-slate-violet-400: #a19acc;
+  --color-slate-violet-500: #877fb4;
+  --color-slate-violet-600: #6f6799;
+  --color-slate-violet-700: #554e7a;
+  --color-slate-violet-800: #3b3458;
+  --color-slate-violet-900: #221d38;
+  --color-slate-violet-alpha-5: rgba(135, 127, 180, 0.05);
+  --color-slate-violet-alpha-10: rgba(135, 127, 180, 0.1);
   --color-violet-25: #fbf9ff;
   --color-violet-50: #f6f0ff;
   --color-violet-100: #eee2ff;
@@ -389,61 +402,61 @@
   --font-letter-spacing-normal: 0; /** Texte de lecture : on ne touche pas au crénage dessiné par le fontier. */
   --font-letter-spacing-wide: 0.02em; /** Petit texte à aérer légèrement. */
   --font-letter-spacing-caps: 0.08em; /** Texte en capitales (overline) : les capitales ont besoin d'air pour rester lisibles. */
-  --font-brand-sans: var(--font-stack-inter); /** Famille « sans » — jouée par la pile « inter ». */
-  --font-brand-serif: var(--font-stack-georgia); /** Famille « serif » — jouée par la pile « georgia ». */
+  --font-brand-heading: var(--font-stack-inter); /** Famille « heading » — jouée par la pile « inter ». */
+  --font-brand-body: var(--font-stack-jetbrains-mono); /** Famille « body » — jouée par la pile « jetbrainsMono ». */
   --font-brand-mono: var(--font-stack-jetbrains-mono); /** Famille « mono » — jouée par la pile « jetbrainsMono ». */
   --shadow-raised: 0 1px 2px 0 rgba(0, 0, 0, 0.08); /** Légère élévation (carte au repos). */
   --shadow-float: 0 12px 32px -8px rgba(0, 0, 0, 0.16); /** Élément flottant (carte au survol, dropdown). */
   --shadow-overlay: 0 16px 48px -12px rgba(0, 0, 0, 0.4); /** Élément détaché de la page (modale, drawer). */
-  --typography-h1-family: var(--font-brand-sans);
+  --typography-h1-family: var(--font-brand-heading);
   --typography-h1-size: var(--font-size-h1);
   --typography-h1-weight: var(--font-weight-bold);
   --typography-h1-line-height: var(--font-line-height-tight);
   --typography-h1-letter-spacing: var(--font-letter-spacing-tight);
   --typography-h1-text-case: none;
-  --typography-h2-family: var(--font-brand-sans);
+  --typography-h2-family: var(--font-brand-heading);
   --typography-h2-size: var(--font-size-h2);
   --typography-h2-weight: var(--font-weight-bold);
   --typography-h2-line-height: var(--font-line-height-tight);
   --typography-h2-letter-spacing: var(--font-letter-spacing-tight);
   --typography-h2-text-case: none;
-  --typography-h3-family: var(--font-brand-sans);
+  --typography-h3-family: var(--font-brand-heading);
   --typography-h3-size: var(--font-size-h3);
   --typography-h3-weight: var(--font-weight-semibold);
   --typography-h3-line-height: var(--font-line-height-tight);
   --typography-h3-letter-spacing: var(--font-letter-spacing-snug);
   --typography-h3-text-case: none;
-  --typography-lead-family: var(--font-brand-sans);
+  --typography-lead-family: var(--font-brand-body);
   --typography-lead-size: var(--font-size-lead);
   --typography-lead-weight: var(--font-weight-regular);
   --typography-lead-line-height: var(--font-line-height-normal);
   --typography-lead-letter-spacing: var(--font-letter-spacing-normal);
   --typography-lead-text-case: none;
-  --typography-body-family: var(--font-brand-sans);
+  --typography-body-family: var(--font-brand-body);
   --typography-body-size: var(--font-size-body);
   --typography-body-weight: var(--font-weight-regular);
   --typography-body-line-height: var(--font-line-height-normal);
   --typography-body-letter-spacing: var(--font-letter-spacing-normal);
   --typography-body-text-case: none;
-  --typography-small-family: var(--font-brand-sans);
+  --typography-small-family: var(--font-brand-body);
   --typography-small-size: var(--font-size-small);
   --typography-small-weight: var(--font-weight-regular);
   --typography-small-line-height: var(--font-line-height-normal);
   --typography-small-letter-spacing: var(--font-letter-spacing-normal);
   --typography-small-text-case: none;
-  --typography-label-family: var(--font-brand-sans);
+  --typography-label-family: var(--font-brand-body);
   --typography-label-size: var(--font-size-small);
   --typography-label-weight: var(--font-weight-medium);
   --typography-label-line-height: var(--font-line-height-tight);
   --typography-label-letter-spacing: var(--font-letter-spacing-normal);
   --typography-label-text-case: none;
-  --typography-caption-family: var(--font-brand-sans);
+  --typography-caption-family: var(--font-brand-body);
   --typography-caption-size: var(--font-size-caption);
   --typography-caption-weight: var(--font-weight-regular);
   --typography-caption-line-height: var(--font-line-height-normal);
   --typography-caption-letter-spacing: var(--font-letter-spacing-wide);
   --typography-caption-text-case: none;
-  --typography-overline-family: var(--font-brand-sans);
+  --typography-overline-family: var(--font-brand-body);
   --typography-overline-size: var(--font-size-caption);
   --typography-overline-weight: var(--font-weight-semibold);
   --typography-overline-line-height: var(--font-line-height-normal);
@@ -488,6 +501,12 @@
   --glyph-size-sm: var(--size-glyph-sm);
   --glyph-size-md: var(--size-glyph-md);
   --glyph-size-lg: var(--size-glyph-lg);
+  --track-width-sm: var(--size-control-lg);
+  --track-width-md: var(--size-control-xl);
+  --track-width-lg: var(--size-spacing-11);
+  --track-height-sm: var(--size-glyph-md);
+  --track-height-md: var(--size-glyph-lg);
+  --track-height-lg: var(--size-control-sm);
 }
 
 [data-theme="dark"] {
@@ -576,5 +595,10 @@
     --control-height-lg: var(--size-control-xl);
     --glyph-size-xs: var(--size-glyph-sm);
     --glyph-size-sm: var(--size-glyph-md);
+    --track-width-sm: var(--size-control-xl);
+    --track-width-md: var(--size-spacing-11);
+    --track-height-sm: var(--size-glyph-lg);
+    --track-height-md: var(--size-control-sm);
+    --track-height-lg: var(--size-control-md);
   }
 }

@@ -42,10 +42,13 @@ const BRAND = {
  *
  * Les valeurs sont des clés de `font.stack` (voir primitives/typography.json).
  */
+// Nommé par USAGE (titre / corps / code), pas par classification (sans/serif) :
+// c'est le brand, il exprime un rôle. Titres et corps portent volontairement deux
+// polices distinctes — ici un contraste sans / mono (esprit terminal).
 const BRAND_FONT = {
-  sans:  'inter',
-  serif: 'georgia',
-  mono:  'jetbrainsMono',
+  heading: 'inter',
+  body:    'jetbrainsMono',
+  mono:    'jetbrainsMono',
 };
 
 /** Couleurs catégorielles (graphiques, avatars, tags) : des teintes distinguables. */

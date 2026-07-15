@@ -8,8 +8,26 @@
 <link rel="stylesheet" href="components.css">
 <link rel="stylesheet" href="docs.css">
 <script>
-  // Avant le premier rendu, pour éviter un flash de thème clair.
-  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  // Avant le premier rendu, pour éviter un flash (thème ET couleur « primary »).
+  (function () {
+    var root = document.documentElement;
+    if (localStorage.getItem('theme') === 'dark') root.setAttribute('data-theme', 'dark');
+    // Remappe toute la chaîne primary en surchargeant les vars brand.primary.* :
+    // le rôle et les composants suivent, ils pointent déjà dessus.
+    var STEPS = ["25","50","100","200","300","400","500","600","700","800","900"], ALPHAS = ["5","10"];
+    window.__setPrimary = function (css) {
+      STEPS.forEach(function (s) { root.style.setProperty('--color-brand-primary-' + s, 'var(--color-' + css + '-' + s + ')'); });
+      ALPHAS.forEach(function (a) { root.style.setProperty('--color-brand-primary-alpha-' + a, 'var(--color-' + css + '-alpha-' + a + ')'); });
+    };
+    var p = localStorage.getItem('primary');
+    if (p) window.__setPrimary(p);
+    // Polices : on surcharge --font-brand-heading (titres) et --font-brand-body (corps),
+    // les rôles typo suivent. Le code garde --font-brand-mono, non touché.
+    window.__setHeading = function (css) { root.style.setProperty('--font-brand-heading', 'var(--font-stack-' + css + ')'); };
+    window.__setBody = function (css) { root.style.setProperty('--font-brand-body', 'var(--font-stack-' + css + ')'); };
+    var fh = localStorage.getItem('fontHeading'); if (fh) window.__setHeading(fh);
+    var fb = localStorage.getItem('fontBody'); if (fb) window.__setBody(fb);
+  })();
 </script>
 </head>
 <body>
@@ -21,37 +39,61 @@
     <div class="nav-group">
       <h5>Comprendre</h5>
       <ul><li><a href="index.html" class="">
-            <span class="nav-num nav-num-off"></span>
             Architecture</a></li><li><a href="demarrer.html" class="">
-            <span class="nav-num nav-num-off"></span>
             Démarrer un projet</a></li></ul>
     </div>
     <div class="nav-group">
       <h5>Le système</h5>
       <ul><li><a href="primitives.html" class="on">
-            <span class="nav-num">1</span>
             Primitives</a></li><li><a href="brand.html" class="">
-            <span class="nav-num">2</span>
             Brand</a></li><li><a href="roles.html" class="">
-            <span class="nav-num">3</span>
             Contrat de rôle</a></li><li><a href="semantique.html" class="">
-            <span class="nav-num">3</span>
             Sémantique (reste)</a></li><li><a href="effets.html" class="">
-            <span class="nav-num">3</span>
             Effets & mouvement</a></li></ul>
     </div>
     <div class="nav-group">
       <h5>Composants</h5>
       <ul><li><a href="composants-formulaire.html" class="">
-            <span class="nav-num">4</span>
-            Formulaire</a></li><li><a href="composants-affichage.html" class="">
-            <span class="nav-num">4</span>
-            Affichage</a></li><li><a href="composants-structure.html" class="">
-            <span class="nav-num">4</span>
-            Structure</a></li></ul>
+            Formulaire<span class="nav-caret" aria-hidden="true">▸</span></a></li><li><a href="composants-affichage.html" class="">
+            Affichage<span class="nav-caret" aria-hidden="true">▸</span></a></li><li><a href="composants-structure.html" class="">
+            Structure<span class="nav-caret" aria-hidden="true">▸</span></a></li></ul>
     </div>
-  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+  <div class="settings">
+    <button class="settings-btn" id="settingsBtn" aria-haspopup="dialog">⚙ Réglages</button>
+  </div>
 </aside>
+
+<dialog class="settings-modal" id="settingsModal" aria-labelledby="settingsTitle">
+  <div class="settings-modal-head">
+    <span class="settings-modal-title" id="settingsTitle">Réglages</span>
+    <button type="button" class="settings-close" id="settingsClose" aria-label="Fermer">✕</button>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Thème</span>
+    <div class="seg">
+      <button type="button" data-theme-choice="light">◐ Clair</button>
+      <button type="button" data-theme-choice="dark">◑ Sombre</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Couleur « primary »</span>
+    <div class="swatch-grid">
+      <button type="button" class="swatch-pick" data-palette="gray" title="gray"><span class="swatch-dot" style="background: var(--color-gray-500)"></span>gray</button><button type="button" class="swatch-pick" data-palette="blue" title="blue"><span class="swatch-dot" style="background: var(--color-blue-500)"></span>blue</button><button type="button" class="swatch-pick" data-palette="red" title="red"><span class="swatch-dot" style="background: var(--color-red-500)"></span>red</button><button type="button" class="swatch-pick" data-palette="green" title="green"><span class="swatch-dot" style="background: var(--color-green-500)"></span>green</button><button type="button" class="swatch-pick" data-palette="orange" title="orange"><span class="swatch-dot" style="background: var(--color-orange-500)"></span>orange</button><button type="button" class="swatch-pick" data-palette="turquoise" title="turquoise"><span class="swatch-dot" style="background: var(--color-turquoise-500)"></span>turquoise</button><button type="button" class="swatch-pick" data-palette="slate-blue" title="slateBlue"><span class="swatch-dot" style="background: var(--color-slate-blue-500)"></span>slateBlue</button><button type="button" class="swatch-pick" data-palette="slate-violet" title="slateViolet"><span class="swatch-dot" style="background: var(--color-slate-violet-500)"></span>slateViolet</button><button type="button" class="swatch-pick" data-palette="violet" title="violet"><span class="swatch-dot" style="background: var(--color-violet-500)"></span>violet</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Police des titres</span>
+    <div class="font-grid">
+      <button type="button" class="font-pick" data-font-heading="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-heading="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-heading="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-heading="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-heading="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-heading="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Police du corps</span>
+    <div class="font-grid">
+      <button type="button" class="font-pick" data-font-body="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-body="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-body="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-body="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-body="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-body="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
+    </div>
+  </div>
+</dialog>
 
 <main class="main">
   <div class="page">
@@ -193,6 +235,23 @@
         <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(100, 139, 180, 0.1)" title="slateBlue.alpha.10 — rgba(100, 139, 180, 0.1)">
         <span class="sw-step">10%</span></div></div>
     </div><div class="ramp">
+      <div class="ramp-name">slateViolet</div>
+      <div class="ramp-swatches"><div class="sw" style="background:#faf9ff" title="slateViolet.25 — #faf9ff — L*98%">
+        <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#f3f2fd" title="slateViolet.50 — #f3f2fd — L*97%">
+        <span class="sw-step" style="color:#000">50</span></div><div class="sw" style="background:#e7e5f8" title="slateViolet.100 — #e7e5f8 — L*93%">
+        <span class="sw-step" style="color:#000">100</span></div><div class="sw" style="background:#d4d0ef" title="slateViolet.200 — #d4d0ef — L*87%">
+        <span class="sw-step" style="color:#000">200</span></div><div class="sw" style="background:#bab4de" title="slateViolet.300 — #bab4de — L*79%">
+        <span class="sw-step" style="color:#000">300</span></div><div class="sw" style="background:#a19acc" title="slateViolet.400 — #a19acc — L*71%">
+        <span class="sw-step" style="color:#000">400</span></div><div class="sw" style="background:#877fb4" title="slateViolet.500 — #877fb4 — L*62%">
+        <span class="sw-step" style="color:#000">500</span></div><div class="sw" style="background:#6f6799" title="slateViolet.600 — #6f6799 — L*54%">
+        <span class="sw-step" style="color:#fff">600</span></div><div class="sw" style="background:#554e7a" title="slateViolet.700 — #554e7a — L*45%">
+        <span class="sw-step" style="color:#fff">700</span></div><div class="sw" style="background:#3b3458" title="slateViolet.800 — #3b3458 — L*35%">
+        <span class="sw-step" style="color:#fff">800</span></div><div class="sw" style="background:#221d38" title="slateViolet.900 — #221d38 — L*25%">
+        <span class="sw-step" style="color:#fff">900</span></div></div>
+      <div class="ramp-alphas"><div class="sw sw-alpha" style="background:rgba(135, 127, 180, 0.05)" title="slateViolet.alpha.5 — rgba(135, 127, 180, 0.05)">
+        <span class="sw-step">5%</span></div><div class="sw sw-alpha" style="background:rgba(135, 127, 180, 0.1)" title="slateViolet.alpha.10 — rgba(135, 127, 180, 0.1)">
+        <span class="sw-step">10%</span></div></div>
+    </div><div class="ramp">
       <div class="ramp-name">violet</div>
       <div class="ramp-swatches"><div class="sw" style="background:#fbf9ff" title="violet.25 — #fbf9ff — L*99%">
         <span class="sw-step" style="color:#000">25</span></div><div class="sw" style="background:#f6f0ff" title="violet.50 — #f6f0ff — L*96%">
@@ -246,6 +305,21 @@
         <table class="tbl"><tbody><tr><td><code>size.border.none</code></td><td class="mono">0</td></tr><tr><td><code>size.border.sm</code></td><td class="mono">1px</td></tr><tr><td><code>size.border.md</code></td><td class="mono">2px</td></tr><tr><td><code>size.border.lg</code></td><td class="mono">4px</td></tr></tbody></table><h3><code>size.breakpoint</code></h3>
         <p class="note">Points de rupture. Une media query CSS ne peut pas lire une custom property : la valeur est inlinée par le build.</p>
         <table class="tbl"><tbody><tr><td><code>size.breakpoint.xs</code></td><td class="mono">480px</td></tr><tr><td><code>size.breakpoint.sm</code></td><td class="mono">640px</td></tr><tr><td><code>size.breakpoint.md</code></td><td class="mono">768px</td></tr><tr><td><code>size.breakpoint.lg</code></td><td class="mono">1024px</td></tr><tr><td><code>size.breakpoint.xl</code></td><td class="mono">1280px</td></tr></tbody></table>
+
+  <h2 id="polices">Les polices</h2>
+  <p>Le catalogue typographique brut : piles de polices, graisses, interlignes, approches. Comme
+  les couleurs, <strong>rien n'est choisi ici</strong> — c'est le <a href="brand.html#polices">brand</a>
+  qui désigne la pile qui joue <code>heading</code>, <code>body</code> et <code>mono</code>. C'est ici
+  qu'un rôle typo trouve sa <code>weight</code>, sa <code>lineHeight</code> et son <code>letterSpacing</code>.</p>
+  <h3><code>font.stack</code></h3>
+        <p class="note">Catalogue de piles de polices. AUCUNE n'est choisie ici : c'est la couche brand (`font.brand.*`) qui désigne celle qui joue le rôle sans / serif / mono. Ajouter une pile ici ne change rien tant que le brand ne la sélectionne pas.</p>
+        <table class="tbl"><tbody><tr><td><code>font.stack.inter</code></td><td class="mono">Inter, system-ui, -apple-system, sans-serif</td></tr><tr><td><code>font.stack.geist</code></td><td class="mono">Geist, system-ui, -apple-system, sans-serif</td></tr><tr><td><code>font.stack.systemSans</code></td><td class="mono">system-ui, -apple-system, 'Segoe UI', sans-serif</td></tr><tr><td><code>font.stack.georgia</code></td><td class="mono">Georgia, 'Times New Roman', serif</td></tr><tr><td><code>font.stack.jetbrainsMono</code></td><td class="mono">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr><td><code>font.stack.systemMono</code></td><td class="mono">ui-monospace, 'SF Mono', Menlo, monospace</td></tr></tbody></table><h3><code>font.weight</code></h3>
+        <p class="note"></p>
+        <table class="tbl"><tbody><tr><td><code>font.weight.regular</code></td><td class="mono">400</td></tr><tr><td><code>font.weight.medium</code></td><td class="mono">500</td></tr><tr><td><code>font.weight.semibold</code></td><td class="mono">600</td></tr><tr><td><code>font.weight.bold</code></td><td class="mono">700</td></tr></tbody></table><h3><code>font.lineHeight</code></h3>
+        <p class="note">Sans unité : l'interligne se multiplie par le corps du texte, il suit donc la bascule mobile tout seul.</p>
+        <table class="tbl"><tbody><tr><td><code>font.lineHeight.tight</code></td><td class="mono">1.2</td></tr><tr><td><code>font.lineHeight.normal</code></td><td class="mono">1.5</td></tr><tr><td><code>font.lineHeight.relaxed</code></td><td class="mono">1.75</td></tr></tbody></table><h3><code>font.letterSpacing</code></h3>
+        <p class="note">En `em`, jamais en px : l'approche doit être PROPORTIONNELLE au corps, sinon un titre passé de 48px à 32px en mobile garderait un crénage calculé pour 48px. Le principe est optique — plus le texte est gros, plus on resserre ; plus il est petit ou capitalisé, plus on aère.</p>
+        <table class="tbl"><tbody><tr><td><code>font.letterSpacing.tight</code></td><td class="mono">-0.02em</td></tr><tr><td><code>font.letterSpacing.snug</code></td><td class="mono">-0.01em</td></tr><tr><td><code>font.letterSpacing.normal</code></td><td class="mono">0</td></tr><tr><td><code>font.letterSpacing.wide</code></td><td class="mono">0.02em</td></tr><tr><td><code>font.letterSpacing.caps</code></td><td class="mono">0.08em</td></tr></tbody></table>
     
     <nav class="pager">
       <a href="demarrer.html" class="pg pg-prev"><span>← Précédent</span><b>Démarrer un projet</b></a>
@@ -256,11 +330,63 @@
 
 <script>
   const root = document.documentElement;
-  document.getElementById('toggle').addEventListener('click', () => {
-    const dark = root.getAttribute('data-theme') === 'dark';
-    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
-    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+
+  // Réglages : modale (thème + couleur « primary »). <dialog> natif → piège de
+  // focus, Escape et inertage du fond sont gratuits. Reste à gérer le clic sur le
+  // fond (le backdrop ne déclenche pas de close natif).
+  const settingsBtn = document.getElementById('settingsBtn');
+  const settingsModal = document.getElementById('settingsModal');
+  settingsBtn.addEventListener('click', () => settingsModal.showModal());
+  document.getElementById('settingsClose').addEventListener('click', () => settingsModal.close());
+  settingsModal.addEventListener('click', (e) => {
+    const r = settingsModal.getBoundingClientRect();
+    const outside = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    if (outside) settingsModal.close();
   });
+
+  const syncTheme = () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    document.querySelectorAll('[data-theme-choice]').forEach((b) =>
+      b.classList.toggle('active', b.dataset.themeChoice === (dark ? 'dark' : 'light')));
+  };
+  document.querySelectorAll('[data-theme-choice]').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (b.dataset.themeChoice === 'dark') { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+      else { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+      syncTheme();
+    }));
+  syncTheme();
+
+  let currentPrimary = localStorage.getItem('primary') || 'violet';
+  const syncPrimary = () =>
+    document.querySelectorAll('.swatch-pick').forEach((b) =>
+      b.classList.toggle('active', b.dataset.palette === currentPrimary));
+  document.querySelectorAll('.swatch-pick').forEach((b) =>
+    b.addEventListener('click', () => {
+      currentPrimary = b.dataset.palette;
+      window.__setPrimary(currentPrimary);
+      localStorage.setItem('primary', currentPrimary);
+      syncPrimary();
+    }));
+  syncPrimary();
+
+  // Deux sélecteurs de police : titres (data-font-heading) et corps (data-font-body).
+  const wireFont = (attr, storeKey, def, apply) => {
+    let current = localStorage.getItem(storeKey) || def;
+    const picks = document.querySelectorAll('[' + attr + ']');
+    const sync = () => picks.forEach((b) => b.classList.toggle('active', b.getAttribute(attr) === current));
+    picks.forEach((b) =>
+      b.addEventListener('click', () => {
+        current = b.getAttribute(attr);
+        apply(current);
+        localStorage.setItem(storeKey, current);
+        sync();
+      }));
+    sync();
+  };
+  wireFont('data-font-heading', 'fontHeading', 'inter', window.__setHeading);
+  wireFont('data-font-body', 'fontBody', 'jetbrains-mono', window.__setBody);
+
   document.getElementById('burger').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('open');
   });

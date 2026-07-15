@@ -36,25 +36,85 @@ body {
   background: var(--color-role-primary-tint-strong);
   color: var(--color-role-primary-text); font-weight: 600;
 }
-.nav-num {
-  display: grid; place-items: center; width: 20px; height: 20px; flex: none;
-  border-radius: var(--radius-full); background: var(--color-role-primary-main);
-  color: var(--color-role-primary-on); font-size: 0.625rem; font-weight: 700;
-}
-.nav-num-off { background: none; }
+/* Caret des items dépliables (les pages à sous-menu). Pointe à droite quand
+   replié, tourne vers le bas sur la page courante (sous-menu déployé). */
+.nav-caret { margin-left: auto; flex: none; font-size: 0.7em; color: var(--color-text-muted); transition: transform .15s; }
+.nav-group a.on .nav-caret { transform: rotate(90deg); color: var(--color-role-primary-text); }
 
 /* Sous-menu : les ancres de la page courante. */
-.nav-group ul.sub { margin: 2px 0 var(--space-sm) 30px; padding-left: var(--space-sm); border-left: var(--border-width-default) solid var(--color-border-divider); gap: 0; }
+.nav-group ul.sub { margin: 2px 0 var(--space-sm) var(--space-md); padding-left: var(--space-sm); border-left: var(--border-width-default) solid var(--color-border-divider); gap: 0; }
 .nav-group ul.sub a { padding: 3px var(--space-sm); font-size: 0.75rem; border-radius: var(--radius-sm); }
 .nav-group ul.sub a.here { color: var(--color-role-primary-text); font-weight: 600; background: var(--color-role-primary-tint); }
-.theme-toggle {
-  margin-top: auto; cursor: pointer; background: var(--color-surface-base);
-  color: var(--color-text-body);
+.settings { margin-top: auto; }
+.settings-btn {
+  width: 100%; cursor: pointer; background: var(--color-surface-base);
+  color: var(--color-text-body); text-align: left;
   border: var(--border-width-default) solid var(--color-border-default);
   border-radius: var(--radius-md); padding: var(--space-sm);
   font-family: inherit; font-size: var(--font-size-small);
 }
-.theme-toggle:hover { border-color: var(--color-role-primary-main); color: var(--color-role-primary-text); }
+.settings-btn:hover { border-color: var(--color-role-primary-main); color: var(--color-role-primary-text); }
+.settings-modal {
+  margin: auto; width: min(92vw, 380px); max-height: 86vh; overflow-y: auto;
+  padding: var(--space-modal-padding-y) var(--space-modal-padding-x);
+  color: var(--color-text-body);
+  background: var(--color-modal-default-background);
+  border: var(--border-width-modal) solid var(--color-modal-default-border);
+  border-radius: var(--radius-modal); box-shadow: var(--shadow-modal-default);
+}
+.settings-modal::backdrop { background: var(--color-modal-default-scrim); }
+.settings-modal[open] { display: flex; flex-direction: column; gap: var(--space-modal-gap); }
+.settings-modal-head { display: flex; align-items: center; justify-content: space-between; }
+.settings-modal-title {
+  font-family: var(--typography-h3-family); font-size: var(--typography-h3-size);
+  font-weight: var(--typography-h3-weight);
+}
+.settings-close {
+  cursor: pointer; background: none; border: none; padding: var(--space-xs);
+  color: var(--color-text-muted); font-size: var(--font-size-lead); line-height: 1;
+  border-radius: var(--radius-sm);
+}
+.settings-close:hover { color: var(--color-text-body); background: var(--color-state-hover); }
+.settings-group { display: flex; flex-direction: column; gap: var(--space-sm); }
+.settings-label {
+  color: var(--color-text-muted);
+  font-family: var(--typography-overline-family); font-size: var(--typography-overline-size);
+  font-weight: var(--typography-overline-weight); letter-spacing: var(--typography-overline-letter-spacing);
+  text-transform: var(--typography-overline-text-case);
+}
+.seg { display: flex; gap: 2px; }
+.seg button {
+  flex: 1; cursor: pointer; padding: var(--space-xs) var(--space-sm);
+  background: var(--color-surface-raised); color: var(--color-text-muted);
+  border: var(--border-width-default) solid var(--color-border-default);
+  border-radius: var(--radius-sm); font-family: inherit; font-size: var(--font-size-small);
+}
+.seg button.active {
+  background: var(--color-role-primary-tint); color: var(--color-role-primary-text);
+  border-color: var(--color-role-primary-main); font-weight: 600;
+}
+.swatch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xs); }
+.swatch-pick {
+  display: flex; align-items: center; gap: var(--space-xs); cursor: pointer; text-align: left;
+  padding: var(--space-xs); background: var(--color-surface-raised); color: var(--color-text-muted);
+  border: var(--border-width-default) solid var(--color-border-default);
+  border-radius: var(--radius-sm); font-family: var(--typography-code-family); font-size: 0.75rem;
+}
+.swatch-pick:hover { border-color: var(--color-border-strong); color: var(--color-text-body); }
+.swatch-pick.active { border-color: var(--color-role-primary-main); color: var(--color-text-body); font-weight: 600; }
+.swatch-dot {
+  width: 14px; height: 14px; flex: none; border-radius: var(--radius-full);
+  border: var(--border-width-default) solid var(--color-border-default);
+}
+.font-grid { display: grid; gap: var(--space-xs); }
+.font-pick {
+  cursor: pointer; text-align: left; padding: var(--space-xs) var(--space-sm);
+  background: var(--color-surface-raised); color: var(--color-text-body);
+  border: var(--border-width-default) solid var(--color-border-default);
+  border-radius: var(--radius-sm); font-size: var(--font-size-body);
+}
+.font-pick:hover { border-color: var(--color-border-strong); }
+.font-pick.active { border-color: var(--color-role-primary-main); color: var(--color-role-primary-text); font-weight: 600; }
 .burger {
   display: none; position: fixed; top: var(--space-sm); left: var(--space-sm); z-index: 30;
   background: var(--color-surface-raised); color: var(--color-text-body);
@@ -102,6 +162,18 @@ pre {
 }
 pre code { background: none; padding: 0; font-size: .8125rem; line-height: 1.6; }
 pre .c { color: var(--color-text-muted); }
+/* Liens de contenu (table de consommation, prose). Sans règle, ils tombaient sur
+   le bleu/violet par défaut du navigateur — illisible sur fond sombre. Le rôle
+   primary.text est fait pour un lien et s'inverse entre les modes (700 en clair,
+   400 en sombre) : lisible dans les deux. Les liens à classe (.lyr, .pg…) gardent
+   leur style propre. Le <code> imbriqué hérite de cette couleur. */
+.page a:not([class]) { color: var(--color-role-primary-text); text-underline-offset: 2px; }
+.page a:not([class]):hover { color: var(--color-role-primary-hover); }
+/* La pilule <code> d'un lien pose son fond sur surface-base, pas -raised : le
+   contrat de rôle ne garantit le contraste de role.text que contre surface.base.
+   Sur -raised (plus clair en sombre), le lien tombait à 4,09:1 (sous AA) ; sur
+   -base il remonte à 5,75:1. */
+.page a:not([class]) code { background: var(--color-surface-base); }
 .note { color: var(--color-text-muted); font-size: var(--font-size-small); }
 .mono { font-family: var(--typography-code-family); font-size: var(--font-size-small); }
 .scroll-x { overflow-x: auto; }
@@ -162,6 +234,7 @@ pre .c { color: var(--color-text-muted); }
 .brand-arrow { color: var(--color-text-muted); }
 .brand-strip { display: flex; gap: 2px; }
 .brand-strip i { flex: 1; height: 22px; border-radius: 2px; }
+.brand-specimen { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cats { display: flex; gap: var(--space-md); flex-wrap: wrap; }
 .cat { display: grid; justify-items: center; gap: 4px; }
 .cat i { display: block; width: 48px; height: 48px; border-radius: var(--radius-md); }

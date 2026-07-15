@@ -8,8 +8,26 @@
 <link rel="stylesheet" href="components.css">
 <link rel="stylesheet" href="docs.css">
 <script>
-  // Avant le premier rendu, pour éviter un flash de thème clair.
-  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  // Avant le premier rendu, pour éviter un flash (thème ET couleur « primary »).
+  (function () {
+    var root = document.documentElement;
+    if (localStorage.getItem('theme') === 'dark') root.setAttribute('data-theme', 'dark');
+    // Remappe toute la chaîne primary en surchargeant les vars brand.primary.* :
+    // le rôle et les composants suivent, ils pointent déjà dessus.
+    var STEPS = ["25","50","100","200","300","400","500","600","700","800","900"], ALPHAS = ["5","10"];
+    window.__setPrimary = function (css) {
+      STEPS.forEach(function (s) { root.style.setProperty('--color-brand-primary-' + s, 'var(--color-' + css + '-' + s + ')'); });
+      ALPHAS.forEach(function (a) { root.style.setProperty('--color-brand-primary-alpha-' + a, 'var(--color-' + css + '-alpha-' + a + ')'); });
+    };
+    var p = localStorage.getItem('primary');
+    if (p) window.__setPrimary(p);
+    // Polices : on surcharge --font-brand-heading (titres) et --font-brand-body (corps),
+    // les rôles typo suivent. Le code garde --font-brand-mono, non touché.
+    window.__setHeading = function (css) { root.style.setProperty('--font-brand-heading', 'var(--font-stack-' + css + ')'); };
+    window.__setBody = function (css) { root.style.setProperty('--font-brand-body', 'var(--font-stack-' + css + ')'); };
+    var fh = localStorage.getItem('fontHeading'); if (fh) window.__setHeading(fh);
+    var fb = localStorage.getItem('fontBody'); if (fb) window.__setBody(fb);
+  })();
 </script>
 </head>
 <body>
@@ -21,37 +39,61 @@
     <div class="nav-group">
       <h5>Comprendre</h5>
       <ul><li><a href="index.html" class="">
-            <span class="nav-num nav-num-off"></span>
             Architecture</a></li><li><a href="demarrer.html" class="">
-            <span class="nav-num nav-num-off"></span>
             Démarrer un projet</a></li></ul>
     </div>
     <div class="nav-group">
       <h5>Le système</h5>
       <ul><li><a href="primitives.html" class="">
-            <span class="nav-num">1</span>
             Primitives</a></li><li><a href="brand.html" class="">
-            <span class="nav-num">2</span>
             Brand</a></li><li><a href="roles.html" class="">
-            <span class="nav-num">3</span>
             Contrat de rôle</a></li><li><a href="semantique.html" class="on">
-            <span class="nav-num">3</span>
             Sémantique (reste)</a></li><li><a href="effets.html" class="">
-            <span class="nav-num">3</span>
             Effets & mouvement</a></li></ul>
     </div>
     <div class="nav-group">
       <h5>Composants</h5>
       <ul><li><a href="composants-formulaire.html" class="">
-            <span class="nav-num">4</span>
-            Formulaire</a></li><li><a href="composants-affichage.html" class="">
-            <span class="nav-num">4</span>
-            Affichage</a></li><li><a href="composants-structure.html" class="">
-            <span class="nav-num">4</span>
-            Structure</a></li></ul>
+            Formulaire<span class="nav-caret" aria-hidden="true">▸</span></a></li><li><a href="composants-affichage.html" class="">
+            Affichage<span class="nav-caret" aria-hidden="true">▸</span></a></li><li><a href="composants-structure.html" class="">
+            Structure<span class="nav-caret" aria-hidden="true">▸</span></a></li></ul>
     </div>
-  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+  <div class="settings">
+    <button class="settings-btn" id="settingsBtn" aria-haspopup="dialog">⚙ Réglages</button>
+  </div>
 </aside>
+
+<dialog class="settings-modal" id="settingsModal" aria-labelledby="settingsTitle">
+  <div class="settings-modal-head">
+    <span class="settings-modal-title" id="settingsTitle">Réglages</span>
+    <button type="button" class="settings-close" id="settingsClose" aria-label="Fermer">✕</button>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Thème</span>
+    <div class="seg">
+      <button type="button" data-theme-choice="light">◐ Clair</button>
+      <button type="button" data-theme-choice="dark">◑ Sombre</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Couleur « primary »</span>
+    <div class="swatch-grid">
+      <button type="button" class="swatch-pick" data-palette="gray" title="gray"><span class="swatch-dot" style="background: var(--color-gray-500)"></span>gray</button><button type="button" class="swatch-pick" data-palette="blue" title="blue"><span class="swatch-dot" style="background: var(--color-blue-500)"></span>blue</button><button type="button" class="swatch-pick" data-palette="red" title="red"><span class="swatch-dot" style="background: var(--color-red-500)"></span>red</button><button type="button" class="swatch-pick" data-palette="green" title="green"><span class="swatch-dot" style="background: var(--color-green-500)"></span>green</button><button type="button" class="swatch-pick" data-palette="orange" title="orange"><span class="swatch-dot" style="background: var(--color-orange-500)"></span>orange</button><button type="button" class="swatch-pick" data-palette="turquoise" title="turquoise"><span class="swatch-dot" style="background: var(--color-turquoise-500)"></span>turquoise</button><button type="button" class="swatch-pick" data-palette="slate-blue" title="slateBlue"><span class="swatch-dot" style="background: var(--color-slate-blue-500)"></span>slateBlue</button><button type="button" class="swatch-pick" data-palette="slate-violet" title="slateViolet"><span class="swatch-dot" style="background: var(--color-slate-violet-500)"></span>slateViolet</button><button type="button" class="swatch-pick" data-palette="violet" title="violet"><span class="swatch-dot" style="background: var(--color-violet-500)"></span>violet</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Police des titres</span>
+    <div class="font-grid">
+      <button type="button" class="font-pick" data-font-heading="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-heading="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-heading="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-heading="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-heading="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-heading="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Police du corps</span>
+    <div class="font-grid">
+      <button type="button" class="font-pick" data-font-body="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-body="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-body="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-body="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-body="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-body="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
+    </div>
+  </div>
+</dialog>
 
 <main class="main">
   <div class="page">
@@ -216,33 +258,222 @@
         <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:24px;font-weight:600;line-height:1.2;letter-spacing:-0.01em;text-transform:none">Le vif renard brun saute</td>
         <td class="mono">24px · 600 · 1.2 · -0.01em</td></tr><tr>
         <td><code>typography.lead</code></td>
-        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:20px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
+        <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-size:20px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
         <td class="mono">20px · 400 · 1.5 · 0</td></tr><tr>
         <td><code>typography.body</code></td>
-        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:16px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
+        <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-size:16px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
         <td class="mono">16px · 400 · 1.5 · 0</td></tr><tr>
         <td><code>typography.small</code></td>
-        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:14px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
+        <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-size:14px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
         <td class="mono">14px · 400 · 1.5 · 0</td></tr><tr>
         <td><code>typography.label</code></td>
-        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:14px;font-weight:500;line-height:1.2;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
+        <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-size:14px;font-weight:500;line-height:1.2;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
         <td class="mono">14px · 500 · 1.2 · 0</td></tr><tr>
         <td><code>typography.caption</code></td>
-        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:12px;font-weight:400;line-height:1.5;letter-spacing:0.02em;text-transform:none">Le vif renard brun saute</td>
+        <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-size:12px;font-weight:400;line-height:1.5;letter-spacing:0.02em;text-transform:none">Le vif renard brun saute</td>
         <td class="mono">12px · 400 · 1.5 · 0.02em</td></tr><tr>
         <td><code>typography.overline</code></td>
-        <td style="font-family:Inter, system-ui, -apple-system, sans-serif;font-size:12px;font-weight:600;line-height:1.5;letter-spacing:0.08em;text-transform:uppercase">Le vif renard brun saute</td>
+        <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-size:12px;font-weight:600;line-height:1.5;letter-spacing:0.08em;text-transform:uppercase">Le vif renard brun saute</td>
         <td class="mono">12px · 600 · 1.5 · 0.08em</td></tr><tr>
         <td><code>typography.code</code></td>
         <td style="font-family:'JetBrains Mono', ui-monospace, 'SF Mono', monospace;font-size:14px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none">Le vif renard brun saute</td>
         <td class="mono">14px · 400 · 1.5 · 0</td></tr></tbody>
   </table>
+
+  <h3>Tous les tokens de chaque rôle</h3>
+  <p class="note">Les <strong>6 slots</strong> de chaque rôle — famille, taille, graisse, interligne,
+    crénage, casse — le token sémantique que chacun consomme (cliquable, vers la page qui le définit),
+    et la valeur résolue. C'est ici que se voient <code>font-family</code>, <code>font-weight</code>, etc.</p>
+  <div class="tok-body"><table class="tbl">
+    <thead><tr><th>Token</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+    <tbody><tr>
+          <td class="mono tiny">--typography-h1-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.heading — défini dans « Brand · polices »"><code>--font-brand-heading</code></a></td>
+          <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+          <td class="mono tiny">--typography-h1-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.h1 — défini dans « Sémantique · tailles »"><code>--font-size-h1</code></a></td>
+          <td class="mono tiny note">48px</td></tr><tr>
+          <td class="mono tiny">--typography-h1-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.bold — défini dans « Primitives · polices »"><code>--font-weight-bold</code></a></td>
+          <td class="mono tiny note">700</td></tr><tr>
+          <td class="mono tiny">--typography-h1-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.tight — défini dans « Primitives · polices »"><code>--font-line-height-tight</code></a></td>
+          <td class="mono tiny note">1.2</td></tr><tr>
+          <td class="mono tiny">--typography-h1-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.tight — défini dans « Primitives · polices »"><code>--font-letter-spacing-tight</code></a></td>
+          <td class="mono tiny note">-0.02em</td></tr><tr>
+          <td class="mono tiny">--typography-h1-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">none</td></tr><tr>
+          <td class="mono tiny">--typography-h2-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.heading — défini dans « Brand · polices »"><code>--font-brand-heading</code></a></td>
+          <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+          <td class="mono tiny">--typography-h2-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.h2 — défini dans « Sémantique · tailles »"><code>--font-size-h2</code></a></td>
+          <td class="mono tiny note">32px</td></tr><tr>
+          <td class="mono tiny">--typography-h2-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.bold — défini dans « Primitives · polices »"><code>--font-weight-bold</code></a></td>
+          <td class="mono tiny note">700</td></tr><tr>
+          <td class="mono tiny">--typography-h2-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.tight — défini dans « Primitives · polices »"><code>--font-line-height-tight</code></a></td>
+          <td class="mono tiny note">1.2</td></tr><tr>
+          <td class="mono tiny">--typography-h2-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.tight — défini dans « Primitives · polices »"><code>--font-letter-spacing-tight</code></a></td>
+          <td class="mono tiny note">-0.02em</td></tr><tr>
+          <td class="mono tiny">--typography-h2-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">none</td></tr><tr>
+          <td class="mono tiny">--typography-h3-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.heading — défini dans « Brand · polices »"><code>--font-brand-heading</code></a></td>
+          <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+          <td class="mono tiny">--typography-h3-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.h3 — défini dans « Sémantique · tailles »"><code>--font-size-h3</code></a></td>
+          <td class="mono tiny note">24px</td></tr><tr>
+          <td class="mono tiny">--typography-h3-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.semibold — défini dans « Primitives · polices »"><code>--font-weight-semibold</code></a></td>
+          <td class="mono tiny note">600</td></tr><tr>
+          <td class="mono tiny">--typography-h3-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.tight — défini dans « Primitives · polices »"><code>--font-line-height-tight</code></a></td>
+          <td class="mono tiny note">1.2</td></tr><tr>
+          <td class="mono tiny">--typography-h3-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.snug — défini dans « Primitives · polices »"><code>--font-letter-spacing-snug</code></a></td>
+          <td class="mono tiny note">-0.01em</td></tr><tr>
+          <td class="mono tiny">--typography-h3-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">none</td></tr><tr>
+          <td class="mono tiny">--typography-lead-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.body — défini dans « Brand · polices »"><code>--font-brand-body</code></a></td>
+          <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
+          <td class="mono tiny">--typography-lead-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.lead — défini dans « Sémantique · tailles »"><code>--font-size-lead</code></a></td>
+          <td class="mono tiny note">20px</td></tr><tr>
+          <td class="mono tiny">--typography-lead-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.regular — défini dans « Primitives · polices »"><code>--font-weight-regular</code></a></td>
+          <td class="mono tiny note">400</td></tr><tr>
+          <td class="mono tiny">--typography-lead-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.normal — défini dans « Primitives · polices »"><code>--font-line-height-normal</code></a></td>
+          <td class="mono tiny note">1.5</td></tr><tr>
+          <td class="mono tiny">--typography-lead-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.normal — défini dans « Primitives · polices »"><code>--font-letter-spacing-normal</code></a></td>
+          <td class="mono tiny note">0</td></tr><tr>
+          <td class="mono tiny">--typography-lead-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">none</td></tr><tr>
+          <td class="mono tiny">--typography-body-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.body — défini dans « Brand · polices »"><code>--font-brand-body</code></a></td>
+          <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
+          <td class="mono tiny">--typography-body-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.body — défini dans « Sémantique · tailles »"><code>--font-size-body</code></a></td>
+          <td class="mono tiny note">16px</td></tr><tr>
+          <td class="mono tiny">--typography-body-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.regular — défini dans « Primitives · polices »"><code>--font-weight-regular</code></a></td>
+          <td class="mono tiny note">400</td></tr><tr>
+          <td class="mono tiny">--typography-body-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.normal — défini dans « Primitives · polices »"><code>--font-line-height-normal</code></a></td>
+          <td class="mono tiny note">1.5</td></tr><tr>
+          <td class="mono tiny">--typography-body-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.normal — défini dans « Primitives · polices »"><code>--font-letter-spacing-normal</code></a></td>
+          <td class="mono tiny note">0</td></tr><tr>
+          <td class="mono tiny">--typography-body-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">none</td></tr><tr>
+          <td class="mono tiny">--typography-small-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.body — défini dans « Brand · polices »"><code>--font-brand-body</code></a></td>
+          <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
+          <td class="mono tiny">--typography-small-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.small — défini dans « Sémantique · tailles »"><code>--font-size-small</code></a></td>
+          <td class="mono tiny note">14px</td></tr><tr>
+          <td class="mono tiny">--typography-small-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.regular — défini dans « Primitives · polices »"><code>--font-weight-regular</code></a></td>
+          <td class="mono tiny note">400</td></tr><tr>
+          <td class="mono tiny">--typography-small-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.normal — défini dans « Primitives · polices »"><code>--font-line-height-normal</code></a></td>
+          <td class="mono tiny note">1.5</td></tr><tr>
+          <td class="mono tiny">--typography-small-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.normal — défini dans « Primitives · polices »"><code>--font-letter-spacing-normal</code></a></td>
+          <td class="mono tiny note">0</td></tr><tr>
+          <td class="mono tiny">--typography-small-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">none</td></tr><tr>
+          <td class="mono tiny">--typography-label-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.body — défini dans « Brand · polices »"><code>--font-brand-body</code></a></td>
+          <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
+          <td class="mono tiny">--typography-label-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.small — défini dans « Sémantique · tailles »"><code>--font-size-small</code></a></td>
+          <td class="mono tiny note">14px</td></tr><tr>
+          <td class="mono tiny">--typography-label-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.medium — défini dans « Primitives · polices »"><code>--font-weight-medium</code></a></td>
+          <td class="mono tiny note">500</td></tr><tr>
+          <td class="mono tiny">--typography-label-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.tight — défini dans « Primitives · polices »"><code>--font-line-height-tight</code></a></td>
+          <td class="mono tiny note">1.2</td></tr><tr>
+          <td class="mono tiny">--typography-label-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.normal — défini dans « Primitives · polices »"><code>--font-letter-spacing-normal</code></a></td>
+          <td class="mono tiny note">0</td></tr><tr>
+          <td class="mono tiny">--typography-label-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">none</td></tr><tr>
+          <td class="mono tiny">--typography-caption-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.body — défini dans « Brand · polices »"><code>--font-brand-body</code></a></td>
+          <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
+          <td class="mono tiny">--typography-caption-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.caption — défini dans « Sémantique · tailles »"><code>--font-size-caption</code></a></td>
+          <td class="mono tiny note">12px</td></tr><tr>
+          <td class="mono tiny">--typography-caption-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.regular — défini dans « Primitives · polices »"><code>--font-weight-regular</code></a></td>
+          <td class="mono tiny note">400</td></tr><tr>
+          <td class="mono tiny">--typography-caption-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.normal — défini dans « Primitives · polices »"><code>--font-line-height-normal</code></a></td>
+          <td class="mono tiny note">1.5</td></tr><tr>
+          <td class="mono tiny">--typography-caption-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.wide — défini dans « Primitives · polices »"><code>--font-letter-spacing-wide</code></a></td>
+          <td class="mono tiny note">0.02em</td></tr><tr>
+          <td class="mono tiny">--typography-caption-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">none</td></tr><tr>
+          <td class="mono tiny">--typography-overline-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.body — défini dans « Brand · polices »"><code>--font-brand-body</code></a></td>
+          <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
+          <td class="mono tiny">--typography-overline-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.caption — défini dans « Sémantique · tailles »"><code>--font-size-caption</code></a></td>
+          <td class="mono tiny note">12px</td></tr><tr>
+          <td class="mono tiny">--typography-overline-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.semibold — défini dans « Primitives · polices »"><code>--font-weight-semibold</code></a></td>
+          <td class="mono tiny note">600</td></tr><tr>
+          <td class="mono tiny">--typography-overline-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.normal — défini dans « Primitives · polices »"><code>--font-line-height-normal</code></a></td>
+          <td class="mono tiny note">1.5</td></tr><tr>
+          <td class="mono tiny">--typography-overline-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.caps — défini dans « Primitives · polices »"><code>--font-letter-spacing-caps</code></a></td>
+          <td class="mono tiny note">0.08em</td></tr><tr>
+          <td class="mono tiny">--typography-overline-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">uppercase</td></tr><tr>
+          <td class="mono tiny">--typography-code-family</td>
+          <td class="tiny"><a href="brand.html#polices" title="font.brand.mono — défini dans « Brand · polices »"><code>--font-brand-mono</code></a></td>
+          <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
+          <td class="mono tiny">--typography-code-size</td>
+          <td class="tiny"><a href="semantique.html#tailles" title="fontSize.small — défini dans « Sémantique · tailles »"><code>--font-size-small</code></a></td>
+          <td class="mono tiny note">14px</td></tr><tr>
+          <td class="mono tiny">--typography-code-weight</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.weight.regular — défini dans « Primitives · polices »"><code>--font-weight-regular</code></a></td>
+          <td class="mono tiny note">400</td></tr><tr>
+          <td class="mono tiny">--typography-code-line-height</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.lineHeight.normal — défini dans « Primitives · polices »"><code>--font-line-height-normal</code></a></td>
+          <td class="mono tiny note">1.5</td></tr><tr>
+          <td class="mono tiny">--typography-code-letter-spacing</td>
+          <td class="tiny"><a href="primitives.html#polices" title="font.letterSpacing.normal — défini dans « Primitives · polices »"><code>--font-letter-spacing-normal</code></a></td>
+          <td class="mono tiny note">0</td></tr><tr>
+          <td class="mono tiny">--typography-code-text-case</td>
+          <td class="tiny"><span class="note">valeur directe</span></td>
+          <td class="mono tiny note">none</td></tr></tbody>
+  </table></div>
   <div class="callout">
     <strong>La police est dans le brand, pas dans la primitive.</strong> Un rôle pointe sur
-    <code>font.brand.sans|serif|mono</code>, qui désigne une pile du catalogue
-    <code>font.stack.*</code>. Changer la police de tout le système, c'est donc une ligne —
-    <code>BRAND_FONT</code> dans <code>scripts/generate-theme.js</code> — exactement comme changer
-    la couleur d'un rôle.
+    <code>font.brand.heading|body|mono</code>, qui désigne une pile du catalogue
+    <code>font.stack.*</code>. Les titres (<code>heading</code>) et le corps (<code>body</code>)
+    portent deux polices distinctes ; changer l'une, c'est une ligne — <code>BRAND_FONT</code> dans
+    <code>scripts/generate-theme.js</code> — exactement comme changer la couleur d'un rôle.
   </div>
     
     <nav class="pager">
@@ -254,11 +485,63 @@
 
 <script>
   const root = document.documentElement;
-  document.getElementById('toggle').addEventListener('click', () => {
-    const dark = root.getAttribute('data-theme') === 'dark';
-    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
-    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+
+  // Réglages : modale (thème + couleur « primary »). <dialog> natif → piège de
+  // focus, Escape et inertage du fond sont gratuits. Reste à gérer le clic sur le
+  // fond (le backdrop ne déclenche pas de close natif).
+  const settingsBtn = document.getElementById('settingsBtn');
+  const settingsModal = document.getElementById('settingsModal');
+  settingsBtn.addEventListener('click', () => settingsModal.showModal());
+  document.getElementById('settingsClose').addEventListener('click', () => settingsModal.close());
+  settingsModal.addEventListener('click', (e) => {
+    const r = settingsModal.getBoundingClientRect();
+    const outside = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    if (outside) settingsModal.close();
   });
+
+  const syncTheme = () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    document.querySelectorAll('[data-theme-choice]').forEach((b) =>
+      b.classList.toggle('active', b.dataset.themeChoice === (dark ? 'dark' : 'light')));
+  };
+  document.querySelectorAll('[data-theme-choice]').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (b.dataset.themeChoice === 'dark') { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+      else { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+      syncTheme();
+    }));
+  syncTheme();
+
+  let currentPrimary = localStorage.getItem('primary') || 'violet';
+  const syncPrimary = () =>
+    document.querySelectorAll('.swatch-pick').forEach((b) =>
+      b.classList.toggle('active', b.dataset.palette === currentPrimary));
+  document.querySelectorAll('.swatch-pick').forEach((b) =>
+    b.addEventListener('click', () => {
+      currentPrimary = b.dataset.palette;
+      window.__setPrimary(currentPrimary);
+      localStorage.setItem('primary', currentPrimary);
+      syncPrimary();
+    }));
+  syncPrimary();
+
+  // Deux sélecteurs de police : titres (data-font-heading) et corps (data-font-body).
+  const wireFont = (attr, storeKey, def, apply) => {
+    let current = localStorage.getItem(storeKey) || def;
+    const picks = document.querySelectorAll('[' + attr + ']');
+    const sync = () => picks.forEach((b) => b.classList.toggle('active', b.getAttribute(attr) === current));
+    picks.forEach((b) =>
+      b.addEventListener('click', () => {
+        current = b.getAttribute(attr);
+        apply(current);
+        localStorage.setItem(storeKey, current);
+        sync();
+      }));
+    sync();
+  };
+  wireFont('data-font-heading', 'fontHeading', 'inter', window.__setHeading);
+  wireFont('data-font-body', 'fontBody', 'jetbrains-mono', window.__setBody);
+
   document.getElementById('burger').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('open');
   });

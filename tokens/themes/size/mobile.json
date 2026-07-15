@@ -99,5 +99,31 @@
     "lg": {
       "$value": "{size.glyph.lg}"
     }
+  },
+  "trackWidth": {
+    "$type": "dimension",
+    "$description": "Largeur de piste du switch, agrandie pour le tactile (cf. desktop.json pour le rôle). Chaque cran grimpe d'un pas ; `lg` plafonne à 64px (`spacing.11`), la plus grande primitive disponible — sa distinction vis-à-vis de `md` passe alors par la hauteur.",
+    "sm": {
+      "$value": "{size.control.xl}"
+    },
+    "md": {
+      "$value": "{size.spacing.11}"
+    },
+    "lg": {
+      "$value": "{size.spacing.11}"
+    }
+  },
+  "trackHeight": {
+    "$type": "dimension",
+    "$description": "Épaisseur de piste du switch, agrandie pour le tactile. Les trois crans restent distincts (24 / 32 / 40) et logent le pouce mobile de 20px avec un jeu croissant.",
+    "sm": {
+      "$value": "{size.glyph.lg}"
+    },
+    "md": {
+      "$value": "{size.control.sm}"
+    },
+    "lg": {
+      "$value": "{size.control.md}"
+    }
   }
 }

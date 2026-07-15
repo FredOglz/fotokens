@@ -322,13 +322,13 @@
   "font": {
     "brand": {
       "$type": "fontFamily",
-      "sans": {
+      "heading": {
         "$value": "{font.stack.inter}",
-        "$description": "Famille « sans » — jouée par la pile « inter »."
+        "$description": "Famille « heading » — jouée par la pile « inter »."
       },
-      "serif": {
-        "$value": "{font.stack.georgia}",
-        "$description": "Famille « serif » — jouée par la pile « georgia »."
+      "body": {
+        "$value": "{font.stack.jetbrainsMono}",
+        "$description": "Famille « body » — jouée par la pile « jetbrainsMono »."
       },
       "mono": {
         "$value": "{font.stack.jetbrainsMono}",

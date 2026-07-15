@@ -4,7 +4,7 @@
       "$description": "Titre de page. Un seul par écran.",
       "family": {
         "$type": "fontFamily",
-        "$value": "{font.brand.sans}"
+        "$value": "{font.brand.heading}"
       },
       "size": {
         "$type": "dimension",
@@ -30,7 +30,7 @@
       "$description": "Titre de section.",
       "family": {
         "$type": "fontFamily",
-        "$value": "{font.brand.sans}"
+        "$value": "{font.brand.heading}"
       },
       "size": {
         "$type": "dimension",
@@ -56,7 +56,7 @@
       "$description": "Sous-titre, titre de carte.",
       "family": {
         "$type": "fontFamily",
-        "$value": "{font.brand.sans}"
+        "$value": "{font.brand.heading}"
       },
       "size": {
         "$type": "dimension",
@@ -82,7 +82,7 @@
       "$description": "Chapô — le paragraphe d’introduction qui suit un titre.",
       "family": {
         "$type": "fontFamily",
-        "$value": "{font.brand.sans}"
+        "$value": "{font.brand.body}"
       },
       "size": {
         "$type": "dimension",
@@ -108,7 +108,7 @@
       "$description": "Texte de lecture. Le rôle par défaut.",
       "family": {
         "$type": "fontFamily",
-        "$value": "{font.brand.sans}"
+        "$value": "{font.brand.body}"
       },
       "size": {
         "$type": "dimension",
@@ -134,7 +134,7 @@
       "$description": "Texte secondaire : mentions, aide contextuelle, cellules de tableau.",
       "family": {
         "$type": "fontFamily",
-        "$value": "{font.brand.sans}"
+        "$value": "{font.brand.body}"
       },
       "size": {
         "$type": "dimension",
@@ -160,7 +160,7 @@
       "$description": "Texte d’interface : bouton, onglet, étiquette de champ. Interligne serré (jamais plus d’une ligne) et graisse medium, pour tenir sans crier.",
       "family": {
         "$type": "fontFamily",
-        "$value": "{font.brand.sans}"
+        "$value": "{font.brand.body}"
       },
       "size": {
         "$type": "dimension",
@@ -186,7 +186,7 @@
       "$description": "Légende sous une image, note de bas de tableau. Au plancher de 12px, donc légèrement aéré pour rester lisible.",
       "family": {
         "$type": "fontFamily",
-        "$value": "{font.brand.sans}"
+        "$value": "{font.brand.body}"
       },
       "size": {
         "$type": "dimension",
@@ -212,7 +212,7 @@
       "$description": "Surtitre en capitales, au-dessus d’un titre. Capitalisé PAR LE TOKEN — le rôle se suffit à lui-même.",
       "family": {
         "$type": "fontFamily",
-        "$value": "{font.brand.sans}"
+        "$value": "{font.brand.body}"
       },
       "size": {
         "$type": "dimension",

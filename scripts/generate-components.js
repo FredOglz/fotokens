@@ -102,37 +102,6 @@ const ROLE_AWARE = {
     },
   },
 
-  /**
-   * `mark` = le glyphe (coche, puce). Il est transparent quand la case est vide :
-   * un seul token suffit, pas besoin de le masquer côté composant.
-   */
-  checkbox: {
-    variants: {
-      default: {
-        unchecked:        { background: '{color.surface.base}',     border: '{color.border.strong}', mark: NONE },
-        uncheckedHover:   { background: 'tint',                     border: 'main',                  mark: NONE },
-        checked:          { background: 'main',                     border: 'main',                  mark: 'on' },
-        checkedHover:     { background: 'hover',                    border: 'hover',                 mark: 'on' },
-        indeterminate:    { background: 'main',                     border: 'main',                  mark: 'on' },
-        disabled:         { background: OFF.bg,                     border: OFF.border,              mark: NONE },
-        disabledChecked:  { background: OFF.bg,                     border: OFF.border,              mark: OFF.text },
-      },
-    },
-  },
-
-  switch: {
-    variants: {
-      default: {
-        off:        { track: '{color.border.strong}',   thumb: '{color.surface.base}' },
-        offHover:   { track: '{color.role.neutral.main}', thumb: '{color.surface.base}' },
-        on:         { track: 'main',                    thumb: 'on' },
-        onHover:    { track: 'hover',                   thumb: 'on' },
-        disabledOff:{ track: OFF.bg,                    thumb: '{color.surface.base}' },
-        disabledOn: { track: OFF.bg,                    thumb: '{color.surface.base}' },
-      },
-    },
-  },
-
   link: {
     variants: {
       default: {
@@ -144,21 +113,49 @@ const ROLE_AWARE = {
   },
 };
 
-/** `radio` est identique à `checkbox`, à la forme près (radius). */
-ROLE_AWARE.radio = {
-  variants: {
-    default: {
-      unchecked:       ROLE_AWARE.checkbox.variants.default.unchecked,
-      uncheckedHover:  ROLE_AWARE.checkbox.variants.default.uncheckedHover,
-      checked:         ROLE_AWARE.checkbox.variants.default.checked,
-      checkedHover:    ROLE_AWARE.checkbox.variants.default.checkedHover,
-      disabled:        ROLE_AWARE.checkbox.variants.default.disabled,
-      disabledChecked: ROLE_AWARE.checkbox.variants.default.disabledChecked,
-    },
-  },
+/* ------------------------------------------------------------------ */
+
+/**
+ * Contrôles à cocher — checkbox, radio, switch. Un SEUL parti pris de couleur :
+ * `primary`. Ils ne sont pas role-aware : une case cochée n'a pas de « couleur »
+ * à choisir, contrairement à un bouton (`<Button color="danger">` a du sens,
+ * `<Checkbox color="success">` non). Ils vivent donc ici, pas dans `ROLE_AWARE`,
+ * et pointent le rôle `primary` en dur — comme le focus d'un champ.
+ *
+ * L'ERREUR pointe le rôle `danger`, exactement comme le `error` de `FIELD_STATES`.
+ * Elle ne s'applique qu'au contrôle NON coché / off : une fois l'action faite,
+ * l'erreur est levée. C'est le sens même (« tu dois cocher / activer ceci »).
+ */
+
+/** `mark` = le glyphe (coche, puce), transparent quand la case est vide. */
+const CHECK_STATES = {
+  unchecked:        { background: '{color.surface.base}',       border: '{color.border.strong}',      mark: NONE },
+  uncheckedHover:   { background: '{color.role.primary.tint}',  border: '{color.role.primary.main}',  mark: NONE },
+  checked:          { background: '{color.role.primary.main}',  border: '{color.role.primary.main}',  mark: '{color.role.primary.on}' },
+  checkedHover:     { background: '{color.role.primary.hover}', border: '{color.role.primary.hover}', mark: '{color.role.primary.on}' },
+  indeterminate:    { background: '{color.role.primary.main}',  border: '{color.role.primary.main}',  mark: '{color.role.primary.on}' },
+  error:            { background: '{color.surface.base}',       border: '{color.role.danger.main}',   mark: NONE },
+  errorHover:       { background: '{color.role.danger.tint}',   border: '{color.role.danger.main}',   mark: NONE },
+  disabled:         { background: OFF.bg,                       border: OFF.border,                   mark: NONE },
+  disabledChecked:  { background: OFF.bg,                       border: OFF.border,                   mark: OFF.text },
 };
 
-/* ------------------------------------------------------------------ */
+/**
+ * Le switch n'a ni case ni coche : `track` (la piste) + `thumb` (le pouce). Il
+ * n'a pas de bordure en temps normal (`border` transparent) — l'anneau `danger`
+ * n'apparaît qu'en erreur. C'est pour ça que le switch porte un `borderWidth`
+ * (voir table SIZED) : réserver l'anneau, invisible tant qu'il n'y a pas d'erreur.
+ */
+const SWITCH_STATES = {
+  off:         { track: '{color.border.strong}',      thumb: '{color.surface.base}',      border: NO_BORDER },
+  offHover:    { track: '{color.role.neutral.main}',  thumb: '{color.surface.base}',      border: NO_BORDER },
+  on:          { track: '{color.role.primary.main}',  thumb: '{color.role.primary.on}',   border: NO_BORDER },
+  onHover:     { track: '{color.role.primary.hover}', thumb: '{color.role.primary.on}',   border: NO_BORDER },
+  error:       { track: '{color.border.strong}',      thumb: '{color.surface.base}',      border: '{color.role.danger.main}' },
+  errorHover:  { track: '{color.role.neutral.main}',  thumb: '{color.surface.base}',      border: '{color.role.danger.main}' },
+  disabledOff: { track: OFF.bg,                       thumb: '{color.surface.base}',      border: NO_BORDER },
+  disabledOn:  { track: OFF.bg,                       thumb: '{color.surface.base}',      border: NO_BORDER },
+};
 
 /** Champ de saisie : le focus est `primary`, l'erreur est `danger`. Pas de rôle libre. */
 const FIELD_STATES = {
@@ -172,6 +169,12 @@ const FIELD_STATES = {
 const NEUTRAL = {
   input:    { states: FIELD_STATES },
   textarea: { states: FIELD_STATES },
+
+  // checkbox et radio partagent EXACTEMENT la même couleur — seule la forme
+  // (radius) diffère, et elle vit dans la table SIZED, pas ici.
+  checkbox: { states: CHECK_STATES },
+  radio:    { states: CHECK_STATES },
+  switch:   { states: SWITCH_STATES },
   select:   {
     states: Object.fromEntries(
       Object.entries(FIELD_STATES).map(([k, v]) => [
@@ -276,9 +279,9 @@ const SIZED = {
     lg: { box: '{glyphSize.lg}', radius: '{radius.full}', borderWidth: '{borderWidth.strong}', icon: '{glyphSize.md}' },
   },
   switch: {
-    sm: { trackWidth: '{size.control.lg}', trackHeight: '{glyphSize.md}', thumb: '{glyphSize.sm}', radius: '{radius.full}' },
-    md: { trackWidth: '{size.control.xl}', trackHeight: '{glyphSize.lg}', thumb: '{glyphSize.md}', radius: '{radius.full}' },
-    lg: { trackWidth: '{size.spacing.11}', trackHeight: '{size.control.sm}', thumb: '{glyphSize.md}', radius: '{radius.full}' },
+    sm: { trackWidth: '{trackWidth.sm}', trackHeight: '{trackHeight.sm}', thumb: '{glyphSize.sm}', radius: '{radius.full}', borderWidth: '{borderWidth.strong}' },
+    md: { trackWidth: '{trackWidth.md}', trackHeight: '{trackHeight.md}', thumb: '{glyphSize.md}', radius: '{radius.full}', borderWidth: '{borderWidth.strong}' },
+    lg: { trackWidth: '{trackWidth.lg}', trackHeight: '{trackHeight.lg}', thumb: '{glyphSize.md}', radius: '{radius.full}', borderWidth: '{borderWidth.strong}' },
   },
 };
 
@@ -412,7 +415,7 @@ function buildComponent(name) {
 
   // ---- typographie ----
   // Le composant pointe sur un RÔLE sémantique, jamais sur une primitive :
-  // `{typography.label.family}`, pas `{font.brand.sans}`. Changer la police du
+  // `{typography.label.family}`, pas `{font.brand.body}`. Changer la police du
   // système reste donc une seule ligne dans le brand.
   const role = TEXT[name];
   if (role) {

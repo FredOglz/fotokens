@@ -46,6 +46,7 @@ const PALETTES = {
   orange:    { hue: 41,  chroma: 0.194 },
   turquoise: { hue: 181, chroma: 0.161 },
   slateBlue: { hue: 250, chroma: 0.076 },
+  slateViolet: { hue: 291, chroma: 0.079 },
   violet:    { hue: 304, chroma: 0.297 },
 };
 

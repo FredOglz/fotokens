@@ -8,8 +8,26 @@
 <link rel="stylesheet" href="components.css">
 <link rel="stylesheet" href="docs.css">
 <script>
-  // Avant le premier rendu, pour éviter un flash de thème clair.
-  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  // Avant le premier rendu, pour éviter un flash (thème ET couleur « primary »).
+  (function () {
+    var root = document.documentElement;
+    if (localStorage.getItem('theme') === 'dark') root.setAttribute('data-theme', 'dark');
+    // Remappe toute la chaîne primary en surchargeant les vars brand.primary.* :
+    // le rôle et les composants suivent, ils pointent déjà dessus.
+    var STEPS = ["25","50","100","200","300","400","500","600","700","800","900"], ALPHAS = ["5","10"];
+    window.__setPrimary = function (css) {
+      STEPS.forEach(function (s) { root.style.setProperty('--color-brand-primary-' + s, 'var(--color-' + css + '-' + s + ')'); });
+      ALPHAS.forEach(function (a) { root.style.setProperty('--color-brand-primary-alpha-' + a, 'var(--color-' + css + '-alpha-' + a + ')'); });
+    };
+    var p = localStorage.getItem('primary');
+    if (p) window.__setPrimary(p);
+    // Polices : on surcharge --font-brand-heading (titres) et --font-brand-body (corps),
+    // les rôles typo suivent. Le code garde --font-brand-mono, non touché.
+    window.__setHeading = function (css) { root.style.setProperty('--font-brand-heading', 'var(--font-stack-' + css + ')'); };
+    window.__setBody = function (css) { root.style.setProperty('--font-brand-body', 'var(--font-stack-' + css + ')'); };
+    var fh = localStorage.getItem('fontHeading'); if (fh) window.__setHeading(fh);
+    var fb = localStorage.getItem('fontBody'); if (fb) window.__setBody(fb);
+  })();
 </script>
 </head>
 <body>
@@ -21,37 +39,61 @@
     <div class="nav-group">
       <h5>Comprendre</h5>
       <ul><li><a href="index.html" class="">
-            <span class="nav-num nav-num-off"></span>
             Architecture</a></li><li><a href="demarrer.html" class="">
-            <span class="nav-num nav-num-off"></span>
             Démarrer un projet</a></li></ul>
     </div>
     <div class="nav-group">
       <h5>Le système</h5>
       <ul><li><a href="primitives.html" class="">
-            <span class="nav-num">1</span>
             Primitives</a></li><li><a href="brand.html" class="">
-            <span class="nav-num">2</span>
             Brand</a></li><li><a href="roles.html" class="">
-            <span class="nav-num">3</span>
             Contrat de rôle</a></li><li><a href="semantique.html" class="">
-            <span class="nav-num">3</span>
             Sémantique (reste)</a></li><li><a href="effets.html" class="">
-            <span class="nav-num">3</span>
             Effets & mouvement</a></li></ul>
     </div>
     <div class="nav-group">
       <h5>Composants</h5>
       <ul><li><a href="composants-formulaire.html" class="on">
-            <span class="nav-num">4</span>
-            Formulaire</a><ul class="sub"><li><a href="#button" data-anchor="button">Button</a></li><li><a href="#input" data-anchor="input">Input</a></li><li><a href="#textarea" data-anchor="textarea">Textarea</a></li><li><a href="#select" data-anchor="select">Select</a></li><li><a href="#checkbox" data-anchor="checkbox">Checkbox</a></li><li><a href="#radio" data-anchor="radio">Radio</a></li><li><a href="#switch" data-anchor="switch">Switch</a></li></ul></li><li><a href="composants-affichage.html" class="">
-            <span class="nav-num">4</span>
-            Affichage</a></li><li><a href="composants-structure.html" class="">
-            <span class="nav-num">4</span>
-            Structure</a></li></ul>
+            Formulaire<span class="nav-caret" aria-hidden="true">▸</span></a><ul class="sub"><li><a href="#button" data-anchor="button">Button</a></li><li><a href="#input" data-anchor="input">Input</a></li><li><a href="#textarea" data-anchor="textarea">Textarea</a></li><li><a href="#select" data-anchor="select">Select</a></li><li><a href="#checkbox" data-anchor="checkbox">Checkbox</a></li><li><a href="#radio" data-anchor="radio">Radio</a></li><li><a href="#switch" data-anchor="switch">Switch</a></li></ul></li><li><a href="composants-affichage.html" class="">
+            Affichage<span class="nav-caret" aria-hidden="true">▸</span></a></li><li><a href="composants-structure.html" class="">
+            Structure<span class="nav-caret" aria-hidden="true">▸</span></a></li></ul>
     </div>
-  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+  <div class="settings">
+    <button class="settings-btn" id="settingsBtn" aria-haspopup="dialog">⚙ Réglages</button>
+  </div>
 </aside>
+
+<dialog class="settings-modal" id="settingsModal" aria-labelledby="settingsTitle">
+  <div class="settings-modal-head">
+    <span class="settings-modal-title" id="settingsTitle">Réglages</span>
+    <button type="button" class="settings-close" id="settingsClose" aria-label="Fermer">✕</button>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Thème</span>
+    <div class="seg">
+      <button type="button" data-theme-choice="light">◐ Clair</button>
+      <button type="button" data-theme-choice="dark">◑ Sombre</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Couleur « primary »</span>
+    <div class="swatch-grid">
+      <button type="button" class="swatch-pick" data-palette="gray" title="gray"><span class="swatch-dot" style="background: var(--color-gray-500)"></span>gray</button><button type="button" class="swatch-pick" data-palette="blue" title="blue"><span class="swatch-dot" style="background: var(--color-blue-500)"></span>blue</button><button type="button" class="swatch-pick" data-palette="red" title="red"><span class="swatch-dot" style="background: var(--color-red-500)"></span>red</button><button type="button" class="swatch-pick" data-palette="green" title="green"><span class="swatch-dot" style="background: var(--color-green-500)"></span>green</button><button type="button" class="swatch-pick" data-palette="orange" title="orange"><span class="swatch-dot" style="background: var(--color-orange-500)"></span>orange</button><button type="button" class="swatch-pick" data-palette="turquoise" title="turquoise"><span class="swatch-dot" style="background: var(--color-turquoise-500)"></span>turquoise</button><button type="button" class="swatch-pick" data-palette="slate-blue" title="slateBlue"><span class="swatch-dot" style="background: var(--color-slate-blue-500)"></span>slateBlue</button><button type="button" class="swatch-pick" data-palette="slate-violet" title="slateViolet"><span class="swatch-dot" style="background: var(--color-slate-violet-500)"></span>slateViolet</button><button type="button" class="swatch-pick" data-palette="violet" title="violet"><span class="swatch-dot" style="background: var(--color-violet-500)"></span>violet</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Police des titres</span>
+    <div class="font-grid">
+      <button type="button" class="font-pick" data-font-heading="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-heading="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-heading="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-heading="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-heading="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-heading="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Police du corps</span>
+    <div class="font-grid">
+      <button type="button" class="font-pick" data-font-body="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-body="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-body="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-body="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-body="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-body="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
+    </div>
+  </div>
+</dialog>
 
 <main class="main">
   <div class="page">
@@ -60,11 +102,13 @@
       avec les variables générées.</p>
     
   <div class="callout callout-key">
-    <strong>Rien n'est écrit à la main.</strong> Les composants <em>role-aware</em>
-    (<code>button</code>, <code>checkbox</code>, <code>radio</code>, <code>switch</code>) sont générés
-    pour <strong>les 6 rôles</strong> à partir d'une table qui dit seulement quels <em>slots</em>
-    chaque variante consomme. C'est la promesse du contrat de rôle :
-    <code>&lt;Checkbox color="danger"&gt;</code> existe sans un token de plus.
+    <strong>Rien n'est écrit à la main.</strong> Seul le <code>button</code> est <em>role-aware</em> :
+    il est généré pour <strong>les 6 rôles</strong> à partir d'une table qui dit quels <em>slots</em>
+    chaque variante consomme (<code>&lt;Button color="danger"&gt;</code> existe sans un token de plus).
+    <code>checkbox</code>, <code>radio</code> et <code>switch</code>, eux, sont <strong>mono-parti</strong> :
+    une case n'a pas de couleur à choisir, elle est <code>primary</code>. Ils gardent en revanche un
+    état d'<strong>erreur</strong> qui pointe le rôle <code>danger</code> — comme le <code>error</code>
+    d'un champ.
   </div>
   <h2 id="button">Button</h2><h3><code>filled</code></h3><div class="scroll-x"><table class="tbl btn-grid ">
     <thead><tr><th></th><th>default</th><th>hover</th><th>active</th><th>disabled</th></tr></thead><tbody><tr><th class="rh">primary</th><td><button class="demo-btn" style="
@@ -1695,7 +1739,7 @@
           <tbody><tr>
             <td class="mono tiny">--typography-button-family</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.label.family — défini dans « Sémantique · typo »"><code>--typography-label-family</code></a></td>
-            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
             <td class="mono tiny">--typography-button-weight</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.label.weight — défini dans « Sémantique · typo »"><code>--typography-label-weight</code></a></td>
             <td class="mono tiny note">500</td></tr><tr>
@@ -1963,7 +2007,7 @@
           <tbody><tr>
             <td class="mono tiny">--typography-input-family</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.family — défini dans « Sémantique · typo »"><code>--typography-body-family</code></a></td>
-            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
             <td class="mono tiny">--typography-input-weight</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.weight — défini dans « Sémantique · typo »"><code>--typography-body-weight</code></a></td>
             <td class="mono tiny note">400</td></tr><tr>
@@ -2160,7 +2204,7 @@
           <tbody><tr>
             <td class="mono tiny">--typography-textarea-family</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.family — défini dans « Sémantique · typo »"><code>--typography-body-family</code></a></td>
-            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
             <td class="mono tiny">--typography-textarea-weight</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.weight — défini dans « Sémantique · typo »"><code>--typography-body-weight</code></a></td>
             <td class="mono tiny note">400</td></tr><tr>
@@ -2458,7 +2502,7 @@
           <tbody><tr>
             <td class="mono tiny">--typography-select-family</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.family — défini dans « Sémantique · typo »"><code>--typography-body-family</code></a></td>
-            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
             <td class="mono tiny">--typography-select-weight</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.weight — défini dans « Sémantique · typo »"><code>--typography-body-weight</code></a></td>
             <td class="mono tiny note">400</td></tr><tr>
@@ -2473,687 +2517,160 @@
             <td class="mono tiny note">none</td></tr></tbody></table></div>
       </div>
 <h2 id="checkbox">Checkbox</h2><div class="scroll-x"><table class="tbl btn-grid checker">
-    <thead><tr><th></th><th>unchecked</th><th>uncheckedHover</th><th>checked</th><th>checkedHover</th><th>indeterminate</th><th>disabled</th><th>disabledChecked</th></tr></thead><tbody><tr><th class="rh">primary</th><td>
+    <thead><tr><th>unchecked</th><th>uncheckedHover</th><th>checked</th><th>checkedHover</th><th>indeterminate</th><th>error</th><th>errorHover</th><th>disabled</th><th>disabledChecked</th></tr></thead>
+    <tbody><tr><td>
       <div class="ctl" style="
         width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-primary-unchecked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-unchecked-border);
+        background: var(--color-checkbox-unchecked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-unchecked-border);
         border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-primary-unchecked-mark);
+        color: var(--color-checkbox-unchecked-mark);
       ">✓</div></td><td>
       <div class="ctl" style="
         width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-primary-unchecked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-unchecked-hover-border);
+        background: var(--color-checkbox-unchecked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-unchecked-hover-border);
         border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-primary-unchecked-hover-mark);
+        color: var(--color-checkbox-unchecked-hover-mark);
       ">✓</div></td><td>
       <div class="ctl" style="
         width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-primary-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-checked-border);
+        background: var(--color-checkbox-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-checked-border);
         border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-primary-checked-mark);
+        color: var(--color-checkbox-checked-mark);
       ">✓</div></td><td>
       <div class="ctl" style="
         width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-primary-checked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-checked-hover-border);
+        background: var(--color-checkbox-checked-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-checked-hover-border);
         border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-primary-checked-hover-mark);
+        color: var(--color-checkbox-checked-hover-mark);
       ">✓</div></td><td>
       <div class="ctl" style="
         width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-primary-indeterminate-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-indeterminate-border);
+        background: var(--color-checkbox-indeterminate-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-indeterminate-border);
         border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-primary-indeterminate-mark);
+        color: var(--color-checkbox-indeterminate-mark);
       ">–</div></td><td>
       <div class="ctl" style="
         width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-primary-disabled-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-disabled-border);
+        background: var(--color-checkbox-error-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-error-border);
         border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-primary-disabled-mark);
+        color: var(--color-checkbox-error-mark);
       ">✓</div></td><td>
       <div class="ctl" style="
         width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-primary-disabled-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-primary-disabled-checked-border);
+        background: var(--color-checkbox-error-hover-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-error-hover-border);
         border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-primary-disabled-checked-mark);
-      ">✓</div></td></tr><tr><th class="rh">neutral</th><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-neutral-unchecked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-unchecked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-neutral-unchecked-mark);
+        color: var(--color-checkbox-error-hover-mark);
       ">✓</div></td><td>
       <div class="ctl" style="
         width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-neutral-unchecked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-unchecked-hover-border);
+        background: var(--color-checkbox-disabled-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-disabled-border);
         border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-neutral-unchecked-hover-mark);
+        color: var(--color-checkbox-disabled-mark);
       ">✓</div></td><td>
       <div class="ctl" style="
         width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-neutral-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-checked-border);
+        background: var(--color-checkbox-disabled-checked-background);
+        border: var(--border-width-checkbox-md) solid var(--color-checkbox-disabled-checked-border);
         border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-neutral-checked-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-neutral-checked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-checked-hover-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-neutral-checked-hover-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-neutral-indeterminate-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-indeterminate-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-neutral-indeterminate-mark);
-      ">–</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-neutral-disabled-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-disabled-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-neutral-disabled-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-neutral-disabled-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-neutral-disabled-checked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-neutral-disabled-checked-mark);
-      ">✓</div></td></tr><tr><th class="rh">success</th><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-success-unchecked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-unchecked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-success-unchecked-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-success-unchecked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-unchecked-hover-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-success-unchecked-hover-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-success-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-checked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-success-checked-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-success-checked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-checked-hover-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-success-checked-hover-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-success-indeterminate-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-indeterminate-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-success-indeterminate-mark);
-      ">–</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-success-disabled-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-disabled-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-success-disabled-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-success-disabled-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-success-disabled-checked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-success-disabled-checked-mark);
-      ">✓</div></td></tr><tr><th class="rh">warning</th><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-warning-unchecked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-unchecked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-warning-unchecked-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-warning-unchecked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-unchecked-hover-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-warning-unchecked-hover-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-warning-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-checked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-warning-checked-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-warning-checked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-checked-hover-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-warning-checked-hover-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-warning-indeterminate-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-indeterminate-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-warning-indeterminate-mark);
-      ">–</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-warning-disabled-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-disabled-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-warning-disabled-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-warning-disabled-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-warning-disabled-checked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-warning-disabled-checked-mark);
-      ">✓</div></td></tr><tr><th class="rh">danger</th><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-danger-unchecked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-unchecked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-danger-unchecked-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-danger-unchecked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-unchecked-hover-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-danger-unchecked-hover-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-danger-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-checked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-danger-checked-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-danger-checked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-checked-hover-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-danger-checked-hover-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-danger-indeterminate-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-indeterminate-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-danger-indeterminate-mark);
-      ">–</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-danger-disabled-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-disabled-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-danger-disabled-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-danger-disabled-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-danger-disabled-checked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-danger-disabled-checked-mark);
-      ">✓</div></td></tr><tr><th class="rh">info</th><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-info-unchecked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-unchecked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-info-unchecked-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-info-unchecked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-unchecked-hover-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-info-unchecked-hover-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-info-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-checked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-info-checked-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-info-checked-hover-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-checked-hover-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-info-checked-hover-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-info-indeterminate-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-indeterminate-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-info-indeterminate-mark);
-      ">–</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-info-disabled-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-disabled-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-info-disabled-mark);
-      ">✓</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-checkbox-md-box); height: var(--size-checkbox-md-box);
-        background: var(--color-checkbox-default-info-disabled-checked-background);
-        border: var(--border-width-checkbox-md) solid var(--color-checkbox-default-info-disabled-checked-border);
-        border-radius: var(--radius-checkbox-md);
-        color: var(--color-checkbox-default-info-disabled-checked-mark);
-      ">✓</div></td></tr></tbody></table></div><p class="note">Les <strong>138 tokens</strong> de <code>checkbox</code>, et le token
+        color: var(--color-checkbox-disabled-checked-mark);
+      ">✓</div></td></tr></tbody></table></div><p class="note">Les <strong>39 tokens</strong> de <code>checkbox</code>, et le token
     sémantique que chacun consomme. <strong>Aucun ne nomme jamais une palette ni une police</strong> —
     suivre un lien mène à la page où ce rôle est défini.</p><div class="tok">
         <div class="tok-head">
           <code>color</code>
-          <span class="note">126 tokens</span>
+          <span class="note">27 tokens</span>
           <span class="tok-to">consomme <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.surface</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.border</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.role</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.text</code></a></span>
         </div>
         <div class="tok-body"><table class="tbl">
           <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
           <tbody><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-unchecked-background</td>
+            <td class="mono tiny">--color-checkbox-unchecked-background</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-unchecked-border</td>
+            <td class="mono tiny">--color-checkbox-unchecked-border</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
             <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-unchecked-mark</td>
+            <td class="mono tiny">--color-checkbox-unchecked-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-unchecked-hover-background</td>
+            <td class="mono tiny">--color-checkbox-unchecked-hover-background</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.tint — défini dans « Contrat de rôle »"><code>--color-role-primary-tint</code></a></td>
             <td class="mono tiny note">rgba(170, 76, 255, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-unchecked-hover-border</td>
+            <td class="mono tiny">--color-checkbox-unchecked-hover-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
             <td class="mono tiny note">#9500ee</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-unchecked-hover-mark</td>
+            <td class="mono tiny">--color-checkbox-unchecked-hover-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-checked-background</td>
+            <td class="mono tiny">--color-checkbox-checked-background</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
             <td class="mono tiny note">#9500ee</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-checked-border</td>
+            <td class="mono tiny">--color-checkbox-checked-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
             <td class="mono tiny note">#9500ee</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-checked-mark</td>
+            <td class="mono tiny">--color-checkbox-checked-mark</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.on — défini dans « Contrat de rôle »"><code>--color-role-primary-on</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-checked-hover-background</td>
+            <td class="mono tiny">--color-checkbox-checked-hover-background</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.hover — défini dans « Contrat de rôle »"><code>--color-role-primary-hover</code></a></td>
             <td class="mono tiny note">#7400bb</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-checked-hover-border</td>
+            <td class="mono tiny">--color-checkbox-checked-hover-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.hover — défini dans « Contrat de rôle »"><code>--color-role-primary-hover</code></a></td>
             <td class="mono tiny note">#7400bb</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-checked-hover-mark</td>
+            <td class="mono tiny">--color-checkbox-checked-hover-mark</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.on — défini dans « Contrat de rôle »"><code>--color-role-primary-on</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-indeterminate-background</td>
+            <td class="mono tiny">--color-checkbox-indeterminate-background</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
             <td class="mono tiny note">#9500ee</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-indeterminate-border</td>
+            <td class="mono tiny">--color-checkbox-indeterminate-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
             <td class="mono tiny note">#9500ee</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-indeterminate-mark</td>
+            <td class="mono tiny">--color-checkbox-indeterminate-mark</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.on — défini dans « Contrat de rôle »"><code>--color-role-primary-on</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-primary-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-unchecked-background</td>
+            <td class="mono tiny">--color-checkbox-error-background</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-unchecked-mark</td>
+            <td class="mono tiny">--color-checkbox-error-border</td>
+            <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
+            <td class="mono tiny note">#cd161d</td></tr><tr>
+            <td class="mono tiny">--color-checkbox-error-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-unchecked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.tint — défini dans « Contrat de rôle »"><code>--color-role-neutral-tint</code></a></td>
-            <td class="mono tiny note">rgba(100, 139, 180, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-unchecked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-unchecked-hover-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.on — défini dans « Contrat de rôle »"><code>--color-role-neutral-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.hover — défini dans « Contrat de rôle »"><code>--color-role-neutral-hover</code></a></td>
-            <td class="mono tiny note">#37587a</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.hover — défini dans « Contrat de rôle »"><code>--color-role-neutral-hover</code></a></td>
-            <td class="mono tiny note">#37587a</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.on — défini dans « Contrat de rôle »"><code>--color-role-neutral-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-indeterminate-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-indeterminate-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-indeterminate-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.on — défini dans « Contrat de rôle »"><code>--color-role-neutral-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-neutral-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-unchecked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-unchecked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-unchecked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.tint — défini dans « Contrat de rôle »"><code>--color-role-success-tint</code></a></td>
-            <td class="mono tiny note">rgba(0, 163, 74, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-unchecked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.main — défini dans « Contrat de rôle »"><code>--color-role-success-main</code></a></td>
-            <td class="mono tiny note">#00853c</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-unchecked-hover-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.main — défini dans « Contrat de rôle »"><code>--color-role-success-main</code></a></td>
-            <td class="mono tiny note">#00853c</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.main — défini dans « Contrat de rôle »"><code>--color-role-success-main</code></a></td>
-            <td class="mono tiny note">#00853c</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.on — défini dans « Contrat de rôle »"><code>--color-role-success-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.hover — défini dans « Contrat de rôle »"><code>--color-role-success-hover</code></a></td>
-            <td class="mono tiny note">#00672d</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.hover — défini dans « Contrat de rôle »"><code>--color-role-success-hover</code></a></td>
-            <td class="mono tiny note">#00672d</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.on — défini dans « Contrat de rôle »"><code>--color-role-success-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-indeterminate-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.main — défini dans « Contrat de rôle »"><code>--color-role-success-main</code></a></td>
-            <td class="mono tiny note">#00853c</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-indeterminate-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.main — défini dans « Contrat de rôle »"><code>--color-role-success-main</code></a></td>
-            <td class="mono tiny note">#00853c</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-indeterminate-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.on — défini dans « Contrat de rôle »"><code>--color-role-success-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-success-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-unchecked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-unchecked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-unchecked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.tint — défini dans « Contrat de rôle »"><code>--color-role-warning-tint</code></a></td>
-            <td class="mono tiny note">rgba(226, 82, 0, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-unchecked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.main — défini dans « Contrat de rôle »"><code>--color-role-warning-main</code></a></td>
-            <td class="mono tiny note">#ba4200</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-unchecked-hover-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.main — défini dans « Contrat de rôle »"><code>--color-role-warning-main</code></a></td>
-            <td class="mono tiny note">#ba4200</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.main — défini dans « Contrat de rôle »"><code>--color-role-warning-main</code></a></td>
-            <td class="mono tiny note">#ba4200</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.on — défini dans « Contrat de rôle »"><code>--color-role-warning-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.hover — défini dans « Contrat de rôle »"><code>--color-role-warning-hover</code></a></td>
-            <td class="mono tiny note">#913200</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.hover — défini dans « Contrat de rôle »"><code>--color-role-warning-hover</code></a></td>
-            <td class="mono tiny note">#913200</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.on — défini dans « Contrat de rôle »"><code>--color-role-warning-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-indeterminate-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.main — défini dans « Contrat de rôle »"><code>--color-role-warning-main</code></a></td>
-            <td class="mono tiny note">#ba4200</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-indeterminate-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.main — défini dans « Contrat de rôle »"><code>--color-role-warning-main</code></a></td>
-            <td class="mono tiny note">#ba4200</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-indeterminate-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.on — défini dans « Contrat de rôle »"><code>--color-role-warning-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-warning-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-unchecked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-unchecked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-unchecked-hover-background</td>
+            <td class="mono tiny">--color-checkbox-error-hover-background</td>
             <td class="tiny"><a href="roles.html" title="color.role.danger.tint — défini dans « Contrat de rôle »"><code>--color-role-danger-tint</code></a></td>
             <td class="mono tiny note">rgba(237, 59, 55, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-unchecked-hover-border</td>
+            <td class="mono tiny">--color-checkbox-error-hover-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
             <td class="mono tiny note">#cd161d</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-unchecked-hover-mark</td>
+            <td class="mono tiny">--color-checkbox-error-hover-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
-            <td class="mono tiny note">#cd161d</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
-            <td class="mono tiny note">#cd161d</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.on — défini dans « Contrat de rôle »"><code>--color-role-danger-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.hover — défini dans « Contrat de rôle »"><code>--color-role-danger-hover</code></a></td>
-            <td class="mono tiny note">#a3000f</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.hover — défini dans « Contrat de rôle »"><code>--color-role-danger-hover</code></a></td>
-            <td class="mono tiny note">#a3000f</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.on — défini dans « Contrat de rôle »"><code>--color-role-danger-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-indeterminate-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
-            <td class="mono tiny note">#cd161d</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-indeterminate-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
-            <td class="mono tiny note">#cd161d</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-indeterminate-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.on — défini dans « Contrat de rôle »"><code>--color-role-danger-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-disabled-background</td>
+            <td class="mono tiny">--color-checkbox-disabled-background</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
             <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-disabled-border</td>
+            <td class="mono tiny">--color-checkbox-disabled-border</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
             <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-disabled-mark</td>
+            <td class="mono tiny">--color-checkbox-disabled-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-disabled-checked-background</td>
+            <td class="mono tiny">--color-checkbox-disabled-checked-background</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
             <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-disabled-checked-border</td>
+            <td class="mono tiny">--color-checkbox-disabled-checked-border</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
             <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-danger-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-unchecked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-unchecked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-unchecked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.tint — défini dans « Contrat de rôle »"><code>--color-role-info-tint</code></a></td>
-            <td class="mono tiny note">rgba(70, 126, 255, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-unchecked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.main — défini dans « Contrat de rôle »"><code>--color-role-info-main</code></a></td>
-            <td class="mono tiny note">#2b60e8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-unchecked-hover-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.main — défini dans « Contrat de rôle »"><code>--color-role-info-main</code></a></td>
-            <td class="mono tiny note">#2b60e8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.main — défini dans « Contrat de rôle »"><code>--color-role-info-main</code></a></td>
-            <td class="mono tiny note">#2b60e8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.on — défini dans « Contrat de rôle »"><code>--color-role-info-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.hover — défini dans « Contrat de rôle »"><code>--color-role-info-hover</code></a></td>
-            <td class="mono tiny note">#1846bf</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.hover — défini dans « Contrat de rôle »"><code>--color-role-info-hover</code></a></td>
-            <td class="mono tiny note">#1846bf</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.on — défini dans « Contrat de rôle »"><code>--color-role-info-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-indeterminate-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.main — défini dans « Contrat de rôle »"><code>--color-role-info-main</code></a></td>
-            <td class="mono tiny note">#2b60e8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-indeterminate-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.main — défini dans « Contrat de rôle »"><code>--color-role-info-main</code></a></td>
-            <td class="mono tiny note">#2b60e8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-indeterminate-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.on — défini dans « Contrat de rôle »"><code>--color-role-info-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-checkbox-default-info-disabled-checked-mark</td>
+            <td class="mono tiny">--color-checkbox-disabled-checked-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
             <td class="mono tiny note">#9fbede</td></tr></tbody></table></div>
       </div><div class="tok">
@@ -3221,591 +2738,160 @@
             <td class="mono tiny note">2px</td></tr></tbody></table></div>
       </div>
 <h2 id="radio">Radio</h2><div class="scroll-x"><table class="tbl btn-grid checker">
-    <thead><tr><th></th><th>unchecked</th><th>uncheckedHover</th><th>checked</th><th>checkedHover</th><th>disabled</th><th>disabledChecked</th></tr></thead><tbody><tr><th class="rh">primary</th><td>
+    <thead><tr><th>unchecked</th><th>uncheckedHover</th><th>checked</th><th>checkedHover</th><th>indeterminate</th><th>error</th><th>errorHover</th><th>disabled</th><th>disabledChecked</th></tr></thead>
+    <tbody><tr><td>
       <div class="ctl" style="
         width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-primary-unchecked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-unchecked-border);
+        background: var(--color-radio-unchecked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-unchecked-border);
         border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-primary-unchecked-mark);
+        color: var(--color-radio-unchecked-mark);
       ">●</div></td><td>
       <div class="ctl" style="
         width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-primary-unchecked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-unchecked-hover-border);
+        background: var(--color-radio-unchecked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-unchecked-hover-border);
         border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-primary-unchecked-hover-mark);
+        color: var(--color-radio-unchecked-hover-mark);
       ">●</div></td><td>
       <div class="ctl" style="
         width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-primary-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-checked-border);
+        background: var(--color-radio-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-checked-border);
         border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-primary-checked-mark);
+        color: var(--color-radio-checked-mark);
       ">●</div></td><td>
       <div class="ctl" style="
         width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-primary-checked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-checked-hover-border);
+        background: var(--color-radio-checked-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-checked-hover-border);
         border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-primary-checked-hover-mark);
+        color: var(--color-radio-checked-hover-mark);
       ">●</div></td><td>
       <div class="ctl" style="
         width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-primary-disabled-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-disabled-border);
+        background: var(--color-radio-indeterminate-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-indeterminate-border);
         border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-primary-disabled-mark);
+        color: var(--color-radio-indeterminate-mark);
       ">●</div></td><td>
       <div class="ctl" style="
         width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-primary-disabled-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-primary-disabled-checked-border);
+        background: var(--color-radio-error-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-error-border);
         border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-primary-disabled-checked-mark);
-      ">●</div></td></tr><tr><th class="rh">neutral</th><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-neutral-unchecked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-unchecked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-neutral-unchecked-mark);
+        color: var(--color-radio-error-mark);
       ">●</div></td><td>
       <div class="ctl" style="
         width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-neutral-unchecked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-unchecked-hover-border);
+        background: var(--color-radio-error-hover-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-error-hover-border);
         border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-neutral-unchecked-hover-mark);
+        color: var(--color-radio-error-hover-mark);
       ">●</div></td><td>
       <div class="ctl" style="
         width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-neutral-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-checked-border);
+        background: var(--color-radio-disabled-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-disabled-border);
         border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-neutral-checked-mark);
+        color: var(--color-radio-disabled-mark);
       ">●</div></td><td>
       <div class="ctl" style="
         width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-neutral-checked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-checked-hover-border);
+        background: var(--color-radio-disabled-checked-background);
+        border: var(--border-width-radio-md) solid var(--color-radio-disabled-checked-border);
         border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-neutral-checked-hover-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-neutral-disabled-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-disabled-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-neutral-disabled-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-neutral-disabled-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-neutral-disabled-checked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-neutral-disabled-checked-mark);
-      ">●</div></td></tr><tr><th class="rh">success</th><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-success-unchecked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-success-unchecked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-success-unchecked-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-success-unchecked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-success-unchecked-hover-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-success-unchecked-hover-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-success-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-success-checked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-success-checked-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-success-checked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-success-checked-hover-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-success-checked-hover-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-success-disabled-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-success-disabled-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-success-disabled-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-success-disabled-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-success-disabled-checked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-success-disabled-checked-mark);
-      ">●</div></td></tr><tr><th class="rh">warning</th><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-warning-unchecked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-unchecked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-warning-unchecked-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-warning-unchecked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-unchecked-hover-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-warning-unchecked-hover-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-warning-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-checked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-warning-checked-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-warning-checked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-checked-hover-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-warning-checked-hover-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-warning-disabled-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-disabled-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-warning-disabled-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-warning-disabled-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-warning-disabled-checked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-warning-disabled-checked-mark);
-      ">●</div></td></tr><tr><th class="rh">danger</th><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-danger-unchecked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-unchecked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-danger-unchecked-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-danger-unchecked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-unchecked-hover-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-danger-unchecked-hover-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-danger-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-checked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-danger-checked-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-danger-checked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-checked-hover-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-danger-checked-hover-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-danger-disabled-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-disabled-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-danger-disabled-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-danger-disabled-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-danger-disabled-checked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-danger-disabled-checked-mark);
-      ">●</div></td></tr><tr><th class="rh">info</th><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-info-unchecked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-info-unchecked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-info-unchecked-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-info-unchecked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-info-unchecked-hover-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-info-unchecked-hover-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-info-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-info-checked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-info-checked-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-info-checked-hover-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-info-checked-hover-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-info-checked-hover-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-info-disabled-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-info-disabled-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-info-disabled-mark);
-      ">●</div></td><td>
-      <div class="ctl" style="
-        width: var(--size-radio-md-box); height: var(--size-radio-md-box);
-        background: var(--color-radio-default-info-disabled-checked-background);
-        border: var(--border-width-radio-md) solid var(--color-radio-default-info-disabled-checked-border);
-        border-radius: var(--radius-radio-md);
-        color: var(--color-radio-default-info-disabled-checked-mark);
-      ">●</div></td></tr></tbody></table></div><p class="note">Les <strong>120 tokens</strong> de <code>radio</code>, et le token
+        color: var(--color-radio-disabled-checked-mark);
+      ">●</div></td></tr></tbody></table></div><p class="note">Les <strong>39 tokens</strong> de <code>radio</code>, et le token
     sémantique que chacun consomme. <strong>Aucun ne nomme jamais une palette ni une police</strong> —
     suivre un lien mène à la page où ce rôle est défini.</p><div class="tok">
         <div class="tok-head">
           <code>color</code>
-          <span class="note">108 tokens</span>
+          <span class="note">27 tokens</span>
           <span class="tok-to">consomme <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.surface</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.border</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.role</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.text</code></a></span>
         </div>
         <div class="tok-body"><table class="tbl">
           <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
           <tbody><tr>
-            <td class="mono tiny">--color-radio-default-primary-unchecked-background</td>
+            <td class="mono tiny">--color-radio-unchecked-background</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-unchecked-border</td>
+            <td class="mono tiny">--color-radio-unchecked-border</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
             <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-unchecked-mark</td>
+            <td class="mono tiny">--color-radio-unchecked-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-unchecked-hover-background</td>
+            <td class="mono tiny">--color-radio-unchecked-hover-background</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.tint — défini dans « Contrat de rôle »"><code>--color-role-primary-tint</code></a></td>
             <td class="mono tiny note">rgba(170, 76, 255, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-unchecked-hover-border</td>
+            <td class="mono tiny">--color-radio-unchecked-hover-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
             <td class="mono tiny note">#9500ee</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-unchecked-hover-mark</td>
+            <td class="mono tiny">--color-radio-unchecked-hover-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-checked-background</td>
+            <td class="mono tiny">--color-radio-checked-background</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
             <td class="mono tiny note">#9500ee</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-checked-border</td>
+            <td class="mono tiny">--color-radio-checked-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
             <td class="mono tiny note">#9500ee</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-checked-mark</td>
+            <td class="mono tiny">--color-radio-checked-mark</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.on — défini dans « Contrat de rôle »"><code>--color-role-primary-on</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-checked-hover-background</td>
+            <td class="mono tiny">--color-radio-checked-hover-background</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.hover — défini dans « Contrat de rôle »"><code>--color-role-primary-hover</code></a></td>
             <td class="mono tiny note">#7400bb</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-checked-hover-border</td>
+            <td class="mono tiny">--color-radio-checked-hover-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.hover — défini dans « Contrat de rôle »"><code>--color-role-primary-hover</code></a></td>
             <td class="mono tiny note">#7400bb</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-checked-hover-mark</td>
+            <td class="mono tiny">--color-radio-checked-hover-mark</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.on — défini dans « Contrat de rôle »"><code>--color-role-primary-on</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-primary-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-unchecked-background</td>
+            <td class="mono tiny">--color-radio-indeterminate-background</td>
+            <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
+            <td class="mono tiny note">#9500ee</td></tr><tr>
+            <td class="mono tiny">--color-radio-indeterminate-border</td>
+            <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
+            <td class="mono tiny note">#9500ee</td></tr><tr>
+            <td class="mono tiny">--color-radio-indeterminate-mark</td>
+            <td class="tiny"><a href="roles.html" title="color.role.primary.on — défini dans « Contrat de rôle »"><code>--color-role-primary-on</code></a></td>
+            <td class="mono tiny note">#f6fbff</td></tr><tr>
+            <td class="mono tiny">--color-radio-error-background</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-unchecked-mark</td>
+            <td class="mono tiny">--color-radio-error-border</td>
+            <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
+            <td class="mono tiny note">#cd161d</td></tr><tr>
+            <td class="mono tiny">--color-radio-error-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-unchecked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.tint — défini dans « Contrat de rôle »"><code>--color-role-neutral-tint</code></a></td>
-            <td class="mono tiny note">rgba(100, 139, 180, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-unchecked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-unchecked-hover-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.on — défini dans « Contrat de rôle »"><code>--color-role-neutral-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.hover — défini dans « Contrat de rôle »"><code>--color-role-neutral-hover</code></a></td>
-            <td class="mono tiny note">#37587a</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.hover — défini dans « Contrat de rôle »"><code>--color-role-neutral-hover</code></a></td>
-            <td class="mono tiny note">#37587a</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.on — défini dans « Contrat de rôle »"><code>--color-role-neutral-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-neutral-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-unchecked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-unchecked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-unchecked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.tint — défini dans « Contrat de rôle »"><code>--color-role-success-tint</code></a></td>
-            <td class="mono tiny note">rgba(0, 163, 74, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-unchecked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.main — défini dans « Contrat de rôle »"><code>--color-role-success-main</code></a></td>
-            <td class="mono tiny note">#00853c</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-unchecked-hover-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.main — défini dans « Contrat de rôle »"><code>--color-role-success-main</code></a></td>
-            <td class="mono tiny note">#00853c</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.main — défini dans « Contrat de rôle »"><code>--color-role-success-main</code></a></td>
-            <td class="mono tiny note">#00853c</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.on — défini dans « Contrat de rôle »"><code>--color-role-success-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.hover — défini dans « Contrat de rôle »"><code>--color-role-success-hover</code></a></td>
-            <td class="mono tiny note">#00672d</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.hover — défini dans « Contrat de rôle »"><code>--color-role-success-hover</code></a></td>
-            <td class="mono tiny note">#00672d</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.on — défini dans « Contrat de rôle »"><code>--color-role-success-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-success-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-unchecked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-unchecked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-unchecked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.tint — défini dans « Contrat de rôle »"><code>--color-role-warning-tint</code></a></td>
-            <td class="mono tiny note">rgba(226, 82, 0, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-unchecked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.main — défini dans « Contrat de rôle »"><code>--color-role-warning-main</code></a></td>
-            <td class="mono tiny note">#ba4200</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-unchecked-hover-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.main — défini dans « Contrat de rôle »"><code>--color-role-warning-main</code></a></td>
-            <td class="mono tiny note">#ba4200</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.main — défini dans « Contrat de rôle »"><code>--color-role-warning-main</code></a></td>
-            <td class="mono tiny note">#ba4200</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.on — défini dans « Contrat de rôle »"><code>--color-role-warning-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.hover — défini dans « Contrat de rôle »"><code>--color-role-warning-hover</code></a></td>
-            <td class="mono tiny note">#913200</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.hover — défini dans « Contrat de rôle »"><code>--color-role-warning-hover</code></a></td>
-            <td class="mono tiny note">#913200</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.on — défini dans « Contrat de rôle »"><code>--color-role-warning-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-warning-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-unchecked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-unchecked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-unchecked-hover-background</td>
+            <td class="mono tiny">--color-radio-error-hover-background</td>
             <td class="tiny"><a href="roles.html" title="color.role.danger.tint — défini dans « Contrat de rôle »"><code>--color-role-danger-tint</code></a></td>
             <td class="mono tiny note">rgba(237, 59, 55, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-unchecked-hover-border</td>
+            <td class="mono tiny">--color-radio-error-hover-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
             <td class="mono tiny note">#cd161d</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-unchecked-hover-mark</td>
+            <td class="mono tiny">--color-radio-error-hover-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
-            <td class="mono tiny note">#cd161d</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
-            <td class="mono tiny note">#cd161d</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.on — défini dans « Contrat de rôle »"><code>--color-role-danger-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.hover — défini dans « Contrat de rôle »"><code>--color-role-danger-hover</code></a></td>
-            <td class="mono tiny note">#a3000f</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.hover — défini dans « Contrat de rôle »"><code>--color-role-danger-hover</code></a></td>
-            <td class="mono tiny note">#a3000f</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.on — défini dans « Contrat de rôle »"><code>--color-role-danger-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-disabled-background</td>
+            <td class="mono tiny">--color-radio-disabled-background</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
             <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-disabled-border</td>
+            <td class="mono tiny">--color-radio-disabled-border</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
             <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-disabled-mark</td>
+            <td class="mono tiny">--color-radio-disabled-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
             <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-disabled-checked-background</td>
+            <td class="mono tiny">--color-radio-disabled-checked-background</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
             <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-disabled-checked-border</td>
+            <td class="mono tiny">--color-radio-disabled-checked-border</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
             <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-danger-disabled-checked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
-            <td class="mono tiny note">#9fbede</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-unchecked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-unchecked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-unchecked-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-unchecked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.tint — défini dans « Contrat de rôle »"><code>--color-role-info-tint</code></a></td>
-            <td class="mono tiny note">rgba(70, 126, 255, 0.05)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-unchecked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.main — défini dans « Contrat de rôle »"><code>--color-role-info-main</code></a></td>
-            <td class="mono tiny note">#2b60e8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-unchecked-hover-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-checked-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.main — défini dans « Contrat de rôle »"><code>--color-role-info-main</code></a></td>
-            <td class="mono tiny note">#2b60e8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-checked-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.main — défini dans « Contrat de rôle »"><code>--color-role-info-main</code></a></td>
-            <td class="mono tiny note">#2b60e8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-checked-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.on — défini dans « Contrat de rôle »"><code>--color-role-info-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-checked-hover-background</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.hover — défini dans « Contrat de rôle »"><code>--color-role-info-hover</code></a></td>
-            <td class="mono tiny note">#1846bf</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-checked-hover-border</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.hover — défini dans « Contrat de rôle »"><code>--color-role-info-hover</code></a></td>
-            <td class="mono tiny note">#1846bf</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-checked-hover-mark</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.on — défini dans « Contrat de rôle »"><code>--color-role-info-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-disabled-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-disabled-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-disabled-mark</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.transparent — défini dans « Sémantique · couleur »"><code>--color-surface-transparent</code></a></td>
-            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-disabled-checked-background</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-disabled-checked-border</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.disabled — défini dans « Sémantique · couleur »"><code>--color-border-disabled</code></a></td>
-            <td class="mono tiny note">#c0d7ef</td></tr><tr>
-            <td class="mono tiny">--color-radio-default-info-disabled-checked-mark</td>
+            <td class="mono tiny">--color-radio-disabled-checked-mark</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.text.disabled — défini dans « Sémantique · couleur »"><code>--color-text-disabled</code></a></td>
             <td class="mono tiny note">#9fbede</td></tr></tbody></table></div>
       </div><div class="tok">
@@ -3873,589 +2959,210 @@
             <td class="mono tiny note">2px</td></tr></tbody></table></div>
       </div>
 <h2 id="switch">Switch</h2><div class="scroll-x"><table class="tbl btn-grid checker">
-    <thead><tr><th></th><th>off</th><th>offHover</th><th>on</th><th>onHover</th><th>disabledOff</th><th>disabledOn</th></tr></thead><tbody><tr><th class="rh">primary</th><td>
+    <thead><tr><th>off</th><th>offHover</th><th>on</th><th>onHover</th><th>error</th><th>errorHover</th><th>disabledOff</th><th>disabledOn</th></tr></thead>
+    <tbody><tr><td>
     <div class="sw-track" style="
       width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-primary-off-track);
+      background: var(--color-switch-off-track);
       border-radius: var(--radius-switch-md);
+      outline: var(--border-width-switch-md) solid var(--color-switch-off-border);
+      outline-offset: 2px;
       justify-content: flex-start;
     "><i style="
       width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-primary-off-thumb);
+      background: var(--color-switch-off-thumb);
     "></i></div></td><td>
     <div class="sw-track" style="
       width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-primary-off-hover-track);
+      background: var(--color-switch-off-hover-track);
       border-radius: var(--radius-switch-md);
+      outline: var(--border-width-switch-md) solid var(--color-switch-off-hover-border);
+      outline-offset: 2px;
       justify-content: flex-start;
     "><i style="
       width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-primary-off-hover-thumb);
+      background: var(--color-switch-off-hover-thumb);
     "></i></div></td><td>
     <div class="sw-track" style="
       width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-primary-on-track);
+      background: var(--color-switch-on-track);
       border-radius: var(--radius-switch-md);
+      outline: var(--border-width-switch-md) solid var(--color-switch-on-border);
+      outline-offset: 2px;
       justify-content: flex-end;
     "><i style="
       width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-primary-on-thumb);
+      background: var(--color-switch-on-thumb);
     "></i></div></td><td>
     <div class="sw-track" style="
       width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-primary-on-hover-track);
+      background: var(--color-switch-on-hover-track);
       border-radius: var(--radius-switch-md);
+      outline: var(--border-width-switch-md) solid var(--color-switch-on-hover-border);
+      outline-offset: 2px;
       justify-content: flex-end;
     "><i style="
       width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-primary-on-hover-thumb);
+      background: var(--color-switch-on-hover-thumb);
     "></i></div></td><td>
     <div class="sw-track" style="
       width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-primary-disabled-off-track);
+      background: var(--color-switch-error-track);
       border-radius: var(--radius-switch-md);
+      outline: var(--border-width-switch-md) solid var(--color-switch-error-border);
+      outline-offset: 2px;
       justify-content: flex-start;
     "><i style="
       width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-primary-disabled-off-thumb);
+      background: var(--color-switch-error-thumb);
     "></i></div></td><td>
     <div class="sw-track" style="
       width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-primary-disabled-on-track);
+      background: var(--color-switch-error-hover-track);
       border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-primary-disabled-on-thumb);
-    "></i></div></td></tr><tr><th class="rh">neutral</th><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-neutral-off-track);
-      border-radius: var(--radius-switch-md);
+      outline: var(--border-width-switch-md) solid var(--color-switch-error-hover-border);
+      outline-offset: 2px;
       justify-content: flex-start;
     "><i style="
       width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-neutral-off-thumb);
+      background: var(--color-switch-error-hover-thumb);
     "></i></div></td><td>
     <div class="sw-track" style="
       width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-neutral-off-hover-track);
+      background: var(--color-switch-disabled-off-track);
       border-radius: var(--radius-switch-md);
+      outline: var(--border-width-switch-md) solid var(--color-switch-disabled-off-border);
+      outline-offset: 2px;
       justify-content: flex-start;
     "><i style="
       width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-neutral-off-hover-thumb);
+      background: var(--color-switch-disabled-off-thumb);
     "></i></div></td><td>
     <div class="sw-track" style="
       width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-neutral-on-track);
+      background: var(--color-switch-disabled-on-track);
       border-radius: var(--radius-switch-md);
+      outline: var(--border-width-switch-md) solid var(--color-switch-disabled-on-border);
+      outline-offset: 2px;
       justify-content: flex-end;
     "><i style="
       width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-neutral-on-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-neutral-on-hover-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-neutral-on-hover-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-neutral-disabled-off-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-neutral-disabled-off-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-neutral-disabled-on-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-neutral-disabled-on-thumb);
-    "></i></div></td></tr><tr><th class="rh">success</th><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-success-off-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-success-off-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-success-off-hover-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-success-off-hover-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-success-on-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-success-on-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-success-on-hover-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-success-on-hover-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-success-disabled-off-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-success-disabled-off-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-success-disabled-on-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-success-disabled-on-thumb);
-    "></i></div></td></tr><tr><th class="rh">warning</th><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-warning-off-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-warning-off-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-warning-off-hover-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-warning-off-hover-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-warning-on-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-warning-on-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-warning-on-hover-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-warning-on-hover-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-warning-disabled-off-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-warning-disabled-off-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-warning-disabled-on-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-warning-disabled-on-thumb);
-    "></i></div></td></tr><tr><th class="rh">danger</th><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-danger-off-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-danger-off-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-danger-off-hover-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-danger-off-hover-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-danger-on-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-danger-on-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-danger-on-hover-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-danger-on-hover-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-danger-disabled-off-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-danger-disabled-off-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-danger-disabled-on-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-danger-disabled-on-thumb);
-    "></i></div></td></tr><tr><th class="rh">info</th><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-info-off-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-info-off-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-info-off-hover-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-info-off-hover-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-info-on-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-info-on-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-info-on-hover-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-info-on-hover-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-info-disabled-off-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-start;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-info-disabled-off-thumb);
-    "></i></div></td><td>
-    <div class="sw-track" style="
-      width: var(--size-switch-md-track-width); height: var(--size-switch-md-track-height);
-      background: var(--color-switch-default-info-disabled-on-track);
-      border-radius: var(--radius-switch-md);
-      justify-content: flex-end;
-    "><i style="
-      width: var(--size-switch-md-thumb); height: var(--size-switch-md-thumb);
-      background: var(--color-switch-default-info-disabled-on-thumb);
-    "></i></div></td></tr></tbody></table></div><p class="note">Les <strong>84 tokens</strong> de <code>switch</code>, et le token
+      background: var(--color-switch-disabled-on-thumb);
+    "></i></div></td></tr></tbody></table></div><p class="note">Les <strong>39 tokens</strong> de <code>switch</code>, et le token
     sémantique que chacun consomme. <strong>Aucun ne nomme jamais une palette ni une police</strong> —
     suivre un lien mène à la page où ce rôle est défini.</p><div class="tok">
         <div class="tok-head">
           <code>color</code>
-          <span class="note">72 tokens</span>
+          <span class="note">24 tokens</span>
           <span class="tok-to">consomme <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.border</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.surface</code></a> <a href="primitives.html#rampes" title="Défini dans « Primitives »"><code>color.role</code></a></span>
         </div>
         <div class="tok-body"><table class="tbl">
           <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
           <tbody><tr>
-            <td class="mono tiny">--color-switch-default-primary-off-track</td>
+            <td class="mono tiny">--color-switch-off-track</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
             <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-off-thumb</td>
+            <td class="mono tiny">--color-switch-off-thumb</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-off-hover-track</td>
+            <td class="mono tiny">--color-switch-off-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.transparent — défini dans « Sémantique · couleur »"><code>--color-border-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-switch-off-hover-track</td>
             <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
             <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-off-hover-thumb</td>
+            <td class="mono tiny">--color-switch-off-hover-thumb</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-on-track</td>
+            <td class="mono tiny">--color-switch-off-hover-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.transparent — défini dans « Sémantique · couleur »"><code>--color-border-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-switch-on-track</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.main — défini dans « Contrat de rôle »"><code>--color-role-primary-main</code></a></td>
             <td class="mono tiny note">#9500ee</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-on-thumb</td>
+            <td class="mono tiny">--color-switch-on-thumb</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.on — défini dans « Contrat de rôle »"><code>--color-role-primary-on</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-on-hover-track</td>
+            <td class="mono tiny">--color-switch-on-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.transparent — défini dans « Sémantique · couleur »"><code>--color-border-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-switch-on-hover-track</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.hover — défini dans « Contrat de rôle »"><code>--color-role-primary-hover</code></a></td>
             <td class="mono tiny note">#7400bb</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-on-hover-thumb</td>
+            <td class="mono tiny">--color-switch-on-hover-thumb</td>
             <td class="tiny"><a href="roles.html" title="color.role.primary.on — défini dans « Contrat de rôle »"><code>--color-role-primary-on</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-disabled-off-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-disabled-off-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-disabled-on-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-primary-disabled-on-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-off-track</td>
+            <td class="mono tiny">--color-switch-on-hover-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.transparent — défini dans « Sémantique · couleur »"><code>--color-border-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-switch-error-track</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
             <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-off-thumb</td>
+            <td class="mono tiny">--color-switch-error-thumb</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-off-hover-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-off-hover-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-on-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-on-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.on — défini dans « Contrat de rôle »"><code>--color-role-neutral-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-on-hover-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.hover — défini dans « Contrat de rôle »"><code>--color-role-neutral-hover</code></a></td>
-            <td class="mono tiny note">#37587a</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-on-hover-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.on — défini dans « Contrat de rôle »"><code>--color-role-neutral-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-disabled-off-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-disabled-off-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-disabled-on-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-neutral-disabled-on-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-off-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-off-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-off-hover-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-off-hover-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-on-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.main — défini dans « Contrat de rôle »"><code>--color-role-success-main</code></a></td>
-            <td class="mono tiny note">#00853c</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-on-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.on — défini dans « Contrat de rôle »"><code>--color-role-success-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-on-hover-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.hover — défini dans « Contrat de rôle »"><code>--color-role-success-hover</code></a></td>
-            <td class="mono tiny note">#00672d</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-on-hover-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.success.on — défini dans « Contrat de rôle »"><code>--color-role-success-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-disabled-off-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-disabled-off-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-disabled-on-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-success-disabled-on-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-off-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-off-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-off-hover-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-off-hover-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-on-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.main — défini dans « Contrat de rôle »"><code>--color-role-warning-main</code></a></td>
-            <td class="mono tiny note">#ba4200</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-on-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.on — défini dans « Contrat de rôle »"><code>--color-role-warning-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-on-hover-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.hover — défini dans « Contrat de rôle »"><code>--color-role-warning-hover</code></a></td>
-            <td class="mono tiny note">#913200</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-on-hover-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.warning.on — défini dans « Contrat de rôle »"><code>--color-role-warning-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-disabled-off-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-disabled-off-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-disabled-on-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-warning-disabled-on-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-off-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-off-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-off-hover-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
-            <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-off-hover-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-on-track</td>
+            <td class="mono tiny">--color-switch-error-border</td>
             <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
             <td class="mono tiny note">#cd161d</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-on-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.on — défini dans « Contrat de rôle »"><code>--color-role-danger-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-on-hover-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.hover — défini dans « Contrat de rôle »"><code>--color-role-danger-hover</code></a></td>
-            <td class="mono tiny note">#a3000f</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-on-hover-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.danger.on — défini dans « Contrat de rôle »"><code>--color-role-danger-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-disabled-off-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-disabled-off-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-disabled-on-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
-            <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-danger-disabled-on-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-off-track</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.border.strong — défini dans « Sémantique · couleur »"><code>--color-border-strong</code></a></td>
-            <td class="mono tiny note">#80a5cc</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-off-thumb</td>
-            <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-off-hover-track</td>
+            <td class="mono tiny">--color-switch-error-hover-track</td>
             <td class="tiny"><a href="roles.html" title="color.role.neutral.main — défini dans « Contrat de rôle »"><code>--color-role-neutral-main</code></a></td>
             <td class="mono tiny note">#4c7299</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-off-hover-thumb</td>
+            <td class="mono tiny">--color-switch-error-hover-thumb</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-on-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.main — défini dans « Contrat de rôle »"><code>--color-role-info-main</code></a></td>
-            <td class="mono tiny note">#2b60e8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-on-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.on — défini dans « Contrat de rôle »"><code>--color-role-info-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-on-hover-track</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.hover — défini dans « Contrat de rôle »"><code>--color-role-info-hover</code></a></td>
-            <td class="mono tiny note">#1846bf</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-on-hover-thumb</td>
-            <td class="tiny"><a href="roles.html" title="color.role.info.on — défini dans « Contrat de rôle »"><code>--color-role-info-on</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-disabled-off-track</td>
+            <td class="mono tiny">--color-switch-error-hover-border</td>
+            <td class="tiny"><a href="roles.html" title="color.role.danger.main — défini dans « Contrat de rôle »"><code>--color-role-danger-main</code></a></td>
+            <td class="mono tiny note">#cd161d</td></tr><tr>
+            <td class="mono tiny">--color-switch-disabled-off-track</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
             <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-disabled-off-thumb</td>
+            <td class="mono tiny">--color-switch-disabled-off-thumb</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
             <td class="mono tiny note">#f6fbff</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-disabled-on-track</td>
+            <td class="mono tiny">--color-switch-disabled-off-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.transparent — défini dans « Sémantique · couleur »"><code>--color-border-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr><tr>
+            <td class="mono tiny">--color-switch-disabled-on-track</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.disabled — défini dans « Sémantique · couleur »"><code>--color-surface-disabled</code></a></td>
             <td class="mono tiny note">#dceaf8</td></tr><tr>
-            <td class="mono tiny">--color-switch-default-info-disabled-on-thumb</td>
+            <td class="mono tiny">--color-switch-disabled-on-thumb</td>
             <td class="tiny"><a href="semantique.html#couleur" title="color.surface.base — défini dans « Sémantique · couleur »"><code>--color-surface-base</code></a></td>
-            <td class="mono tiny note">#f6fbff</td></tr></tbody></table></div>
+            <td class="mono tiny note">#f6fbff</td></tr><tr>
+            <td class="mono tiny">--color-switch-disabled-on-border</td>
+            <td class="tiny"><a href="semantique.html#couleur" title="color.border.transparent — défini dans « Sémantique · couleur »"><code>--color-border-transparent</code></a></td>
+            <td class="mono tiny note">rgba(0, 0, 0, 0)</td></tr></tbody></table></div>
       </div><div class="tok">
         <div class="tok-head">
           <code>size</code>
           <span class="note">9 tokens</span>
-          <span class="tok-to">consomme <code>size</code> <code>glyphSize</code></span>
+          <span class="tok-to">consomme <code>trackWidth</code> <code>trackHeight</code> <code>glyphSize</code></span>
         </div>
         <div class="tok-body"><table class="tbl">
           <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
           <tbody><tr>
             <td class="mono tiny">--size-switch-sm-track-width</td>
-            <td class="tiny"><a href="primitives.html#echelles" title="size.control.lg — défini dans « Primitives »"><code>--size-control-lg</code></a></td>
+            <td class="tiny"><a href="semantique.html#tailles" title="trackWidth.sm — défini dans « Sémantique · tailles »"><code>--track-width-sm</code></a></td>
             <td class="mono tiny note">48px</td></tr><tr>
             <td class="mono tiny">--size-switch-sm-track-height</td>
-            <td class="tiny"><a href="semantique.html#tailles" title="glyphSize.md — défini dans « Sémantique · tailles »"><code>--glyph-size-md</code></a></td>
+            <td class="tiny"><a href="semantique.html#tailles" title="trackHeight.sm — défini dans « Sémantique · tailles »"><code>--track-height-sm</code></a></td>
             <td class="mono tiny note">20px</td></tr><tr>
             <td class="mono tiny">--size-switch-sm-thumb</td>
             <td class="tiny"><a href="semantique.html#tailles" title="glyphSize.sm — défini dans « Sémantique · tailles »"><code>--glyph-size-sm</code></a></td>
             <td class="mono tiny note">16px</td></tr><tr>
             <td class="mono tiny">--size-switch-md-track-width</td>
-            <td class="tiny"><a href="primitives.html#echelles" title="size.control.xl — défini dans « Primitives »"><code>--size-control-xl</code></a></td>
+            <td class="tiny"><a href="semantique.html#tailles" title="trackWidth.md — défini dans « Sémantique · tailles »"><code>--track-width-md</code></a></td>
             <td class="mono tiny note">52px</td></tr><tr>
             <td class="mono tiny">--size-switch-md-track-height</td>
-            <td class="tiny"><a href="semantique.html#tailles" title="glyphSize.lg — défini dans « Sémantique · tailles »"><code>--glyph-size-lg</code></a></td>
+            <td class="tiny"><a href="semantique.html#tailles" title="trackHeight.md — défini dans « Sémantique · tailles »"><code>--track-height-md</code></a></td>
             <td class="mono tiny note">24px</td></tr><tr>
             <td class="mono tiny">--size-switch-md-thumb</td>
             <td class="tiny"><a href="semantique.html#tailles" title="glyphSize.md — défini dans « Sémantique · tailles »"><code>--glyph-size-md</code></a></td>
             <td class="mono tiny note">20px</td></tr><tr>
             <td class="mono tiny">--size-switch-lg-track-width</td>
-            <td class="tiny"><a href="primitives.html#echelles" title="size.spacing.11 — défini dans « Primitives »"><code>--size-spacing-11</code></a></td>
+            <td class="tiny"><a href="semantique.html#tailles" title="trackWidth.lg — défini dans « Sémantique · tailles »"><code>--track-width-lg</code></a></td>
             <td class="mono tiny note">64px</td></tr><tr>
             <td class="mono tiny">--size-switch-lg-track-height</td>
-            <td class="tiny"><a href="primitives.html#echelles" title="size.control.sm — défini dans « Primitives »"><code>--size-control-sm</code></a></td>
+            <td class="tiny"><a href="semantique.html#tailles" title="trackHeight.lg — défini dans « Sémantique · tailles »"><code>--track-height-lg</code></a></td>
             <td class="mono tiny note">32px</td></tr><tr>
             <td class="mono tiny">--size-switch-lg-thumb</td>
             <td class="tiny"><a href="semantique.html#tailles" title="glyphSize.md — défini dans « Sémantique · tailles »"><code>--glyph-size-md</code></a></td>
@@ -4478,6 +3185,24 @@
             <td class="mono tiny">--radius-switch-lg</td>
             <td class="tiny"><a href="semantique.html#tailles" title="radius.full — défini dans « Sémantique · tailles »"><code>--radius-full</code></a></td>
             <td class="mono tiny note">9999px</td></tr></tbody></table></div>
+      </div><div class="tok">
+        <div class="tok-head">
+          <code>borderWidth</code>
+          <span class="note">3 tokens</span>
+          <span class="tok-to">consomme <code>borderWidth</code></span>
+        </div>
+        <div class="tok-body"><table class="tbl">
+          <thead><tr><th>Token du composant</th><th>Consomme (sémantique)</th><th>Valeur résolue</th></tr></thead>
+          <tbody><tr>
+            <td class="mono tiny">--border-width-switch-sm</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="borderWidth.strong — défini dans « Sémantique · tailles »"><code>--border-width-strong</code></a></td>
+            <td class="mono tiny note">2px</td></tr><tr>
+            <td class="mono tiny">--border-width-switch-md</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="borderWidth.strong — défini dans « Sémantique · tailles »"><code>--border-width-strong</code></a></td>
+            <td class="mono tiny note">2px</td></tr><tr>
+            <td class="mono tiny">--border-width-switch-lg</td>
+            <td class="tiny"><a href="semantique.html#tailles" title="borderWidth.strong — défini dans « Sémantique · tailles »"><code>--border-width-strong</code></a></td>
+            <td class="mono tiny note">2px</td></tr></tbody></table></div>
       </div>
     
     <nav class="pager">
@@ -4489,11 +3214,63 @@
 
 <script>
   const root = document.documentElement;
-  document.getElementById('toggle').addEventListener('click', () => {
-    const dark = root.getAttribute('data-theme') === 'dark';
-    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
-    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+
+  // Réglages : modale (thème + couleur « primary »). <dialog> natif → piège de
+  // focus, Escape et inertage du fond sont gratuits. Reste à gérer le clic sur le
+  // fond (le backdrop ne déclenche pas de close natif).
+  const settingsBtn = document.getElementById('settingsBtn');
+  const settingsModal = document.getElementById('settingsModal');
+  settingsBtn.addEventListener('click', () => settingsModal.showModal());
+  document.getElementById('settingsClose').addEventListener('click', () => settingsModal.close());
+  settingsModal.addEventListener('click', (e) => {
+    const r = settingsModal.getBoundingClientRect();
+    const outside = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    if (outside) settingsModal.close();
   });
+
+  const syncTheme = () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    document.querySelectorAll('[data-theme-choice]').forEach((b) =>
+      b.classList.toggle('active', b.dataset.themeChoice === (dark ? 'dark' : 'light')));
+  };
+  document.querySelectorAll('[data-theme-choice]').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (b.dataset.themeChoice === 'dark') { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+      else { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+      syncTheme();
+    }));
+  syncTheme();
+
+  let currentPrimary = localStorage.getItem('primary') || 'violet';
+  const syncPrimary = () =>
+    document.querySelectorAll('.swatch-pick').forEach((b) =>
+      b.classList.toggle('active', b.dataset.palette === currentPrimary));
+  document.querySelectorAll('.swatch-pick').forEach((b) =>
+    b.addEventListener('click', () => {
+      currentPrimary = b.dataset.palette;
+      window.__setPrimary(currentPrimary);
+      localStorage.setItem('primary', currentPrimary);
+      syncPrimary();
+    }));
+  syncPrimary();
+
+  // Deux sélecteurs de police : titres (data-font-heading) et corps (data-font-body).
+  const wireFont = (attr, storeKey, def, apply) => {
+    let current = localStorage.getItem(storeKey) || def;
+    const picks = document.querySelectorAll('[' + attr + ']');
+    const sync = () => picks.forEach((b) => b.classList.toggle('active', b.getAttribute(attr) === current));
+    picks.forEach((b) =>
+      b.addEventListener('click', () => {
+        current = b.getAttribute(attr);
+        apply(current);
+        localStorage.setItem(storeKey, current);
+        sync();
+      }));
+    sync();
+  };
+  wireFont('data-font-heading', 'fontHeading', 'inter', window.__setHeading);
+  wireFont('data-font-body', 'fontBody', 'jetbrains-mono', window.__setBody);
+
   document.getElementById('burger').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('open');
   });

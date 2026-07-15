@@ -1,306 +1,92 @@
 {
   "color": {
     "switch": {
-      "default": {
-        "primary": {
-          "off": {
-            "track": {
-              "$value": "{color.border.strong}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "offHover": {
-            "track": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "on": {
-            "track": {
-              "$value": "{color.role.primary.main}"
-            },
-            "thumb": {
-              "$value": "{color.role.primary.on}"
-            }
-          },
-          "onHover": {
-            "track": {
-              "$value": "{color.role.primary.hover}"
-            },
-            "thumb": {
-              "$value": "{color.role.primary.on}"
-            }
-          },
-          "disabledOff": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "disabledOn": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          }
+      "off": {
+        "track": {
+          "$value": "{color.border.strong}"
         },
-        "neutral": {
-          "off": {
-            "track": {
-              "$value": "{color.border.strong}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "offHover": {
-            "track": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "on": {
-            "track": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "thumb": {
-              "$value": "{color.role.neutral.on}"
-            }
-          },
-          "onHover": {
-            "track": {
-              "$value": "{color.role.neutral.hover}"
-            },
-            "thumb": {
-              "$value": "{color.role.neutral.on}"
-            }
-          },
-          "disabledOff": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "disabledOn": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          }
+        "thumb": {
+          "$value": "{color.surface.base}"
         },
-        "success": {
-          "off": {
-            "track": {
-              "$value": "{color.border.strong}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "offHover": {
-            "track": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "on": {
-            "track": {
-              "$value": "{color.role.success.main}"
-            },
-            "thumb": {
-              "$value": "{color.role.success.on}"
-            }
-          },
-          "onHover": {
-            "track": {
-              "$value": "{color.role.success.hover}"
-            },
-            "thumb": {
-              "$value": "{color.role.success.on}"
-            }
-          },
-          "disabledOff": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "disabledOn": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          }
+        "border": {
+          "$value": "{color.border.transparent}"
+        }
+      },
+      "offHover": {
+        "track": {
+          "$value": "{color.role.neutral.main}"
         },
-        "warning": {
-          "off": {
-            "track": {
-              "$value": "{color.border.strong}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "offHover": {
-            "track": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "on": {
-            "track": {
-              "$value": "{color.role.warning.main}"
-            },
-            "thumb": {
-              "$value": "{color.role.warning.on}"
-            }
-          },
-          "onHover": {
-            "track": {
-              "$value": "{color.role.warning.hover}"
-            },
-            "thumb": {
-              "$value": "{color.role.warning.on}"
-            }
-          },
-          "disabledOff": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "disabledOn": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          }
+        "thumb": {
+          "$value": "{color.surface.base}"
         },
-        "danger": {
-          "off": {
-            "track": {
-              "$value": "{color.border.strong}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "offHover": {
-            "track": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "on": {
-            "track": {
-              "$value": "{color.role.danger.main}"
-            },
-            "thumb": {
-              "$value": "{color.role.danger.on}"
-            }
-          },
-          "onHover": {
-            "track": {
-              "$value": "{color.role.danger.hover}"
-            },
-            "thumb": {
-              "$value": "{color.role.danger.on}"
-            }
-          },
-          "disabledOff": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "disabledOn": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          }
+        "border": {
+          "$value": "{color.border.transparent}"
+        }
+      },
+      "on": {
+        "track": {
+          "$value": "{color.role.primary.main}"
         },
-        "info": {
-          "off": {
-            "track": {
-              "$value": "{color.border.strong}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "offHover": {
-            "track": {
-              "$value": "{color.role.neutral.main}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "on": {
-            "track": {
-              "$value": "{color.role.info.main}"
-            },
-            "thumb": {
-              "$value": "{color.role.info.on}"
-            }
-          },
-          "onHover": {
-            "track": {
-              "$value": "{color.role.info.hover}"
-            },
-            "thumb": {
-              "$value": "{color.role.info.on}"
-            }
-          },
-          "disabledOff": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          },
-          "disabledOn": {
-            "track": {
-              "$value": "{color.surface.disabled}"
-            },
-            "thumb": {
-              "$value": "{color.surface.base}"
-            }
-          }
+        "thumb": {
+          "$value": "{color.role.primary.on}"
+        },
+        "border": {
+          "$value": "{color.border.transparent}"
+        }
+      },
+      "onHover": {
+        "track": {
+          "$value": "{color.role.primary.hover}"
+        },
+        "thumb": {
+          "$value": "{color.role.primary.on}"
+        },
+        "border": {
+          "$value": "{color.border.transparent}"
+        }
+      },
+      "error": {
+        "track": {
+          "$value": "{color.border.strong}"
+        },
+        "thumb": {
+          "$value": "{color.surface.base}"
+        },
+        "border": {
+          "$value": "{color.role.danger.main}"
+        }
+      },
+      "errorHover": {
+        "track": {
+          "$value": "{color.role.neutral.main}"
+        },
+        "thumb": {
+          "$value": "{color.surface.base}"
+        },
+        "border": {
+          "$value": "{color.role.danger.main}"
+        }
+      },
+      "disabledOff": {
+        "track": {
+          "$value": "{color.surface.disabled}"
+        },
+        "thumb": {
+          "$value": "{color.surface.base}"
+        },
+        "border": {
+          "$value": "{color.border.transparent}"
+        }
+      },
+      "disabledOn": {
+        "track": {
+          "$value": "{color.surface.disabled}"
+        },
+        "thumb": {
+          "$value": "{color.surface.base}"
+        },
+        "border": {
+          "$value": "{color.border.transparent}"
         }
       }
     },
@@ -310,10 +96,10 @@
     "switch": {
       "sm": {
         "trackWidth": {
-          "$value": "{size.control.lg}"
+          "$value": "{trackWidth.sm}"
         },
         "trackHeight": {
-          "$value": "{glyphSize.md}"
+          "$value": "{trackHeight.sm}"
         },
         "thumb": {
           "$value": "{glyphSize.sm}"
@@ -321,10 +107,10 @@
       },
       "md": {
         "trackWidth": {
-          "$value": "{size.control.xl}"
+          "$value": "{trackWidth.md}"
         },
         "trackHeight": {
-          "$value": "{glyphSize.lg}"
+          "$value": "{trackHeight.md}"
         },
         "thumb": {
           "$value": "{glyphSize.md}"
@@ -332,10 +118,10 @@
       },
       "lg": {
         "trackWidth": {
-          "$value": "{size.spacing.11}"
+          "$value": "{trackWidth.lg}"
         },
         "trackHeight": {
-          "$value": "{size.control.sm}"
+          "$value": "{trackHeight.lg}"
         },
         "thumb": {
           "$value": "{glyphSize.md}"
@@ -354,6 +140,20 @@
       },
       "lg": {
         "$value": "{radius.full}"
+      }
+    },
+    "$type": "dimension"
+  },
+  "borderWidth": {
+    "switch": {
+      "sm": {
+        "$value": "{borderWidth.strong}"
+      },
+      "md": {
+        "$value": "{borderWidth.strong}"
+      },
+      "lg": {
+        "$value": "{borderWidth.strong}"
       }
     },
     "$type": "dimension"

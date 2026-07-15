@@ -99,5 +99,31 @@
     "lg": {
       "$value": "{size.glyph.lg}"
     }
+  },
+  "trackWidth": {
+    "$type": "dimension",
+    "$description": "Largeur de la piste d'un switch. Seule dimension du système qui n'a de sens que pour un composant, mais elle passe par un rôle plutôt que de pointer une primitive : un composant ne référence jamais `size.*` en direct (règle de layering). Sur mobile elle GRANDIT (comme `controlHeight`, cible tactile) — mais la largeur `lg` plafonne à 64px, la plus grande primitive d'espacement disponible.",
+    "sm": {
+      "$value": "{size.control.lg}"
+    },
+    "md": {
+      "$value": "{size.control.xl}"
+    },
+    "lg": {
+      "$value": "{size.spacing.11}"
+    }
+  },
+  "trackHeight": {
+    "$type": "dimension",
+    "$description": "Épaisseur de la piste d'un switch — elle doit loger le pouce (`thumb`, tiré de `glyphSize`) plus son jeu. Comme `trackWidth`, elle grandit sur mobile.",
+    "sm": {
+      "$value": "{size.glyph.md}"
+    },
+    "md": {
+      "$value": "{size.glyph.lg}"
+    },
+    "lg": {
+      "$value": "{size.control.sm}"
+    }
   }
 }

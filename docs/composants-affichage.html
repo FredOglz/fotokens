@@ -8,8 +8,26 @@
 <link rel="stylesheet" href="components.css">
 <link rel="stylesheet" href="docs.css">
 <script>
-  // Avant le premier rendu, pour éviter un flash de thème clair.
-  if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  // Avant le premier rendu, pour éviter un flash (thème ET couleur « primary »).
+  (function () {
+    var root = document.documentElement;
+    if (localStorage.getItem('theme') === 'dark') root.setAttribute('data-theme', 'dark');
+    // Remappe toute la chaîne primary en surchargeant les vars brand.primary.* :
+    // le rôle et les composants suivent, ils pointent déjà dessus.
+    var STEPS = ["25","50","100","200","300","400","500","600","700","800","900"], ALPHAS = ["5","10"];
+    window.__setPrimary = function (css) {
+      STEPS.forEach(function (s) { root.style.setProperty('--color-brand-primary-' + s, 'var(--color-' + css + '-' + s + ')'); });
+      ALPHAS.forEach(function (a) { root.style.setProperty('--color-brand-primary-alpha-' + a, 'var(--color-' + css + '-alpha-' + a + ')'); });
+    };
+    var p = localStorage.getItem('primary');
+    if (p) window.__setPrimary(p);
+    // Polices : on surcharge --font-brand-heading (titres) et --font-brand-body (corps),
+    // les rôles typo suivent. Le code garde --font-brand-mono, non touché.
+    window.__setHeading = function (css) { root.style.setProperty('--font-brand-heading', 'var(--font-stack-' + css + ')'); };
+    window.__setBody = function (css) { root.style.setProperty('--font-brand-body', 'var(--font-stack-' + css + ')'); };
+    var fh = localStorage.getItem('fontHeading'); if (fh) window.__setHeading(fh);
+    var fb = localStorage.getItem('fontBody'); if (fb) window.__setBody(fb);
+  })();
 </script>
 </head>
 <body>
@@ -21,37 +39,61 @@
     <div class="nav-group">
       <h5>Comprendre</h5>
       <ul><li><a href="index.html" class="">
-            <span class="nav-num nav-num-off"></span>
             Architecture</a></li><li><a href="demarrer.html" class="">
-            <span class="nav-num nav-num-off"></span>
             Démarrer un projet</a></li></ul>
     </div>
     <div class="nav-group">
       <h5>Le système</h5>
       <ul><li><a href="primitives.html" class="">
-            <span class="nav-num">1</span>
             Primitives</a></li><li><a href="brand.html" class="">
-            <span class="nav-num">2</span>
             Brand</a></li><li><a href="roles.html" class="">
-            <span class="nav-num">3</span>
             Contrat de rôle</a></li><li><a href="semantique.html" class="">
-            <span class="nav-num">3</span>
             Sémantique (reste)</a></li><li><a href="effets.html" class="">
-            <span class="nav-num">3</span>
             Effets & mouvement</a></li></ul>
     </div>
     <div class="nav-group">
       <h5>Composants</h5>
       <ul><li><a href="composants-formulaire.html" class="">
-            <span class="nav-num">4</span>
-            Formulaire</a></li><li><a href="composants-affichage.html" class="on">
-            <span class="nav-num">4</span>
-            Affichage</a><ul class="sub"><li><a href="#badge" data-anchor="badge">Badge</a></li><li><a href="#tag" data-anchor="tag">Tag</a></li><li><a href="#alert" data-anchor="alert">Alert</a></li><li><a href="#card" data-anchor="card">Card</a></li><li><a href="#tooltip" data-anchor="tooltip">Tooltip</a></li><li><a href="#link" data-anchor="link">Link</a></li></ul></li><li><a href="composants-structure.html" class="">
-            <span class="nav-num">4</span>
-            Structure</a></li></ul>
+            Formulaire<span class="nav-caret" aria-hidden="true">▸</span></a></li><li><a href="composants-affichage.html" class="on">
+            Affichage<span class="nav-caret" aria-hidden="true">▸</span></a><ul class="sub"><li><a href="#badge" data-anchor="badge">Badge</a></li><li><a href="#tag" data-anchor="tag">Tag</a></li><li><a href="#alert" data-anchor="alert">Alert</a></li><li><a href="#card" data-anchor="card">Card</a></li><li><a href="#tooltip" data-anchor="tooltip">Tooltip</a></li><li><a href="#link" data-anchor="link">Link</a></li></ul></li><li><a href="composants-structure.html" class="">
+            Structure<span class="nav-caret" aria-hidden="true">▸</span></a></li></ul>
     </div>
-  <button class="theme-toggle" id="toggle">◐ Thème clair / sombre</button>
+  <div class="settings">
+    <button class="settings-btn" id="settingsBtn" aria-haspopup="dialog">⚙ Réglages</button>
+  </div>
 </aside>
+
+<dialog class="settings-modal" id="settingsModal" aria-labelledby="settingsTitle">
+  <div class="settings-modal-head">
+    <span class="settings-modal-title" id="settingsTitle">Réglages</span>
+    <button type="button" class="settings-close" id="settingsClose" aria-label="Fermer">✕</button>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Thème</span>
+    <div class="seg">
+      <button type="button" data-theme-choice="light">◐ Clair</button>
+      <button type="button" data-theme-choice="dark">◑ Sombre</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Couleur « primary »</span>
+    <div class="swatch-grid">
+      <button type="button" class="swatch-pick" data-palette="gray" title="gray"><span class="swatch-dot" style="background: var(--color-gray-500)"></span>gray</button><button type="button" class="swatch-pick" data-palette="blue" title="blue"><span class="swatch-dot" style="background: var(--color-blue-500)"></span>blue</button><button type="button" class="swatch-pick" data-palette="red" title="red"><span class="swatch-dot" style="background: var(--color-red-500)"></span>red</button><button type="button" class="swatch-pick" data-palette="green" title="green"><span class="swatch-dot" style="background: var(--color-green-500)"></span>green</button><button type="button" class="swatch-pick" data-palette="orange" title="orange"><span class="swatch-dot" style="background: var(--color-orange-500)"></span>orange</button><button type="button" class="swatch-pick" data-palette="turquoise" title="turquoise"><span class="swatch-dot" style="background: var(--color-turquoise-500)"></span>turquoise</button><button type="button" class="swatch-pick" data-palette="slate-blue" title="slateBlue"><span class="swatch-dot" style="background: var(--color-slate-blue-500)"></span>slateBlue</button><button type="button" class="swatch-pick" data-palette="slate-violet" title="slateViolet"><span class="swatch-dot" style="background: var(--color-slate-violet-500)"></span>slateViolet</button><button type="button" class="swatch-pick" data-palette="violet" title="violet"><span class="swatch-dot" style="background: var(--color-violet-500)"></span>violet</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Police des titres</span>
+    <div class="font-grid">
+      <button type="button" class="font-pick" data-font-heading="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-heading="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-heading="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-heading="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-heading="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-heading="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
+    </div>
+  </div>
+  <div class="settings-group">
+    <span class="settings-label">Police du corps</span>
+    <div class="font-grid">
+      <button type="button" class="font-pick" data-font-body="inter" style="font-family: var(--font-stack-inter)">Inter</button><button type="button" class="font-pick" data-font-body="geist" style="font-family: var(--font-stack-geist)">Geist</button><button type="button" class="font-pick" data-font-body="system-sans" style="font-family: var(--font-stack-system-sans)">System Sans</button><button type="button" class="font-pick" data-font-body="georgia" style="font-family: var(--font-stack-georgia)">Georgia</button><button type="button" class="font-pick" data-font-body="jetbrains-mono" style="font-family: var(--font-stack-jetbrains-mono)">Jetbrains Mono</button><button type="button" class="font-pick" data-font-body="system-mono" style="font-family: var(--font-stack-system-mono)">System Mono</button>
+    </div>
+  </div>
+</dialog>
 
 <main class="main">
   <div class="page">
@@ -502,7 +544,7 @@
           <tbody><tr>
             <td class="mono tiny">--typography-badge-family</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.label.family — défini dans « Sémantique · typo »"><code>--typography-label-family</code></a></td>
-            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
             <td class="mono tiny">--typography-badge-weight</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.label.weight — défini dans « Sémantique · typo »"><code>--typography-label-weight</code></a></td>
             <td class="mono tiny note">500</td></tr><tr>
@@ -1576,7 +1618,7 @@
           <tbody><tr>
             <td class="mono tiny">--typography-tag-family</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.label.family — défini dans « Sémantique · typo »"><code>--typography-label-family</code></a></td>
-            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
             <td class="mono tiny">--typography-tag-weight</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.label.weight — défini dans « Sémantique · typo »"><code>--typography-label-weight</code></a></td>
             <td class="mono tiny note">500</td></tr><tr>
@@ -2002,7 +2044,7 @@
           <tbody><tr>
             <td class="mono tiny">--typography-alert-family</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.family — défini dans « Sémantique · typo »"><code>--typography-body-family</code></a></td>
-            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
             <td class="mono tiny">--typography-alert-weight</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.weight — défini dans « Sémantique · typo »"><code>--typography-body-weight</code></a></td>
             <td class="mono tiny note">400</td></tr><tr>
@@ -2201,7 +2243,7 @@
           <tbody><tr>
             <td class="mono tiny">--typography-tooltip-family</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.small.family — défini dans « Sémantique · typo »"><code>--typography-small-family</code></a></td>
-            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
             <td class="mono tiny">--typography-tooltip-weight</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.small.weight — défini dans « Sémantique · typo »"><code>--typography-small-weight</code></a></td>
             <td class="mono tiny note">400</td></tr><tr>
@@ -2304,7 +2346,7 @@
           <tbody><tr>
             <td class="mono tiny">--typography-link-family</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.family — défini dans « Sémantique · typo »"><code>--typography-body-family</code></a></td>
-            <td class="mono tiny note">Inter, system-ui, -apple-system, sans-serif</td></tr><tr>
+            <td class="mono tiny note">'JetBrains Mono', ui-monospace, 'SF Mono', monospace</td></tr><tr>
             <td class="mono tiny">--typography-link-weight</td>
             <td class="tiny"><a href="semantique.html#typographie" title="typography.body.weight — défini dans « Sémantique · typo »"><code>--typography-body-weight</code></a></td>
             <td class="mono tiny note">400</td></tr><tr>
@@ -2328,11 +2370,63 @@
 
 <script>
   const root = document.documentElement;
-  document.getElementById('toggle').addEventListener('click', () => {
-    const dark = root.getAttribute('data-theme') === 'dark';
-    if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
-    else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+
+  // Réglages : modale (thème + couleur « primary »). <dialog> natif → piège de
+  // focus, Escape et inertage du fond sont gratuits. Reste à gérer le clic sur le
+  // fond (le backdrop ne déclenche pas de close natif).
+  const settingsBtn = document.getElementById('settingsBtn');
+  const settingsModal = document.getElementById('settingsModal');
+  settingsBtn.addEventListener('click', () => settingsModal.showModal());
+  document.getElementById('settingsClose').addEventListener('click', () => settingsModal.close());
+  settingsModal.addEventListener('click', (e) => {
+    const r = settingsModal.getBoundingClientRect();
+    const outside = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    if (outside) settingsModal.close();
   });
+
+  const syncTheme = () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    document.querySelectorAll('[data-theme-choice]').forEach((b) =>
+      b.classList.toggle('active', b.dataset.themeChoice === (dark ? 'dark' : 'light')));
+  };
+  document.querySelectorAll('[data-theme-choice]').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (b.dataset.themeChoice === 'dark') { root.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+      else { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+      syncTheme();
+    }));
+  syncTheme();
+
+  let currentPrimary = localStorage.getItem('primary') || 'violet';
+  const syncPrimary = () =>
+    document.querySelectorAll('.swatch-pick').forEach((b) =>
+      b.classList.toggle('active', b.dataset.palette === currentPrimary));
+  document.querySelectorAll('.swatch-pick').forEach((b) =>
+    b.addEventListener('click', () => {
+      currentPrimary = b.dataset.palette;
+      window.__setPrimary(currentPrimary);
+      localStorage.setItem('primary', currentPrimary);
+      syncPrimary();
+    }));
+  syncPrimary();
+
+  // Deux sélecteurs de police : titres (data-font-heading) et corps (data-font-body).
+  const wireFont = (attr, storeKey, def, apply) => {
+    let current = localStorage.getItem(storeKey) || def;
+    const picks = document.querySelectorAll('[' + attr + ']');
+    const sync = () => picks.forEach((b) => b.classList.toggle('active', b.getAttribute(attr) === current));
+    picks.forEach((b) =>
+      b.addEventListener('click', () => {
+        current = b.getAttribute(attr);
+        apply(current);
+        localStorage.setItem(storeKey, current);
+        sync();
+      }));
+    sync();
+  };
+  wireFont('data-font-heading', 'fontHeading', 'inter', window.__setHeading);
+  wireFont('data-font-body', 'fontBody', 'jetbrains-mono', window.__setBody);
+
   document.getElementById('burger').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('open');
   });
